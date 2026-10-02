@@ -1,0 +1,33 @@
+name = "oracle-market"
+version = "2.0.0"
+description = "Persistent event-driven auctioneer/judge/settler for the Squawk bid-market. Watches the bid-market channel via inotify, validates sealed bids (HMAC + AES-GCM), clears Vickrey second-price auctions, verifies signed results and settles with stake-and-slash accountability. Control-plane messages (task_post/assign) are HMAC-authenticated; provider keys come from a rotating key-pool (bin/keypool.py)."
+author = "toxicwind"
+module = "external:daemon"
+
+[model]
+# Model routing doctrine (SPEC §8): FREE BEATS LOCAL.
+# Runtime model calls go through bin/keypool.py -- all candidate keys,
+# first-valid-wins per call, tier priority free cloud > paid cloud >
+# local (herd/beellama) as fallback only. A down key is a routing
+# signal, never a config rewrite. This block is the preferred default;
+# do not pin this agent local-first.
+provider = "herd"
+model = "openrouter-free/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free"
+fallback_models = [{ provider = "herd", model = "gemini/gemini-3-flash-preview" }]
+base_url = "http://127.0.0.1:25100/v1"
+max_tokens = 32000
+temperature = 0.2
+
+[resources]
+max_llm_tokens_per_hour = 100000
+max_context_tokens = 32000
+
+[capabilities]
+tools = ["file_read", "file_list", "file_write", "exec"]
+network = []
+agent_spawn = false
+workflow_run = false
+
+[runtime]
+command = "bin/run.sh"
+restart = "always"

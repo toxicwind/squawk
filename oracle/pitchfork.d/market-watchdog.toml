@@ -1,0 +1,15 @@
+# ranch/oracle — project-owned daemon manifest. Source of truth for 'market-watchdog'.
+# Owned by the ranch/oracle project; the parent only composes it.
+
+[daemons.market-watchdog]
+run = "exec /home/toxic/estate/projects/range/ranch/oracle/bin/market-watchdog.sh"
+dir = "/home/toxic/estate/projects/range/ranch/oracle"
+mise = false
+retry = true
+auto = ["start"]
+
+# estate-reconcile-watch — event-driven config/binary drift watcher (WS2).
+# supervises: bin/estate-reconcile watch (inotify event loop over manifest
+# dirs; no timers, no polls). Drifted binaries are restored atomically from
+# immutable copies or signed git HEAD; declared configs are report-only.
+# Squawks on drift/restore. Added 2026-09-21.

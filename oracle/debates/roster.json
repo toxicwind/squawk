@@ -1,0 +1,2 @@
+{"wanted": ["ember", "kindling"],
+ "note": "Default named agents for debates opened without an explicit wanted list (e.g. the intake DEBATE route). The oracle announces these names in fleet on debate open and chases the ones who haven't replied. Edit freely; committed."}

@@ -1,0 +1,11 @@
+# ranch/oracle — project-owned daemon manifest. Source of truth for 'oracle-market'.
+# Owned by the ranch/oracle project; the parent only composes it.
+
+
+[daemons.oracle-market]
+run = "exec /home/toxic/estate/projects/range/ranch/oracle/bin/run.sh"
+dir = "/home/toxic/estate/projects/range/ranch/oracle"
+mise = false
+retry = true
+env = { ORACLE_INTAKE = "1" }
+auto = ["start"]
