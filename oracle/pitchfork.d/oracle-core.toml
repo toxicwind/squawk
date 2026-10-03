@@ -1,13 +1,13 @@
-# ranch/oracle — project-owned daemon manifest. Source of truth for 'oracle-core'.
-# Owned by the ranch/oracle project; the parent only composes it.
+# ranch/squawk/oracle — project-owned daemon manifest. Source of truth for 'oracle-core'.
+# Owned by the ranch/squawk/oracle project; the parent only composes it.
 
 
 [daemons.oracle-core]
 port = 25151
 ready_http = "http://127.0.0.1:25151/health"
 health_http = { url = "http://127.0.0.1:25151/health", interval = "30s", timeout = "5s", retries = 3 }
-run = "exec /home/toxic/estate/projects/range/ranch/oracle/bin/run-oracle-core.sh"
-dir = "/home/toxic/estate/projects/range/ranch/oracle"
+run = "exec /home/toxic/estate/ranch/squawk/oracle/bin/run-oracle-core.sh"
+dir = "/home/toxic/estate/ranch/squawk/oracle"
 mise = false
 retry = true
 auto = ["start"]

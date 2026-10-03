@@ -1,11 +1,11 @@
-# ranch/oracle — project-owned daemon manifest. Source of truth for 'oracle-chat'.
-# Owned by the ranch/oracle project; the parent only composes it.
+# ranch/squawk/oracle — project-owned daemon manifest. Source of truth for 'oracle-chat'.
+# Owned by the ranch/squawk/oracle project; the parent only composes it.
 
 
 [daemons.oracle-chat]
-run = "exec /home/toxic/estate/projects/range/ranch/oracle/bin/oracle_chat.py"
-dir = "/home/toxic/estate/projects/range/ranch/oracle"
+run = "exec /home/toxic/estate/ranch/squawk/oracle/bin/oracle_chat.py"
+dir = "/home/toxic/estate/ranch/squawk/oracle"
 mise = false
 retry = true
-env = { ORACLE_CHANNEL = "/home/toxic/.fleet-bus/squawk-root/bid-market" }
+env = { ORACLE_CHANNEL = "/home/toxic/hatch/agents/ember/squawk-root/bid-market" }
 auto = ["start"]

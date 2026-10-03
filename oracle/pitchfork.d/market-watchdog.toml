@@ -1,9 +1,9 @@
-# ranch/oracle — project-owned daemon manifest. Source of truth for 'market-watchdog'.
-# Owned by the ranch/oracle project; the parent only composes it.
+# ranch/squawk/oracle — project-owned daemon manifest. Source of truth for 'market-watchdog'.
+# Owned by the ranch/squawk/oracle project; the parent only composes it.
 
 [daemons.market-watchdog]
-run = "exec /home/toxic/estate/projects/range/ranch/oracle/bin/market-watchdog.sh"
-dir = "/home/toxic/estate/projects/range/ranch/oracle"
+run = "exec /home/toxic/estate/ranch/squawk/oracle/bin/market-watchdog.sh"
+dir = "/home/toxic/estate/ranch/squawk/oracle"
 mise = false
 retry = true
 auto = ["start"]
