@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v0.8.1 (2026-10-03)
+
+### Bug Fixes
+
+- Squash sequence allocation and test suite green across squawk
+  ([`ce16e84`](https://github.com/toxicwind/squawk/commit/ce16e84426ee05191b473a95b4a9b53cd94dc6a2))
+
+### Documentation
+
+- **readme**: Maximal README pass per readme-maximal skill
+  ([`054aea2`](https://github.com/toxicwind/squawk/commit/054aea2107bbc3939fc473f76a4ab7badd11f3af))
+
+
 ## v0.8.0 (2026-09-15)
 
 ### Chores
