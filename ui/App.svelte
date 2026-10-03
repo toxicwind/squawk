@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { mdBlock, esc } from "./markdown";
   import MessageCard from "./MessageCard.svelte";
   import AddChannelDialog from "./AddChannelDialog.svelte";
   import { live, keyOf } from "./live.svelte.js";

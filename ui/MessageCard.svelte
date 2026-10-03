@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { mdBlock, esc } from "./markdown";
+  import { mdBlock } from "./markdown";
 
   type Msg = {
     seq: number; from: string; to: string; channel: string;

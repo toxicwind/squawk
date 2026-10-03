@@ -100,9 +100,6 @@ body {
   background: color-mix(in srgb, var(--bg-1) 82%, transparent);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  position: sticky;
-  top: 0;
-  z-index: 20;
 }
 
 .brand { display: flex; align-items: center; gap: 9px; user-select: none; }
@@ -127,6 +124,7 @@ body {
 
 .conn {
   margin-left: auto;
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -141,6 +139,7 @@ body {
   transition: border-color .2s, color .2s;
 }
 .conn[data-state="live"] { border-color: rgba(111, 213, 152, 0.28); }
+.conn[data-state="connecting"],
 .conn[data-state="reconnecting"] { border-color: var(--accent-line); color: var(--accent-hi); }
 
 .dot { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto; }
@@ -159,7 +158,6 @@ body {
   flex: 0 0 auto;
   border-bottom: 1px solid var(--line);
   background: var(--bg-1);
-  z-index: 10;
 }
 .tabs-scroll {
   display: flex;
@@ -200,7 +198,7 @@ body {
 .tab .x {
   display: inline-grid;
   place-items: center;
-  width: 20px; height: 20px;
+  width: 24px; height: 24px;
   border: none;
   border-radius: 50%;
   background: transparent;
@@ -244,10 +242,9 @@ body {
 
 .msg {
   padding: 7px 18px;
-  border-radius: var(--r-sm);
   transition: background .12s;
   animation: msg-in .18s ease-out;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 .msg:hover { background: rgba(255, 238, 220, 0.022); }
 .msg.compact { padding-top: 1px; padding-bottom: 1px; }
@@ -382,7 +379,7 @@ body {
 /* ---------- composer: floating bar, circular send ---------- */
 #composer {
   flex: 0 0 auto;
-  padding: 10px 18px calc(10px + env(safe-area-inset-bottom, 0px));
+  padding: 10px 18px; /* safe-area inset lives on #statusbar (bottom-most bar) only */
   background: linear-gradient(to top, var(--bg-0) 60%, transparent);
 }
 .composer-bar {
@@ -530,6 +527,8 @@ body {
 }
 .btn.primary:hover { filter: brightness(1.06); background: linear-gradient(135deg, var(--accent-hi), var(--accent) 60%, #d97f2b); }
 .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn.ghost { background: transparent; border-color: transparent; }
+.btn.ghost:hover { background: var(--bg-3); }
 
 /* ---------- scrollbars ---------- */
 #log::-webkit-scrollbar { width: 10px; }
@@ -548,7 +547,6 @@ body {
 
 /* small phones */
 @media (max-width: 640px) {
-  body { font-size: 15px; }
   :root { --topbar-h: 50px; }
 
   .topbar { padding: 0 12px; }
@@ -564,18 +562,19 @@ body {
 
   #log { padding: 10px 0 16px; }
   .msg { padding: 6px 12px; border-radius: 0; }
-  .msg.compact .body { padding-left: 42px; }
+  .msg.compact .body { padding-left: 40px; } /* 30px avatar + 10px gap: aligns with non-compact rows */
   .avatar { width: 30px; height: 30px; font-size: 13px; }
   .msg .body { font-size: 15px; }
   .sys { padding: 3px 12px; }
 
-  #composer { padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px)); }
+  #composer { padding: 8px 12px; }
   #msg { font-size: 16px; } /* stop iOS auto-zoom */
   .composer-meta { display: none; }
   #send { width: 40px; height: 40px; } /* 44px-ish touch target w/ bar padding */
 
   #statusbar { padding: 6px 12px calc(6px + env(safe-area-inset-bottom, 0px)); font-size: 11px; }
   #dlg { padding: 18px; }
+  #dlg input { font-size: 16px; } /* stop iOS auto-zoom on focus */
 }
 
 /* desktop: hairline column edges */

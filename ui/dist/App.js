@@ -1,6 +1,5 @@
 import 'svelte/internal/disclose-version';
 import * as $ from 'svelte/internal/client';
-import { mdBlock, esc } from "../markdown.js";
 import MessageCard from "./MessageCard.js";
 import AddChannelDialog from "./AddChannelDialog.js";
 import { live, keyOf } from "./live.js";

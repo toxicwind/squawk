@@ -12,6 +12,13 @@ export function esc(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
+/** Link hrefs: attribute-escape the URL and block scriptable schemes. */
+export function safeHref(u: string): string {
+  const t = u.trim();
+  if (/^\s*(javascript|data|vbscript|file):/i.test(t)) return "#blocked";
+  return esc(t);
+}
+
 const SENT = "⁠"; // sentinel char: \u2060 WORD JOINER, survives esc(), never in real text
 
 export function mdInline(src: string): string {
@@ -24,7 +31,7 @@ export function mdInline(src: string): string {
   out = out.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
   out = out.replace(/(^|[^*\w])\*([^*]+)\*/g, "$1<em>$2</em>");
   out = out.replace(/\[([^\]\n]+)\]\(([^)\s\n]+)\)/g, (_m, t, u) =>
-    `<a href="${u}" target="_blank" rel="noopener">${t}</a>`);
+    `<a href="${safeHref(u)}" target="_blank" rel="noopener">${t}</a>`);
   const re = new RegExp(SENT + "(\\d+)" + SENT, "g");
   out = out.replace(re, (_m, i) => `<code>${esc(codes[+i])}</code>`);
   return out;

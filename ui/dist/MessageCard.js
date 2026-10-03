@@ -1,6 +1,6 @@
 import 'svelte/internal/disclose-version';
 import * as $ from 'svelte/internal/client';
-import { mdBlock, esc } from "../markdown.js";
+import { mdBlock } from "../markdown.js";
 
 var root = $.from_html(`<span class="badge unverified">unverified</span>`);
 var root_1 = $.from_html(`<div class="msg-head"><span class="avatar" aria-hidden="true"> </span> <span class="who"> </span> <span class="ts"> </span> <!></div>`);
