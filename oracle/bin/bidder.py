@@ -719,6 +719,24 @@ class Bidder:
         if tid in self.executed:
             return  # catch-up re-drive must never double-execute
         self.executed.add(tid)
+        try:
+            self._execute_task_inner(task)
+        except Exception:
+            import traceback
+            tb = traceback.format_exc()
+            try:
+                wd = ol.WORK / self.id / tid
+                wd.mkdir(parents=True, exist_ok=True)
+                (wd / "thread-crash.txt").write_text(tb, encoding="utf-8")
+            except Exception:
+                pass
+            try:
+                self.say(f"{self.emoji} {self.name}: EXEC THREAD CRASH on {tid}: {tb[-300:]}")
+            except Exception:
+                pass
+
+    def _execute_task_inner(self, task):
+        tid = task["task_id"]
         payload = task.get("payload", "")
         timeout_ms = task.get("timeout_ms", 30000)
         workdir = ol.WORK / self.id / tid

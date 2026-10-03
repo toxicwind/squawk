@@ -62,7 +62,7 @@ AGENT_DIR = BIN.parent
 # be set to the yote squawk-root paths on deploy (see RESUME.md). Deploying
 # with the defaults on yote watches a nonexistent dir and crashes on startup.
 CHANNEL = Path(os.environ.get("ORACLE_CHANNEL",
-    "/home/toxic/estate/hatch/agents/ember/squawk-root/bid-market"))
+    "/home/toxic/hatch/agents/ember/squawk-root/bid-market"))
 FLEET = Path(os.environ.get("ORACLE_FLEET",
     "/home/toxic/.fleet-bus/squawk-root/fleet"))
 WORK = Path(os.environ.get("ORACLE_WORK", str(AGENT_DIR / "work")))
@@ -1064,6 +1064,10 @@ class OracleLoop:
         a.winner, a.price_paid, a.assign_ts = winner, price_paid, now
         bond = mech.BOND
         try:
+            # Profiles file is the source of truth: reload before locking
+            # so externally released bonds (stale-lock admin release)
+            # are visible. (nightjar-debug 2026-10-02)
+            self.profiles = mech.load_profiles()
             mech.lock_bond(self.profiles, winner.removeprefix("bidder-"),
                            tid, bond)
         except (KeyError, ValueError) as e:
