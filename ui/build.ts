@@ -1,6 +1,6 @@
 // Build script: compile Svelte 5 components -> JS, then bundle with Bun.
 // Run: bun ui/build.ts  (or: mise run build)
-import { compile } from "svelte/compiler";
+import { compile, compileModule } from "svelte/compiler";
 import { readdirSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, basename } from "node:path";
 
@@ -10,18 +10,32 @@ const DIST_DIR = join(UI_DIR, "dist");
 mkdirSync(DIST_DIR, { recursive: true });
 
 // 1. Compile each .svelte file to JS (client-side, Svelte 5 runes)
-//    Rewrite imports: ./X.svelte -> ./X.js, ./markdown -> ../markdown.js
+//    Rewrite imports: ./X.svelte -> ./X.js, ./X.svelte.js -> ./X.js, ./markdown -> ../markdown.js
 const svelteFiles = readdirSync(UI_DIR).filter(f => f.endsWith(".svelte"));
 for (const f of svelteFiles) {
   const src = readFileSync(join(UI_DIR, f), "utf8");
   const { js } = compile(src, { filename: f, generate: "client", dev: false });
   let code = js.code;
   // fix relative imports for the dist/ layout
+  code = code.replace(/from\s+["']\.\/([\w-]+)\.svelte\.js["']/g, 'from "./$1.js"');
   code = code.replace(/from\s+["']\.\/([\w-]+)\.svelte["']/g, 'from "./$1.js"');
   code = code.replace(/from\s+["']\.\/markdown["']/g, 'from "../markdown.js"');
   const outName = basename(f, ".svelte") + ".js";
   writeFileSync(join(DIST_DIR, outName), code);
   console.log(`compiled ${f} -> dist/${outName} (${code.length} bytes)`);
+}
+
+// 1b. Compile each .svelte.js rune module (e.g. live.svelte.js: the
+//     Svelte 5 rune-class singleton) via compileModule. NOTE: compileModule
+//     parses JS only — no TypeScript syntax allowed in these files
+//     (JSDoc comments for types).
+const runeFiles = readdirSync(UI_DIR).filter(f => f.endsWith(".svelte.js"));
+for (const f of runeFiles) {
+  const src = readFileSync(join(UI_DIR, f), "utf8");
+  const { js } = compileModule(src, { filename: f, generate: "client", dev: false });
+  const outName = basename(f, ".svelte.js") + ".js";
+  writeFileSync(join(DIST_DIR, outName), js.code);
+  console.log(`compiled ${f} -> dist/${outName} (${js.code.length} bytes)`);
 }
 
 // 2. Bundle main.ts (+ compiled svelte JS + markdown.ts) with Bun
