@@ -1,0 +1,108 @@
+#!/usr/bin/env python3
+"""relay-status: squawk relay health at a glance.
+
+Shows outbox depth, forwarder lag (seconds), last-relayed seq/key, sink
+position, quarantine/corruption counters -- so staleness is always visible.
+Exit 0; exit 2 if the forwarder looks stalled (depth growing, lag > 600s).
+"""
+import json
+import sys
+import time
+from datetime import datetime
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import relay_common as C
+
+STALL_AFTER_S = 600
+
+
+def parse_ts(ts):
+    try:
+        return datetime.fromisoformat(ts).timestamp()
+    except (TypeError, ValueError):
+        return None
+
+
+def main():
+    now = time.time()
+    out = {
+        "ts": C.now_iso(),
+        "outbox_path": str(C.OUTBOX),
+        "dest_channel": C.DEST_CHANNEL,
+    }
+    # --- outbox (the transactional record) ---
+    entries, corrupt = [], 0
+    try:
+        for line in C.OUTBOX.read_text().splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                entries.append(json.loads(line))
+            except ValueError:
+                corrupt += 1
+    except OSError:
+        pass
+    seqs = [int(e.get("seq", 0)) for e in entries if isinstance(e, dict)]
+    out["outbox_total"] = len(entries)
+    out["outbox_max_seq"] = max(seqs) if seqs else 0
+    out["outbox_corrupt_lines"] = corrupt
+    if entries:
+        last = entries[-1]
+        out["outbox_last_ts"] = last.get("ingest_ts") or last.get("ts")
+
+    # --- sink position ---
+    sink = C.load_json(C.SINK_STATE, {})
+    out["sink_feed_seq"] = sink.get("feed_seq", 0)
+    out["sink_channels"] = sink.get("channels", {})
+    out["sink_dup_suppressed"] = sink.get("sink_dup_suppressed", 0)
+    out["sink_invalid_sig"] = sink.get("invalid_sig_skipped", 0)
+
+    # --- forwarder position ---
+    fwd = C.load_json(C.FWD_STATE, {})
+    cursor = int(fwd.get("cursor_seq", 0))
+    out["forward_cursor_seq"] = cursor
+    out["outbox_depth"] = sum(1 for s in seqs if s > cursor)
+    out["last_relayed_seq"] = cursor
+    out["last_relayed_key"] = fwd.get("last_key")
+    last_relay_ts = fwd.get("last_relay_ts")
+    lag = now - parse_ts(last_relay_ts) if last_relay_ts and parse_ts(last_relay_ts) else None
+    out["forwarder_lag_s"] = round(lag, 1) if lag is not None else None
+    # age of the oldest entry still waiting
+    pending_ts = [parse_ts(e.get("ingest_ts") or e.get("ts", ""))
+                  for e in entries
+                  if isinstance(e, dict) and int(e.get("seq", 0)) > cursor]
+    pending_ts = [t for t in pending_ts if t]
+    out["oldest_pending_age_s"] = round(now - min(pending_ts), 1) if pending_ts else 0.0
+    out["dup_suppressed"] = fwd.get("dup_suppressed", 0)
+    out["quarantined"] = len(fwd.get("quarantined", {}))
+    out["invalid_sig_skipped"] = fwd.get("invalid_sig_skipped", 0)
+    out["forwarder_corrupt_skipped"] = fwd.get("corrupt_skipped", 0)
+
+    # --- HFT hop telemetry: msg->outbox, outbox->post (p50/p95/max) ---
+    hops = fwd.get("hop_samples", [])
+    out["hop_latency_s"] = {
+        "msg_to_outbox": C.hop_quantiles(hops, "t_msg_to_outbox_s"),
+        "outbox_to_post": C.hop_quantiles(hops, "t_outbox_to_post_s"),
+    }
+
+    stalled = (out["outbox_depth"] > 0 and lag is not None and lag > STALL_AFTER_S)
+    out["stalled"] = bool(stalled)
+
+    lag_s = "never" if lag is None else ("%.0fs" % lag)
+    hop_line = ""
+    m2o = out["hop_latency_s"]["msg_to_outbox"]
+    o2p = out["hop_latency_s"]["outbox_to_post"]
+    if m2o or o2p:
+        hop_line = " hops[msg->outbox p50=%s | outbox->post p50=%s]" % (
+            m2o["p50"] if m2o else "-", o2p["p50"] if o2p else "-")
+    print("relay status: depth=%d lag=%s last_seq=%d dest=#%s%s%s" % (
+        out["outbox_depth"], lag_s, cursor, C.DEST_CHANNEL, hop_line,
+        " STALLED" if stalled else ""))
+    print(json.dumps(out, indent=2, sort_keys=True))
+    return 2 if stalled else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

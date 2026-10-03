@@ -1,0 +1,23 @@
+# squawk-feed settings.conf - TRACKED EXAMPLE (sovereign-projects).
+# Runtime copy: ~/.fleet-bus/squawk-relay/settings.conf (mode 0600, NOT tracked).
+# Copy this file there to start, then add keys as needed.
+#
+# Format: KEY=VALUE lines. Blank lines and lines starting with # are ignored.
+# Values may be wrapped in single or double quotes (stripped on load).
+# Real environment variables ALWAYS win over this file.
+# A missing settings file is fine - the server starts without it.
+# CLI: --settings-file PATH, or $SQUAWK_FEED_SETTINGS to override the path.
+#
+# --- Token (usually NOT needed) -------------------------------------------
+# The server configures its bearer token by itself, in this order:
+#   1. $SQUAWK_FEED_TOKEN env var
+#   2. token file (~/.fleet-bus/squawk-relay/feed-token,
+#      or --token-file / $SQUAWK_FEED_TOKEN_FILE)
+#   3. secure auto-generate (secrets.token_urlsafe(32)), persisted 0600
+# Only set SQUAWK_FEED_TOKEN here for a fixed token; env var still wins.
+#SQUAWK_FEED_TOKEN=
+#
+# --- Future keys ------------------------------------------------------------
+# Add integration/provider keys here as needed. Loaded into the process
+# environment at startup; existing env vars take precedence.
+#SQUAWK_FEED_EXTRA_KEY=

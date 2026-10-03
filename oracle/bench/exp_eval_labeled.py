@@ -207,7 +207,7 @@ def main(argv):
 
     ts = int(time.time())
     tag = ("-" + a.tag) if a.tag else ""
-    work = "/home/toxic/estate/projects/range/ranch/oracle/work-eval-%d%s" % (ts, tag)
+    work = "/home/toxic/estate/ranch/squawk/oracle/work-eval-%d%s" % (ts, tag)
     os.makedirs(work, exist_ok=True)
     os.environ["ORACLE_WORK"] = work
 

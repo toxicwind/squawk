@@ -1,0 +1,10 @@
+# ranch/squawk — project-owned daemon manifest. Source of truth for 'nats-tail'.
+# Owned by the ranch/squawk project; the parent only composes it.
+
+[daemons.nats-tail]
+run = "exec /home/toxic/estate/ranch/squawk/nats/run-tail.sh"
+dir = "/home/toxic/estate/ranch/squawk/nats"
+mise = false
+retry = true
+boot_start = true
+auto = ["start"]

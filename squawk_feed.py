@@ -17,7 +17,9 @@ Fat response: {"seq": M, "messages": [relay-record envelopes, ...]} where
 every envelope carries its own per-message "seq". Messages with seq >
 since, oldest first, capped at 50 per response; the returned "seq" is the
 seq of the LAST message in the batch, so the client re-polls with it to
-drain the rest. Each message text is truncated to 500 chars. Sealed
+drain the rest. Query param tail=N returns the N most recent messages in
+one shot (the boot snapshot path) with "seq" set to the channel
+high-water mark, so the client lands at the live cursor immediately.
 messages are unsealed server-side with the relay identity (the hosting
 lane provisions relay.seal.key); unopenable ones ride as
 {"sealed": true, "body": null} -- ciphertext is never served.
@@ -38,6 +40,8 @@ import json
 import os
 import re
 import select
+import signal
+import socket
 import socketserver
 import sys
 import threading
@@ -182,13 +186,14 @@ def _truncate(text, cap: int = TEXT_CAP) -> str:
 
 
 def build_fat(since: int, state: FeedState,
-              max_messages: int = MAX_MESSAGES) -> dict:
+              max_messages: int = MAX_MESSAGES, tail: int = 0) -> dict:
     """{"seq": M, "messages": [...]} for messages with seq > since.
 
     M is the seq of the last message in the batch (== channel high-water
     when nothing was capped), so the client can re-poll to drain.
     """
-    paths = _new_messages(state.chan_dir, since)[:max_messages]
+    paths = _new_messages(state.chan_dir, since)
+    paths = paths[-tail:] if tail > 0 else paths[:max_messages]
     messages = []
     last = since
     for p in paths:
@@ -252,11 +257,16 @@ class _Handler(http.server.BaseHTTPRequestHandler):
             except (TypeError, ValueError):
                 since = 0
             since = max(since, 0)
+            try:
+                tail = int(qs.get("tail", ["0"])[0])
+            except (TypeError, ValueError):
+                tail = 0
+            tail = max(tail, 0)
             state = self.server.state
             with state.cond:
                 if state.high <= since:
                     state.cond.wait(timeout=self.server.hold)
-            self._send_json(200, build_fat(since, state))
+            self._send_json(200, build_fat(since, state, tail=tail))
             return
         self._send_404()
 
@@ -264,6 +274,13 @@ class _Handler(http.server.BaseHTTPRequestHandler):
 class FeedServer(socketserver.ThreadingMixIn, http.server.HTTPServer):
     daemon_threads = True
     allow_reuse_address = True
+
+    def server_bind(self):
+        # SO_REUSEPORT: allow a new process to bind the same port for
+        # zero-downtime hot reload. The kernel load-balances between old
+        # and new; the old drains and exits on SIGTERM.
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+        super().server_bind()
 
     def __init__(self, addr, state: FeedState, token: str,
                  hold: float = HOLD_SECONDS):
@@ -335,6 +352,14 @@ def main(argv=None) -> None:
     print(f"squawk-feed: serving #{a.channel} on {sa[0]}:{sa[1]} "
           f"(hold={a.hold}s, bearer auth on /wait + /subscribe)",
           flush=True)
+    def _on_term(signum, frame):
+        # Graceful shutdown: stop accepting new connections, finish
+        # in-flight requests, then exit. For hot reload, the new process
+        # is already bound via SO_REUSEPORT and serving.
+        print("squawk-feed: SIGTERM, draining...", flush=True)
+        server.shutdown()
+
+    signal.signal(signal.SIGTERM, _on_term)
     try:
         server.serve_forever()
     except KeyboardInterrupt:

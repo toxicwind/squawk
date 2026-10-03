@@ -342,8 +342,66 @@ def _release_lock(lock: Path):
         pass
 
 
+def _seqhigh_path(chan: Path) -> Path:
+    """Durable high-water mark: max seq ever allocated for this channel.
+
+    Stored as `<chan>/.seqhigh`. Never decreases, even if message files
+    are deleted or archived. This prevents seq reuse -- the 2026-09-21 bug
+    where the feed's in-memory high-water mark suppressed "new" messages
+    that reused dead sequence numbers (12805 allocated after 12816 existed).
+    """
+    return chan / ".seqhigh"
+
+
+def _read_seqhigh(chan: Path) -> int:
+    """Read the durable mark (0 when never allocated)."""
+    try:
+        return int(_seqhigh_path(chan).read_text(encoding="utf-8").strip() or "0")
+    except (OSError, ValueError):
+        return 0
+
+
+def _write_seqhigh(chan: Path, value: int) -> None:
+    """Atomically persist the high-water mark (tmp file + rename)."""
+    tmp = chan / f".seqhigh.tmp-{os.getpid()}"
+    tmp.write_text(f"{value}\n", encoding="utf-8")
+    os.replace(tmp, _seqhigh_path(chan))
+
+
 def _next_seq(chan: Path) -> int:
-    return max_seq(chan) + 1
+    """Allocate the next monotonic seq. MUST be called under _acquire_lock.
+
+    Uses a durable high-water mark so deleted/archived files never cause
+    seq reuse. Fast path (mark exists): O(1), no directory scan. Slow path
+    (fresh channel): scan disk once to start above pre-existing files.
+
+    The mkdir lock (held by the caller) guarantees no concurrent allocator
+    can interleave. The mark is written atomically via tmp+rename.
+    """
+    stored = _read_seqhigh(chan)
+    if stored > 0:
+        # Fast path: stored is the max ever allocated. All writes go through
+        # here under the channel lock, so disk can only contain seqs <= stored.
+        # stored+1 is safe without scanning.
+        seq = stored + 1
+    else:
+        # Fresh channel (or wiped mark): scan disk to start above any
+        # pre-existing files (e.g., manually placed before first alloc).
+        seq = max_seq(chan) + 1
+    _write_seqhigh(chan, seq)
+    return seq
+
+
+def _seed_seqhigh(chan: Path, floor: int) -> int:
+    """Ensure the durable mark is >= floor (and >= disk). Returns the mark.
+
+    MUST be called under _acquire_lock. Used for manual recovery or
+    migration: e.g., after restoring from backup, seed the mark above
+    the highest seq in the restored files.
+    """
+    cur = max(_read_seqhigh(chan), max_seq(chan), int(floor))
+    _write_seqhigh(chan, cur)
+    return cur
 
 
 # --- cursors -----------------------------------------------------------------
@@ -414,6 +472,10 @@ __all__ = [
     "_acquire_lock",
     "_release_lock",
     "_next_seq",
+    "_seqhigh_path",
+    "_read_seqhigh",
+    "_write_seqhigh",
+    "_seed_seqhigh",
     "cursor_path",
     "read_cursor",
     "write_cursor",

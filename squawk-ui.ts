@@ -17,8 +17,9 @@
 // exposure. A pasted/magic-link token is still forwarded as-is when present.
 //
 // Hot-reload (2026-10-03): the Svelte 5 UI is prebuilt via `mise run build`
-// (mbx-cache) to ui/dist/bundle.js. The server re-reads it when the mtime
-// changes, so UI edits land without a daemon restart.
+// (mbx-cache) to ui/dist/bundle.js, and the stylesheet is a first-class
+// asset at ui/design.css. The server re-reads both when their mtime changes,
+// so UI edits land without a daemon restart.
 //
 // Channel-aware (2026-10-03): /wait and /send are served directly from the
 // channel store (/home/toxic/.fleet-bus/squawk-root/<channel>/*.md) so tabs
@@ -204,67 +205,28 @@ async function uiBundle(): Promise<string> {
   return bundleJs;
 }
 
-const UI_CSS = `
-:root { --bg:#14100c; --panel:#1d1712; --line:#3a2f26; --txt:#e8ded2; --dim:#a89880;
-  --faint:#6b5d4c; --accent:#e0a458; --good:#7bc98a; --bad:#e06c6c; }
-* { box-sizing:border-box; }
-body { margin:0; background:var(--bg); color:var(--txt); font:14px/1.45 system-ui,sans-serif;
-  display:flex; flex-direction:column; height:100vh; }
-header { padding:10px 14px; border-bottom:1px solid var(--line); display:flex;
-  align-items:center; gap:12px; }
-header h1 { margin:0; font-size:18px; letter-spacing:2px; color:var(--accent); }
-.transport { margin-left:auto; font-size:11px; color:var(--faint);
-  border:1px solid var(--line); border-radius:6px; padding:4px 8px; }
-#tabs { display:flex; gap:6px; align-items:flex-end; padding:8px 14px 0; flex-wrap:wrap; }
-.tab { display:flex; gap:8px; align-items:center; padding:5px 10px; cursor:pointer;
-  border:1px solid var(--line); border-bottom:none; border-radius:8px 8px 0 0;
-  background:var(--panel); color:var(--dim); }
-.tab.active { color:var(--txt); background:var(--bg); border-color:var(--accent); }
-.tab .x { color:var(--faint); padding:0 4px; border-radius:4px; line-height:1.2; cursor:pointer; }
-.tab .x:hover { color:var(--bad); background:#00000033; }
-#addTab { margin-left:2px; padding:4px 10px; align-self:center; background:var(--panel);
-  color:var(--dim); border:1px solid var(--line); border-radius:6px; cursor:pointer; }
-#addTab:hover { color:var(--txt); border-color:var(--accent); }
-#log { flex:1; overflow-y:auto; padding:12px 14px; display:flex; flex-direction:column; gap:10px; }
-.msg { background:var(--panel); border:1px solid var(--line);
-  border-radius:8px; padding:8px 12px; overflow-wrap:anywhere; }
-.msg .meta { color:var(--faint); font-size:12px; margin-bottom:4px; display:flex; gap:8px; flex-wrap:wrap; }
-.msg .meta .who { color:var(--accent); font-weight:600; }
-.msg .body p { margin:6px 0; }
-.msg .body ul,.msg .body ol { margin:4px 0 8px; padding-left:22px; }
-.msg .body blockquote { margin:4px 0 8px; padding:4px 10px; border-left:2px solid var(--accent); color:var(--dim); }
-.msg .body pre { margin:6px 0; padding:8px 10px; background:#0f0c09; border:1px solid var(--line);
-  border-radius:6px; overflow-x:auto; }
-.msg .body code { font-family:ui-monospace,monospace; background:#0f0c09; padding:1px 5px; border-radius:4px; font-size:13px; }
-.msg .body pre code { background:none; padding:0; }
-.badge { font-size:11px; border:1px solid; border-radius:4px; padding:0 6px; }
-.badge.unverified { color:var(--bad); border-color:var(--bad); }
-.sys { color:var(--dim); font-style:italic; font-size:12px; padding:2px 4px; }
-#composer { display:flex; gap:8px; padding:10px 14px; border-top:1px solid var(--line); }
-#msg { flex:1; background:var(--panel); color:var(--txt); border:1px solid var(--line);
-  border-radius:6px; padding:8px 10px; font:inherit; }
-#send { background:var(--accent); color:#14100c; border:none; border-radius:6px;
-  padding:8px 16px; font-weight:600; cursor:pointer; }
-#send:disabled { opacity:.5; cursor:default; }
-#statusbar { display:flex; gap:12px; padding:6px 14px; border-top:1px solid var(--line);
-  color:var(--faint); font-size:12px; }
-#statusbar .dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:4px; }
-.dot.live { background:var(--good); } .dot.recon { background:var(--accent); } .dot.dead { background:var(--bad); }
-#dlg-back { position:fixed; inset:0; background:#00000088; display:flex; align-items:center; justify-content:center; }
-#dlg { background:var(--panel); border:1px solid var(--accent); border-radius:10px; padding:18px; min-width:300px; }
-#dlg input { width:100%; background:var(--bg); color:var(--txt); border:1px solid var(--line);
-  border-radius:6px; padding:8px; font:inherit; margin:8px 0; }
-#dlg .row { display:flex; gap:8px; justify-content:flex-end; }
-#dlg button { padding:6px 14px; border-radius:6px; cursor:pointer; border:1px solid var(--line);
-  background:var(--bg); color:var(--txt); }
-#dlg button.primary { background:var(--accent); color:#14100c; border:none; font-weight:600; }
-`;
+// --- UI stylesheet: first-class design asset at ui/design.css, cached by
+// --- mtime like the JS bundle, so CSS edits land on page refresh (no
+// --- daemon restart needed). Extracted from inline by Worker A (2026-10-03).
+const CSS_PATH = join(SQUAWK_DIR, "ui", "design.css");
+let uiCss = "";
+let cssMtimeMs = 0;
+function uiStyle(): string {
+  let mtime = 0;
+  try { mtime = statSync(CSS_PATH).mtimeMs; } catch { /* fall through */ }
+  if (!mtime) throw new Error("ui stylesheet missing: ui/design.css");
+  if (mtime !== cssMtimeMs || !uiCss) {
+    uiCss = readFileSync(CSS_PATH, "utf8");
+    cssMtimeMs = mtime;
+  }
+  return uiCss;
+}
 
 async function uiHtml(): Promise<string> {
   const js = await uiBundle();
   return `<!doctype html><html><head><meta charset="utf-8">`
     + `<meta name="viewport" content="width=device-width,initial-scale=1">`
-    + `<title>SQUAWK</title><style>${UI_CSS}</style></head>`
+    + `<title>SQUAWK</title><meta name="color-scheme" content="dark"><style>${uiStyle()}</style></head>`
     + `<body><div id="root"></div>`
     + `<script>window.SERVER_AUTH=true;</script>`
     + `<script type="module">${js}</script>`
@@ -278,6 +240,14 @@ Bun.serve<SockData>({
   hostname: "0.0.0.0",
   async fetch(req, server) {
     const url = new URL(req.url);
+    // --- funnel mount prefix: the UI loads under /fleet on the funnel, so
+    // relative fetches arrive as /fleet/wait, /fleet/send, /fleet/squawk-ws...
+    // Strip the /fleet segment so both lanes (funnel + tailnet-direct) hit
+    // the same handlers below. Anchored to the leading segment only, so
+    // /fleet-ui (a different daemon) and similarly-prefixed paths are untouched.
+    if (url.pathname === "/fleet" || url.pathname.startsWith("/fleet/")) {
+      url.pathname = url.pathname.slice("/fleet".length) || "/";
+    }
     // --- websocket upgrade: shuttle to the real backend, don't fetch-proxy ---
     if (req.headers.get("upgrade")?.toLowerCase() === "websocket") {
       const target = wsTarget(url.pathname, url.search);

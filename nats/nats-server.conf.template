@@ -1,0 +1,29 @@
+# nats-server config for the squawk fleet-chat substrate (Taps, 2026-09-21).
+# Rendered at daemon start by run-nats.sh: @FEED_TOKEN@ is replaced with the
+# canonical squawk feed token (the same bearer secret the feed server and the
+# UI already use). The rendered config lands at
+# /home/toxic/.local/share/nats/nats-server.conf (0600) -- never in the repo.
+#
+# Listeners are 127.0.0.1-only. Browser access goes through the tailnet funnel
+# (/nats-ws -> 127.0.0.1:4223, declared in projects/yote/ops/funnel-map.sh).
+
+listen: 127.0.0.1:4222
+
+http: 127.0.0.1:8222
+
+websocket {
+  listen: 127.0.0.1:4223
+  no_tls: true
+}
+
+jetstream {
+  store_dir: /home/toxic/.local/share/nats/jetstream
+  max_memory_store: 256MB
+  max_file_store: 2GB
+}
+
+# Token auth everywhere (client + websocket). Local agents and the UI all
+# present the feed token; no separate credential to mint or rotate.
+authorization {
+  token: "@FEED_TOKEN@"
+}

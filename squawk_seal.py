@@ -26,7 +26,7 @@ Wire format (message body):
 Key files (same trust boundary as the fleet identity keys):
     <keys>/<agent>.seal.key   mode 0600, 64 hex chars (X25519 private key)
     <keys>/<agent>.seal.pub   mode 0644, 64 hex chars (X25519 public key)
-Default <keys> is /home/toxic/.shingle/keys (FLEET_KEYS_DIR overrides,
+Default <keys> is /home/toxic/.fleet-bus/keys (FLEET_KEYS_DIR overrides,
 mirroring fleet_identity.py).
 
 CLI:
@@ -89,7 +89,7 @@ from pathlib import Path
 CHAT_DIR = Path(__file__).resolve().parent
 CHAT_PY = CHAT_DIR / "chat.py"
 
-KEYS_DIR = Path(os.environ.get("FLEET_KEYS_DIR", "/home/toxic/.shingle/keys"))
+KEYS_DIR = Path(os.environ.get("FLEET_KEYS_DIR", "/home/toxic/.fleet-bus/keys"))
 SEAL_KEY_SUFFIX = ".seal.key"
 SEAL_PUB_SUFFIX = ".seal.pub"
 
@@ -348,7 +348,7 @@ def _post_envelope(root: Path, channel: str, sender: str, recipient: str,
     """Post the envelope via chat.py. Returns chat.py's stdout line."""
     _check_channel(channel)
     # Fail fast: the sender needs an HMAC identity key or chat.py rejects the post.
-    idkey = Path(os.environ.get("FLEET_KEYS_DIR", "/home/toxic/.shingle/keys")) / f"{sender}.key"
+    idkey = Path(os.environ.get("FLEET_KEYS_DIR", "/home/toxic/.fleet-bus/keys")) / f"{sender}.key"
     if not idkey.exists():
         raise RuntimeError(
             f"squawk_seal: sender {sender!r} has no chat identity key "

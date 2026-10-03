@@ -532,13 +532,13 @@ def suggest_role(
 
 def _default_root(explicit: str | None) -> Path:
     return Path(
-        explicit or os.environ.get("AGENT_CHAT_ROOT") or str(Path.home() / ".shingle" / "chat")
+        explicit or os.environ.get("AGENT_CHAT_ROOT") or str(Path.home() / ".fleet-bus" / "chat")
     )
 
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="virtual stigmergy + emergent specialization")
-    ap.add_argument("--root", default=None, help="chat root (default: $AGENT_CHAT_ROOT or ~/.shingle/chat)")
+    ap.add_argument("--root", default=None, help="chat root (default: $AGENT_CHAT_ROOT or ~/.fleet-bus/chat)")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     p = sub.add_parser("deposit")

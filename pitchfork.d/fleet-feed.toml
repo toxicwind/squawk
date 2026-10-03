@@ -1,0 +1,15 @@
+# ranch/squawk — project-owned daemon manifest. Source of truth for 'fleet-feed'.
+#
+# fleet-feed.ts is the TypeScript port of the retired rust_algo_web/src/agents.rs
+# (2026-10-02). It serves the fleet roster, per-agent history and the live ws
+# feed that the Surfaces tab host frames. The Rust tree had no Cargo.toml left,
+# so rust-web's launcher could only ever fall into `cargo build` and fail.
+
+[daemons.fleet-feed]
+run = "exec /home/toxic/.bun/bin/bun /home/toxic/estate/ranch/squawk/fleet-feed.ts"
+dir = "/home/toxic/estate/ranch/squawk"
+mise = false
+retry = true
+boot_start = true
+ready_cmd = "ss -ltn 'sport = :25201' | grep -q LISTEN"
+auto = ["start"]

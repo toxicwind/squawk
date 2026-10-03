@@ -25,20 +25,23 @@
   onkeydown={(e) => { if (e.key === "Escape") onClose(); }}
   role="presentation"
 >
-  <div id="dlg" role="dialog" aria-label="add channel">
-    <div><strong>new channel</strong></div>
+  <div id="dlg" role="dialog" aria-modal="true" aria-label="add channel">
+    <p class="dlg-title">new channel</p>
+    <p class="dlg-sub">tune into another feed</p>
     <input
       bind:this={inputEl}
       bind:value={name}
       oninput={() => (err = "")}
       onkeydown={(e) => { if (e.key === "Enter") submit(); }}
-      placeholder="channel name (a-z, 0-9, -, _)"
+      placeholder="channel name"
       aria-label="channel name"
+      autocapitalize="none"
+      spellcheck="false"
     />
-    {#if err}<div class="sys">{err}</div>{/if}
+    {#if err}<div class="dlg-err" role="alert">{err}</div>{/if}
     <div class="row">
-      <button onclick={onClose}>cancel</button>
-      <button class="primary" onclick={submit}>add</button>
+      <button class="btn ghost" onclick={onClose}>cancel</button>
+      <button class="btn primary" onclick={submit}>add channel</button>
     </div>
   </div>
 </div>

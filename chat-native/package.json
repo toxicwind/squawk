@@ -1,0 +1,1 @@
+{"description":"One-import chat-native agent shim over the squawk feed. Event-driven: recursive long-poll subscription, tiered attention, task queue. No timers, no polling loops.","main":"src/index.ts","name":"@fleet/chat-native","scripts":{"test":"bun test"},"type":"module","types":"src/index.ts","version":"0.1.0"}

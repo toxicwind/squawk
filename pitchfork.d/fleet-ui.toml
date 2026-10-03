@@ -1,0 +1,13 @@
+# ranch/squawk — project-owned daemon manifest. Source of truth for 'fleet-ui'.
+# Owned by the ranch/squawk project; the parent only composes it.
+# Restored 2026-10-02: fleet-ui.ts was an untracked live file that got deleted;
+# recovered from the reconciliation copy. Now a first-class supervised daemon.
+
+[daemons.fleet-ui]
+run = "exec /home/toxic/.bun/bin/bun /home/toxic/estate/ranch/squawk/fleet-ui.ts"
+dir = "/home/toxic/estate/ranch/squawk"
+mise = false
+retry = true
+boot_start = true
+ready_cmd = "ss -ltn 'sport = :25136' | grep -q LISTEN"
+auto = ["start"]

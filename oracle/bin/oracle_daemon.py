@@ -26,7 +26,7 @@ import oracle_ask
 
 LISTEN = os.environ.get("ORACLE_CORE_LISTEN", "127.0.0.1:25151")
 LOG = os.path.join(os.environ.get("ORACLE_WORK",
-                                  "/home/toxic/estate/projects/range/ranch/oracle/work"),
+                                  "/home/toxic/estate/ranch/squawk/oracle/work"),
                    "oracle-core.log")
 START = time.time()
 VERDICTS = 0

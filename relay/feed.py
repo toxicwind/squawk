@@ -19,12 +19,32 @@ import ctypes.util
 import json
 import os
 import re
+import signal
 import struct
+import sys
 import threading
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit, parse_qs
+
+# Graceful-stop mixin for blue-green deploys (estate/hotreload/graceful.py).
+# Provides /health (200 serving / 503 draining) and SIGTERM drain.
+# hotreload/ lives at the estate root, three levels up from relay/.
+_HOTRELOAD_DIR = Path(__file__).resolve().parents[3] / "hotreload"
+if str(_HOTRELOAD_DIR) not in sys.path:
+    sys.path.insert(0, str(_HOTRELOAD_DIR))
+try:
+    from graceful import ShutdownFlag
+    _HAVE_GRACEFUL = True
+except ImportError:
+    _HAVE_GRACEFUL = False
+    print("feed: graceful.py not found, SIGTERM will be abrupt", flush=True)
+
+# Drain state: set on SIGTERM, /health returns 503 while draining.
+_draining = threading.Event()
+_active_requests = 0
+_active_lock = threading.Lock()
 
 CHAT_ROOT = Path(os.environ.get("SQUAWK_CHAT_ROOT", "/home/toxic/.shingle/squawk-root"))
 RELAY_DIR = Path(os.environ.get("SQUAWK_RELAY_DIR", "/home/toxic/.shingle/squawk-relay"))
@@ -298,8 +318,28 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def handle(self):
+        # Track active requests for graceful drain.
+        global _active_requests
+        with _active_lock:
+            _active_requests += 1
+        try:
+            super().handle()
+        finally:
+            with _active_lock:
+                _active_requests -= 1
+
     def do_GET(self):
         parts = urlsplit(self.path)
+        if parts.path == "/health":
+            # Blue-green health probe: 200 when serving, 503 when draining.
+            if _draining.is_set():
+                self._json({"ok": False, "draining": True}, 503)
+            else:
+                with _lock:
+                    seq = _feed_seq
+                self._json({"ok": True, "seq": seq})
+            return
         if parts.path == "/squawk-feed/seq" or parts.path == "/squawk-feed/ping":
             # content-free counter. safe for public funnel (no auth).
             with _lock:
@@ -327,7 +367,7 @@ class Handler(BaseHTTPRequestHandler):
             while True:
                 with _lock:
                     seq = _feed_seq
-                if seq > since or time.monotonic() >= deadline:
+                if _draining.is_set() or seq > since or time.monotonic() >= deadline:
                     self._json({"seq": seq})
                     return
                 time.sleep(0.2)
@@ -355,8 +395,43 @@ def main():
     t = threading.Thread(target=inotify_loop, daemon=True)
     t.start()
     srv = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
+    srv.allow_reuse_address = True
     print("squawk-feed listening on 127.0.0.1:%d" % PORT, flush=True)
-    srv.serve_forever()
+
+    def _on_term(signum, frame):
+        # Graceful stop for blue-green deploys: mark draining
+        # (/health -> 503). The serve loop below exits on _draining.
+        # The proxy has already cut over to the new backend.
+        # NOTE: do NOT stop the server from inside this handler --
+        # it deadlocks when invoked in the serve thread. Just set
+        # the flag and let the loop below exit on its own.
+        print("squawk-feed: SIGTERM, draining...", flush=True)
+        _draining.set()
+
+    signal.signal(signal.SIGTERM, _on_term)
+    signal.signal(signal.SIGINT, _on_term)
+    try:
+        # Manual serve loop (not serve_forever) so the signal handler
+        # can break it via _draining without deadlocking.
+        srv.timeout = 0.5
+        while not _draining.is_set():
+            srv.handle_request()
+    finally:
+        # Drain in-flight requests (max 15s). Long-polls exit early
+        # on _draining, so this is fast.
+        deadline = time.monotonic() + 15
+        while time.monotonic() < deadline:
+            with _active_lock:
+                if _active_requests == 0:
+                    break
+            time.sleep(0.1)
+        with _active_lock:
+            remaining = _active_requests
+        if remaining:
+            print("squawk-feed: %d requests still active, closing anyway" % remaining,
+                  flush=True)
+        srv.server_close()
+        print("squawk-feed: stop complete", flush=True)
 
 
 if __name__ == "__main__":

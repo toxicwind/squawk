@@ -13,7 +13,7 @@ whitespace collapsed to dashes (src/mcp/server.js:50-53). Presence is a
 heartbeat fold (member.presence events, src/hub/server.js:212-229).
 
 Our adaptation: a single persistent roster file living at
-``/home/toxic/.shingle/roster`` -- the same trust boundary as the identity
+``/home/toxic/.fleet-bus/roster`` -- the same trust boundary as the identity
 keys managed by the sibling fleet_identity.py (NOT inside the chat root,
 which is untrusted data). One JSON document per agent, revocation as a
 first-class flag checkable at read time.
@@ -51,7 +51,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from agent_chat._advisory_lock import acquire_advisory_file_lock  # noqa: E402
 
-ROSTER_PATH = Path(os.environ.get("FLEET_ROSTER", "/home/toxic/.shingle/roster"))
+ROSTER_PATH = Path(os.environ.get("FLEET_ROSTER", "/home/toxic/.fleet-bus/roster"))
 ROSTER_VERSION = 1
 LOCK_TIMEOUT = 10.0
 

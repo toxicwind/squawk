@@ -1,8 +1,8 @@
 import 'svelte/internal/disclose-version';
 import * as $ from 'svelte/internal/client';
 
-var root = $.from_html(`<div class="sys"> </div>`);
-var root_1 = $.from_html(`<div id="dlg-back" role="presentation"><div id="dlg" role="dialog" aria-label="add channel"><div><strong>new channel</strong></div> <input placeholder="channel name (a-z, 0-9, -, _)" aria-label="channel name"/> <!> <div class="row"><button>cancel</button> <button class="primary">add</button></div></div></div>`);
+var root = $.from_html(`<div class="dlg-err" role="alert"> </div>`);
+var root_1 = $.from_html(`<div id="dlg-back" role="presentation"><div id="dlg" role="dialog" aria-modal="true" aria-label="add channel"><p class="dlg-title">new channel</p> <p class="dlg-sub">tune into another feed</p> <input placeholder="channel name" aria-label="channel name" autocapitalize="none" spellcheck="false"/> <!> <div class="row"><button class="btn ghost">cancel</button> <button class="btn primary">add channel</button></div></div></div>`);
 
 export default function AddChannelDialog($$anchor, $$props) {
 	$.push($$props, true);
@@ -30,7 +30,7 @@ export default function AddChannelDialog($$anchor, $$props) {
 
 	var div = root_1();
 	var div_1 = $.child(div);
-	var input = $.sibling($.child(div_1), 2);
+	var input = $.sibling($.child(div_1), 4);
 
 	$.remove_input_defaults(input);
 	$.bind_this(input, ($$value) => $.set(inputEl, $$value), () => $.get(inputEl));

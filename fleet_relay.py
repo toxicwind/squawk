@@ -56,7 +56,7 @@ RELAY_IDENTITY_DEFAULT = "relay"
 # Keys live OUTSIDE the chat root, never inside it. The hosting lane owns
 # this directory (0600 files); the relay only reads.
 KEYS_DIR_ENV = "FLEET_KEYS_DIR"
-KEYS_DIR_DEFAULT = Path("/home/toxic/.shingle/keys")
+KEYS_DIR_DEFAULT = Path("/home/toxic/.fleet-bus/keys")
 
 
 class SealError(Exception):
@@ -73,7 +73,7 @@ def resolve_key_dir(cli_value: str | None = None, root=None) -> Path:
 
     The <root>/keys preference exists because the canonical deployment
     keeps identities next to the chat root (e.g.
-    /home/toxic/.shingle/squawk-root/keys/relay.key). Pass the chat root
+    /home/toxic/.fleet-bus/squawk-root/keys/relay.key). Pass the chat root
     when you have it.
     """
     if cli_value or os.environ.get(KEYS_DIR_ENV):
@@ -133,25 +133,106 @@ def unseal_message(channel: str, body: str, identity: str, key_dir: Path):
         raise SealError(f"unsealed payload is not valid UTF-8: {e}")
 
 
+def _tolerant_body(path: Path) -> str | None:
+    """Body text for a file whose frontmatter the strict parser rejected.
+
+    Mirrors _read_frontmatter's tolerance of a missing opening '---' fence
+    (some publishers write bare frontmatter: fields then a closing ---).
+    The body is everything after the first line that is exactly ---, with
+    the same one-blank-line strip and CRLF/rstrip normalization as
+    fleet_identity._parse_file. Returns None when no closing fence exists
+    (meta and body cannot be separated reliably).
+    """
+    try:
+        text = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError):
+        return None
+    lines = text.split("\n")
+    for i, line in enumerate(lines):
+        if line.strip() == "---":
+            rest = "\n".join(lines[i + 1 :])
+            if rest.startswith("\n"):
+                rest = rest[1:]
+            return rest.replace("\r\n", "\n").replace("\r", "\n").rstrip()
+    return None
+
+
+def _unverified_body(path: Path, channel: str) -> tuple[str | None, bool]:
+    """Body for a message that failed HMAC verification.
+
+    Returns (text, False) with the raw plaintext body so the feed stays
+    readable for pre-HMAC history -- the record keeps signature:'invalid'
+    so clients badge it unverified. Returns (None, True) -- body withheld
+    and marked sealed -- when the body is ciphertext: E2EE priv-* channels
+    or a squawk_seal envelope. Ciphertext is never served.
+    """
+    if channel.startswith(fleet_e2ee.PRIV_PREFIX):
+        return None, True
+    try:
+        _meta, body = fleet_identity._parse_file(path)
+    except (OSError, UnicodeError):
+        # Unreadable file: nothing to serve. The record keeps
+        # signature:'invalid', body None.
+        return None, False
+    except fleet_identity.FleetIdentityError:
+        # Malformed frontmatter (e.g. bare frontmatter with no opening ---
+        # fence, as some publishers write). The record meta was already
+        # parsed tolerantly by _read_frontmatter; recover the body the same
+        # way so unsigned plaintext renders flagged unverified instead of
+        # an empty row (fleet seq 12712-12717, 2026-09-21). Anything shaped
+        # like a sealed envelope still fails closed below.
+        body = _tolerant_body(path)
+        if body is None:
+            return None, False
+    body = body or ""
+    # A sealed envelope (or anything shaped like one) is ciphertext:
+    # withhold. Marker presence alone is enough to fail closed -- we do
+    # NOT use parse_envelope() here because it raises ValueError both for
+    # "no envelope" and for "malformed envelope", and a malformed envelope
+    # must withhold, not be served as plaintext.
+    try:
+        import squawk_seal
+        begin_mark = squawk_seal.BEGIN_MARK
+    except (ImportError, OSError, AttributeError):
+        return None, True  # cannot even check: fail closed
+    if begin_mark in body:
+        return None, True
+    return body, False
+
+
 # ---------------------------------------------------------------------------
 # Relay record: the machine contract shared by relay-out and squawk-feed
 # ---------------------------------------------------------------------------
 
 
 def _read_frontmatter(path: Path) -> dict:
-    """Minimal frontmatter parse (mirrors chat.parse_frontmatter semantics)."""
+    """Minimal frontmatter parse (mirrors chat.parse_frontmatter semantics).
+
+    Tolerates a missing opening '---' fence: several publishers write bare
+    'key: value' header lines followed by the closing '---'. Previously
+    those messages parsed as {} and were served as empty seq-0 ghosts;
+    now their leading 'k: v' lines are parsed until the first blank line,
+    '---', or non-header line.
+    """
     meta: dict = {}
     try:
         with path.open(encoding="utf-8") as f:
-            if not f.readline().startswith("---"):
-                return meta
-            for line in f:
-                if line.strip() == "---":
-                    break
-                if ":" not in line:
-                    continue
-                k, v = line.split(":", 1)
-                meta[k.strip()] = v.strip()
+            first = f.readline()
+            if first.startswith("---"):
+                for line in f:
+                    if line.strip() == "---":
+                        break
+                    if ":" not in line:
+                        continue
+                    k, v = line.split(":", 1)
+                    meta[k.strip()] = v.strip()
+            else:
+                for line in [first] + list(f):
+                    s = line.strip()
+                    if not s or s == "---" or ":" not in s:
+                        break
+                    k, v = s.split(":", 1)
+                    meta[k.strip()] = v.strip()
     except (OSError, UnicodeError):
         return {}
     return meta
@@ -183,7 +264,10 @@ def build_relay_record(path: Path, *, channel: str, identity: str, key_dir: Path
 
     Never raises on a bad message: signature problems are reported in the
     record ("signature": "invalid"|"revoked"|"unknown-sender"), never
-    silently passed and never fatal to the stream. Sealed/unreadable
+    silently passed and never fatal to the stream. Messages that fail HMAC
+    verification (e.g. pre-HMAC history) have their *plaintext* body served
+    with "signature": "invalid" so the feed stays readable -- clients badge
+    them unverified. Sealed/unreadable
     bodies are reported with "sealed": true and "body": null -- ciphertext
     is never dumped into the record.
     """
@@ -224,6 +308,12 @@ def build_relay_record(path: Path, *, channel: str, identity: str, key_dir: Path
         rec["unseal_error"] = None
         rec["signature"] = "invalid"
         rec["_verify_error"] = str(e)
+        # Serve the plaintext body flagged unverified: pre-HMAC history is
+        # otherwise a wall of empty lines. Ciphertext is never served --
+        # _unverified_body withholds E2EE and sealed-envelope bodies.
+        text, sealed = _unverified_body(path, rec["channel"])
+        rec["body"] = text
+        rec["sealed"] = sealed
         return _finalize_record(rec)
 
     rec["body"] = verified.get("body", "")
@@ -277,7 +367,7 @@ def ensure_keys_env(root=None) -> None:
     """Make FLEET_KEYS_DIR resolve for import-time readers (squawk_seal).
 
     Never overrides an explicit setting. The service definition should
-    set FLEET_KEYS_DIR=/home/toxic/.shingle/squawk-root/keys; this is the
+    set FLEET_KEYS_DIR=/home/toxic/.fleet-bus/squawk-root/keys; this is the
     fallback so <root>/keys wins over the stale compiled-in default.
     """
     if "FLEET_KEYS_DIR" not in os.environ:

@@ -98,7 +98,7 @@ def main(argv):
     a = ap.parse_args(argv)
 
     ts = int(time.time())
-    work = "/home/toxic/estate/projects/range/ranch/oracle/work-escal-%d" % ts
+    work = "/home/toxic/estate/ranch/squawk/oracle/work-escal-%d" % ts
     os.makedirs(work, exist_ok=True)
     os.environ["ORACLE_WORK"] = work
     sys.path.insert(0, BIN)

@@ -1,0 +1,10 @@
+$schema: 'https://moonrepo.dev/schemas/project.json'
+language: 'python'
+layer: 'application'
+# /usr/bin/python3 bypasses the mise shim (which points at a pytest-less 3.12).
+tasks:
+  test:
+    command: '/usr/bin/python3 -m pytest tests/'
+    inputs: ['**/*.py']
+    options:
+      cache: false

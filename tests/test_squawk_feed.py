@@ -179,6 +179,21 @@ class SquawkFeedFatTests(unittest.TestCase):
         self.assertTrue(text.endswith("…"))
 
     # -- wake + timeout --------------------------------------------------------
+    def test_wait_tail_returns_most_recent(self):
+        # the UI boot path: wait?since=0&tail=N must return the LAST N
+        # messages (landing at the live cursor), not the first N.
+        port = self._serve()
+        base = self._high(port)
+        for i in range(6):
+            self._post(f"msg{i}")
+        status, obj = _get(port, "/squawk-feed/wait?since=0&tail=2",
+                           token=TOKEN)
+        self.assertEqual(status, 200)
+        self.assertEqual(len(obj["messages"]), 2)
+        self.assertEqual([m["body"] for m in obj["messages"]],
+                         ["msg4", "msg5"])
+        self.assertEqual(obj["seq"], base + 6)
+
 
     def test_wait_wakes_on_post(self):
         port = self._serve()
@@ -242,7 +257,6 @@ class SquawkFeedFatTests(unittest.TestCase):
         rec = obj["messages"][-1]
         self.assertTrue(rec["sealed"])
         self.assertEqual(rec["body"], "secret for relay")
-
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

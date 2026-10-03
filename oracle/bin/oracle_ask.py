@@ -46,7 +46,7 @@ import evidence as evmod
 import escalation
 
 HERD_URL = os.environ.get("HERD_URL", "http://127.0.0.1:25100")
-WORK = os.environ.get("ORACLE_WORK", "/home/toxic/estate/projects/range/ranch/oracle/work")
+WORK = os.environ.get("ORACLE_WORK", "/home/toxic/estate/ranch/squawk/oracle/work")
 
 # Judge panel: ROUTER ROLE ALIASES. Concrete targets are owned by
 # config/herd.yaml ("Oracle judge panel"); this list is routing surface

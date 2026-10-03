@@ -22,7 +22,7 @@ unchanged — this is presentation, not renaming.
 
 | Ranch term | What it is |
 |---|---|
-| **The corral** | This component: `ranch/oracle/` — where the Oracle lives and works |
+| **The corral** | This component: `ranch/squawk/oracle/` — where the Oracle lives and works |
 | **The roundup** | The decision engine — gathers judge opinions, drives them to a single verdict |
 | **The remuda** | The judge panel — the string of judges the roundup draws from |
 | **The auction yard** | The work market — tasks posted, bids taken, Vickrey auctions clear |
@@ -142,7 +142,7 @@ Replay guard: the watch re-arm path re-ingests recent files with
 |---|---|
 | `ORACLE_INTAKE=1` | enables the intake wiring in `oracle_loop.py`; exported by `bin/run.sh` (daemon entrypoint) and pinned in `pitchfork.toml` `[daemons.oracle-market]` env for the next supervisor boot |
 | `work/` | calibration state, verdict ledgers, escalation flags — all on disk |
-| `ranch/oracle/` | the corral's location in the ranch (moved from `sovereign/agents/oracle-market`) |
+| `ranch/squawk/oracle/` | the corral's location in the ranch (moved from `sovereign/agents/oracle-market`) |
 
 ## Durability
 
@@ -189,14 +189,12 @@ guards, so re-ingested requests never duplicate decisions.
 
 ## Build
 
-The main build entry is `scripts/flicker-build.py` — it submits the canonical
+The main build entry is `scripts/mise-build.sh` — it submits the canonical
 core suite (`python3 bench/test_core.py`: deterministic, no model calls, no
-network; exits nonzero on failure) as a job to flicker, the estate build-job
-system, and streams the log:
+network; exits nonzero on failure) directly through mise. Eligible task artifacts restore through mbx-cache:
 
 ```bash
-./scripts/flicker-build.py
+./scripts/mise-build.sh
 ```
 
-Honors `FLICKER_URL` (default `http://127.0.0.1:25148`). Exit 0 on success
-(or cached identical success), 1 on failure/timeout.
+Exit status comes directly from the suite; no queue, polling loop, or fixed timeout.

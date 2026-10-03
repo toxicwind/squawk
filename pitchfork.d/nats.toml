@@ -1,0 +1,12 @@
+# ranch/squawk — project-owned daemon manifest. Source of truth for 'nats'.
+# Owned by the ranch/squawk project; the parent only composes it.
+
+
+[daemons.nats]
+run = "exec /home/toxic/estate/ranch/squawk/nats/run-nats.sh"
+dir = "/home/toxic/estate/ranch/squawk/nats"
+mise = false
+retry = true
+boot_start = true
+ready_cmd = "ss -ltn 'sport = :4222' | grep -q LISTEN"
+auto = ["start"]

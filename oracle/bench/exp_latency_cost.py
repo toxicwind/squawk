@@ -97,7 +97,7 @@ def part_b(questions_path, concurrencies, seed):
     sub = qs[:12]
     res = {}
     for c in concurrencies:
-        work = ("/home/toxic/estate/projects/range/ranch/oracle/"
+        work = ("/home/toxic/estate/ranch/squawk/oracle/"
                 "work-sweep-c%d-%d" % (c, int(time.time())))
         os.makedirs(work, exist_ok=True)
         os.environ["ORACLE_WORK"] = work

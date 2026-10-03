@@ -10,8 +10,6 @@
     signature?: string; text: string;
   };
 
-  const VALID_NAME = /^[a-z0-9-_]{1,32}$/;
-
   // --- UI state (Svelte 5 runes); transport + message data live in the
   // --- `live` singleton (ui/live.svelte.js): one persistent websocket,
   // --- server push only, no HTTP polling anywhere.
@@ -30,6 +28,7 @@
     : live.status === "connecting" ? "connecting…"
     : `reconnecting… (attempt ${live.attempt})`,
   );
+  let tabCount = $derived(Object.keys(live.tabs).length);
 
   // --- boot: open the one websocket; the server replays since our cursor ---
   $effect(() => {
@@ -98,79 +97,112 @@
   }
 </script>
 
-<header>
-  <h1>SQUAWK</h1>
-  <span class="transport" title="single websocket push connection — no polling">
-    ws · {live.status}
-  </span>
-</header>
-
-<div id="tabs" role="tablist">
-  {#each Object.keys(live.tabs) as name (name)}
-    <div
-      role="tab"
-      aria-selected={name === activeName}
-      class="tab"
-      class:active={name === activeName}
-      onclick={() => showTab(name)}
-      onkeydown={(e) => e.key === "Enter" && showTab(name)}
-      tabindex="0"
-    >
-      <span>#{name}</span>
-      {#if Object.keys(live.tabs).length > 1}
-        <span
-          class="x"
-          title={`close #${name}`}
-          role="button"
-          tabindex="0"
-          onclick={(e) => { e.stopPropagation(); closeTab(name); }}
-          onkeydown={(e) => { if (e.key === "Enter") { e.stopPropagation(); closeTab(name); } }}
-        >×</span>
-      {/if}
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">◈</span>
+      <h1>SQUAWK</h1>
     </div>
-  {/each}
-  <button id="addTab" onclick={() => (showDlg = true)} title="add channel" aria-label="add channel">+</button>
-</div>
+    <div
+      class="conn"
+      data-state={live.status}
+      title="single websocket push connection — no polling"
+      role="status"
+      aria-label={`connection: ${connLabel}`}
+    >
+      <span class="dot {dotClass}"></span>
+      <span class="conn-label">{connLabel}</span>
+      {#if live.latency}<span class="conn-lat">{live.latency}ms</span>{/if}
+    </div>
+  </header>
 
-<div id="log" bind:this={logEl}>
-  {#each live.sysLines as s, i (i)}
-    <div class="sys">{s}</div>
-  {/each}
-  {#each active.messages as m (keyOf(m))}
-    <MessageCard {m} />
-  {/each}
-</div>
+  <nav id="tabs" aria-label="channels">
+    <div class="tabs-scroll" role="tablist">
+      {#each Object.keys(live.tabs) as name (name)}
+        <div
+          role="tab"
+          aria-selected={name === activeName}
+          class="tab"
+          class:active={name === activeName}
+          onclick={() => showTab(name)}
+          onkeydown={(e) => e.key === "Enter" && showTab(name)}
+          tabindex="0"
+        >
+          <span class="tab-name">#{name}</span>
+          {#if tabCount > 1}
+            <button
+              class="x"
+              title={`close #${name}`}
+              aria-label={`close #${name}`}
+              onclick={(e) => { e.stopPropagation(); closeTab(name); }}
+            >×</button>
+          {/if}
+        </div>
+      {/each}
+      <button id="addTab" onclick={() => (showDlg = true)} title="add channel" aria-label="add channel">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M8 3v10M3 8h10" />
+        </svg>
+      </button>
+    </div>
+  </nav>
 
-<div id="composer">
-  <input
-    id="msg"
-    bind:value={draft}
-    onkeydown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMsg(); } }}
-    placeholder={`message #${activeName}…  (enter to send)`}
-    autocomplete="off"
-    aria-label="message"
-    disabled={sending}
-  />
-  <button id="send" onclick={sendMsg} disabled={sending || !draft.trim()}>send</button>
-</div>
+  <div id="log" bind:this={logEl}>
+    {#each live.sysLines as s, i (i)}
+      <div class="sys">{s}</div>
+    {/each}
+    {#if active.messages.length === 0}
+      <div class="empty">
+        <div class="empty-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z" />
+          </svg>
+        </div>
+        <p class="empty-title">nothing on #{activeName} yet</p>
+        <p class="empty-sub">messages land here live — say something below</p>
+      </div>
+    {/if}
+    {#each active.messages as m, i (keyOf(m))}
+      <MessageCard {m} compact={i > 0 && active.messages[i - 1].from === m.from} />
+    {/each}
+  </div>
 
-<div id="statusbar">
-  <span><span class="dot {dotClass}"></span>{connLabel}</span>
-  <span>seq {active.cursor || "—"}</span>
-  <span>{live.latency ? `${live.latency}ms` : ""}</span>
+  <div id="composer">
+    <div class="composer-bar">
+      <input
+        id="msg"
+        bind:value={draft}
+        onkeydown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMsg(); } }}
+        placeholder={`message #${activeName}`}
+        autocomplete="off"
+        autocapitalize="sentences"
+        aria-label="message"
+        enterkeyhint="send"
+        disabled={sending}
+      />
+      <button
+        id="send"
+        onclick={sendMsg}
+        disabled={sending || !draft.trim()}
+        aria-label="send message"
+        title="send (enter)"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 19V5M5 12l7-7 7 7" />
+        </svg>
+      </button>
+    </div>
+    <div class="composer-meta" aria-hidden="true">
+      <span><kbd>enter</kbd> to send</span>
+    </div>
+  </div>
+
+  <footer id="statusbar">
+    <span class="sb-item">seq {active.cursor || "—"}</span>
+    <span class="sb-item sb-right">{tabCount} channel{tabCount === 1 ? "" : "s"}</span>
+  </footer>
 </div>
 
 {#if showDlg}
   <AddChannelDialog onClose={() => (showDlg = false)} onAdd={addTab} />
 {/if}
-
-<style>
-  .transport {
-    margin-left: auto;
-    font-size: 11px;
-    color: var(--faint);
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    padding: 4px 8px;
-  }
-</style>

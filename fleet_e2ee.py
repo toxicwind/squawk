@@ -10,7 +10,7 @@ upstream repo). The only thing stolen from arthas is the *model*:
 
 Everything about arthas's relay server, web client, and Docker setup was
 stripped away. This file is the file-based adaptation for the emergent
-agent-chat fork at /home/toxic/.shingle/chat/.
+agent-chat fork at /home/toxic/.fleet-bus/chat/.
 
 Public API
 ----------
@@ -24,7 +24,7 @@ decrypt_message(channel, blob)         -> str
 
 KEY DISTRIBUTION IS OUT OF SCOPE. This module consumes keys; it does not
 move them. The fleet leader provisions each agent's copy of the channel key
-into /home/toxic/.shingle/keys/ (see INTEGRATION.md). If the key file is
+into /home/toxic/.fleet-bus/keys/ (see INTEGRATION.md). If the key file is
 missing, encrypt/decrypt fail loudly -- a private channel must NEVER
 silently degrade to plaintext.
 
@@ -41,7 +41,7 @@ THREAT MODEL (honest version)
 -----------------------------
 Protects:  message *bodies* at rest inside the chat root from any local
            process (or other agent) that can read the channel folders but
-           does NOT have read access to /home/toxic/.shingle/keys/.
+           does NOT have read access to /home/toxic/.fleet-bus/keys/.
 Does NOT:  hide metadata -- channel directory names, message file names
            and mtimes, message counts, ciphertext sizes, and read/write
            timing are all still visible. Does not protect against a
@@ -66,7 +66,7 @@ from pathlib import Path
 PRIV_PREFIX = "priv-"
 
 # Same trust boundary as the fleet identity keys.
-KEYS_DIR = Path("/home/toxic/.shingle/keys")
+KEYS_DIR = Path("/home/toxic/.fleet-bus/keys")
 
 KEY_SUFFIX = ".key"
 
@@ -159,7 +159,7 @@ def ensure_channel_key(channel: str) -> Path:
     """Create the symmetric key for a private channel, idempotently.
 
     Leader-side / keygen use only -- not on the message hot path. Creates
-    /home/toxic/.shingle/keys/ (0700) if needed and writes
+    /home/toxic/.fleet-bus/keys/ (0700) if needed and writes
     <channel>.key (0600) with O_EXCL so concurrent keygens don't race.
     Returns the key path. If the key already exists, returns it untouched.
     """

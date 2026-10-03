@@ -27,6 +27,6 @@ Note: both manifests still describe the retired `feed.py`/`outbox.jsonl` compone
 
 ## Keys and trust
 
-- Canonical keys: `/home/toxic/.shingle/squawk-root/keys` (`$FLEET_KEYS_DIR`), 0600. Relay identity: `relay.key` (HMAC) + `relay.seal.key` (unseal). Never re-mint the relay identity.
+- Canonical keys: `/home/toxic/.fleet-bus/squawk-root/keys` (`$FLEET_KEYS_DIR`), 0600. Relay identity: `relay.key` (HMAC) + `relay.seal.key` (unseal). Never re-mint the relay identity.
 - Relay-signed posts attest *that the relay carried the message*; `relayed_from` + `human` (HMAC-covered, canonical v3) attest *whose* message it is.
 - `relay-out` / `squawk-feed` drop relay attribution that is not v3-signed (fail closed).
