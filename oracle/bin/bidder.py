@@ -55,7 +55,7 @@ RALPH_CAP_S = 1740  # 29 min ceiling: Super Ralph runs are slow (~11 min
                     # observed for a trivial run)
 RALPH_MODEL = os.environ.get("RALPH_MODEL", "kimi-k3-nim")
 RALPH_BASE_URL = os.environ.get("RALPH_BASE_URL",
-                                "http://127.0.0.1:25200/v1")  # cuttinggate (canonical router); cut over 2026-10-02
+                                "http://127.0.0.1:25104/v1")  # sovereign TS router; :25200 (cuttinggate test) is dead
 # cuttinggate's auth gate requires a "Bearer " prefix (any non-empty value;
 # the upstream key comes from cuttinggate's own credential plane).
 RALPH_API_KEY = os.environ.get("RALPH_API_KEY", "oracle-market-bidder")
@@ -151,10 +151,12 @@ def _summarize_ralph_nodes(workdir):
 # against the router with a live probe, falling back down a priority chain.
 RALPH_MODEL_CANDIDATES = [
     os.environ.get("RALPH_MODEL") or "",  # explicit operator override
-    # 2026-10-02 cutover: :25104 retired, :25200 (cuttinggate) is canonical.
-    # gemini-eap-openai/gemini-3.8-flash is not served on :25200
-    # (google/gemini-3.8-flash there is openrouter-only, 402 no-credit).
-    "openai/gpt-oss-20b",  # groq via cuttinggate :25200, verified live 2026-10-02 (GROQ-OK)
+    # 2026-10-03: :25200 (cuttinggate test instance) is DEAD — nothing
+    # listening. :25104 (sovereign TS router) is the live backend, verified
+    # 2026-10-03 with non-empty completions on every candidate below.
+    "gemini-eap-openai/gemini-3.8-flash",
+    "google/gemini-3.8-flash",
+    "openai/gpt-oss-20b",  # fallback; routes fine on :25104
 ]
 _ralph_model_cache = {"model": None, "ts": 0.0}
 RALPH_MODEL_CACHE_S = 300
@@ -192,7 +194,16 @@ def _resolve_ralph_model(base_url, timeout=15):
                          "User-Agent": "oracle-market-bidder"})
             with urllib.request.urlopen(req, timeout=timeout) as r:
                 payload = json.loads(r.read().decode("utf-8", "replace"))
-            if payload.get("choices"):
+            # 2026-10-03: a model can answer 200 with choices whose
+            # content is EMPTY (the :25200 collapse burned 28 min of
+            # retries on one). Require non-empty content, not just a
+            # choices array.
+            choices = payload.get("choices") or []
+            content = ""
+            if choices:
+                msg = choices[0].get("message") or {}
+                content = (msg.get("content") or "").strip()
+            if content:
                 _ralph_model_cache.update(model=cand, ts=now)
                 return cand
         except Exception:
