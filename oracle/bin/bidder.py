@@ -97,11 +97,13 @@ def _redact_text(s):
 
 def _canon_ralph_text(s):
     """Super Ralph's headless stdout may carry literal "\n" escapes
-    instead of real newlines. Canonicalize before hash/sign/post so the
-    acceptance parser (and humans) see real text. Only when no real
-    newlines exist, to avoid corrupting mixed or legitimately-backslashed
-    output."""
-    if "\\n" in s and "\n" not in s:
+    instead of real newlines -- including MIXED with real newlines
+    (observed 2026-10-03: banner line real, body escaped). Canonicalize
+    before hash/sign/post so the acceptance parser (and humans) see
+    real text. A stray converted backslash-n in prose is harmless to
+    the dash-led acceptance parser; a missed conversion rejects
+    valid work."""
+    if "\\n" in s:
         s = (s.replace("\\r\\n", "\n").replace("\\n", "\n")
               .replace("\\t", "\t"))
     return s

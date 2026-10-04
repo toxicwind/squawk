@@ -22,7 +22,7 @@ import time
 BIN = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, BIN)
 
-import escalation  # noqa: E402  (after sys.path.insert for sibling-dir import)
+import escalation
 
 FAILURES = []
 

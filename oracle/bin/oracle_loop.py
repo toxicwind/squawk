@@ -318,9 +318,10 @@ def _parse_acceptance_report(output):
     so no separate bidder-supplied field is trusted.
     """
     # Tolerate producers that emit literal "\n" escapes instead of
-    # real newlines (observed from Super Ralph headless stdout). The
-    # bidder canonicalizes before posting; this is belt-and-braces.
-    if output and "\\n" in output and "\n" not in output:
+    # real newlines -- including MIXED with real newlines (observed
+    # 2026-10-03: banner line real, body escaped). The bidder
+    # canonicalizes before posting; this is belt-and-braces.
+    if output and "\\n" in output:
         output = output.replace("\\r\\n", "\n").replace("\\n", "\n")
     items = []
     found = False

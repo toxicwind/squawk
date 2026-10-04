@@ -25,8 +25,8 @@ import sys
 BIN = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(BIN, "..", "bin"))
 
-import engine  # noqa: E402  (after sys.path.insert for sibling-dir import)
-import calibration as cal  # noqa: E402  (after sys.path.insert for sibling-dir import)
+import engine
+import calibration as cal
 
 
 def _existing_ids():

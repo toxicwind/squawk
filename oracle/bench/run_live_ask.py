@@ -15,7 +15,7 @@ import time
 BIN = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "bin")
 sys.path.insert(0, BIN)
 
-import oracle_ask  # noqa: E402  (after sys.path.insert for sibling-dir import)
+import oracle_ask
 
 
 def main(argv):
