@@ -103,10 +103,19 @@ TOPO_NO_DATA = "unknown_no_attempt_data"
 class JudgeAttempt:
     """One structured judge-call attempt. Every field is persisted."""
 
-    __slots__ = ("attempt_no", "slot_alias", "provider_requested",
-                 "model_served", "provider_served", "http_status",
-                 "failure_category", "latency_s", "error_excerpt",
-                 "response_excerpt", "correlation_id")
+    __slots__ = (
+        "attempt_no",
+        "correlation_id",
+        "error_excerpt",
+        "failure_category",
+        "http_status",
+        "latency_s",
+        "model_served",
+        "provider_requested",
+        "provider_served",
+        "response_excerpt",
+        "slot_alias",
+    )
 
     def __init__(self, attempt_no, slot_alias, provider_requested=None,
                  model_served=None, provider_served=None, http_status=None,

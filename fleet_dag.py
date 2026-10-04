@@ -180,7 +180,7 @@ def canonical_dag(meta: dict, body: str, parents: list[str]) -> bytes:
             body=body,
         )
     plist = sorted(p for p in parents if p)
-    return base + f"{PARENTS_KEY}: {','.join(plist)}\n".encode("utf-8")
+    return base + f"{PARENTS_KEY}: {','.join(plist)}\n".encode()
 
 
 # ---------------------------------------------------------------------------

@@ -14,13 +14,12 @@
 // parses JS only — NO TypeScript syntax in this file (JSDoc types only).
 //
 // @typedef {"connecting"|"live"|"reconnecting"} ConnStatus
-// @typedef {{seq:number,file_seq?:number,from:string,sender?:string,to:string,channel:string,ts:string,status:string,uuid:string,title:string,signature?:string,text:string}} Msg
+// @typedef {{seq:number,file_seq?:number,from:string,sender?:string,to:string,channel:string,ts:string,status:string,uuid:string,title:string,signature?:string,sealed?:boolean,text:string}} Msg
 // @typedef {{messages:Msg[],cursor:number}} TabData
 
 const MAX_BACKOFF_MS = 30000;
 const BASE_BACKOFF_MS = 1000;
 const FLUSH_MS = 250;      // inbound batching: never re-render per frame
-const PING_MS = 30000;      // keepalive; server answers {type:"status",kind:"pong"}
 const SYS_CAP = 20;
 
 /** WebSocket URL for the page's mount: /fleet/squawk-ws through the funnel, /squawk-ws at root. */
@@ -61,6 +60,7 @@ function normalize(d, fallbackChannel) {
     uuid: d.uuid ?? "",
     title: d.title ?? "msg",
     signature: d.signature,
+    sealed: !!d.sealed,
     text: typeof d.text === "string" ? d.text : "",
   };
 }
@@ -70,7 +70,6 @@ class LiveConnection {
   /** @type {ConnStatus} */
   status = $state("connecting");
   attempt = $state(0);
-  latency = $state(0); // last ping RTT ms; 0 = unknown
   /** @type {Record<string, TabData>} */
   tabs = $state({});
   /** @type {string[]} */
@@ -81,7 +80,6 @@ class LiveConnection {
   ticket = "";
   running = false;
   backoffTimer = undefined;
-  pingTimer = undefined;
   flushTimer = undefined;
   /** @type {{channel:string, msg:Msg}[]} inbound frame buffer (renderer-crash guard) */
   buf = [];
@@ -210,7 +208,6 @@ class LiveConnection {
 
   clearTimers() {
     clearTimeout(this.backoffTimer); this.backoffTimer = undefined;
-    clearInterval(this.pingTimer); this.pingTimer = undefined;
     clearTimeout(this.flushTimer); this.flushTimer = undefined;
   }
 
@@ -235,13 +232,9 @@ class LiveConnection {
       this.status = "live";
       this.attempt = 0;
       this.sysLine(`live push connected — #${chans.join(" #")}`);
-      // keepalive: NATs and proxies kill idle sockets; the server answers pong
-      clearInterval(this.pingTimer);
-      this.pingTimer = setInterval(() => {
-        if (sock.readyState === WebSocket.OPEN) {
-          try { sock.send(JSON.stringify({ type: "ping", t: Date.now() })); } catch {}
-        }
-      }, PING_MS);
+      // keepalive is server-side: the WS server pings every 30s and the
+      // runtime answers automatically. No client JSON ping needed —
+      // the server ignores all post-subscribe frames.
     };
 
     sock.onmessage = (ev) => {
@@ -298,8 +291,6 @@ class LiveConnection {
     if (d && d.type === "status") {
       if (d.kind === "subscribed" && Array.isArray(d.channels)) {
         this.sysLine(`server confirmed subscription: #${d.channels.join(" #")}`);
-      } else if (d.kind === "pong" && typeof d.t === "number") {
-        this.latency = Math.max(0, Math.round(Date.now() - d.t));
       } else if (d.kind === "error") {
         this.sysLine("server: " + String(d.message || "error"));
       }

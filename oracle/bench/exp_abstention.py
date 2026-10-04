@@ -31,8 +31,8 @@ import tempfile
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 "..", "bin"))
-import engine
 import calibration as cal
+import engine
 
 
 def fresh():

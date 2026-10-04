@@ -1,0 +1,1 @@
+{"dependencies":{"svelte":"5"},"description":"Squawk Svelte 5 UI - compiled to ui/dist/bundle.js via bun ui/build.ts (mise run build)","name":"squawk-ui","private":true,"scripts":{"build":"bun ui/build.ts"},"type":"module"}

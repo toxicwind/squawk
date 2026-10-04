@@ -103,6 +103,7 @@ def part_b(questions_path, concurrencies, seed):
         # reimport to pick up the new ORACLE_WORK is unnecessary:
         # engine/oracle_ask read it at first import; force reload
         import importlib
+
         import engine
         importlib.reload(engine)
         importlib.reload(oracle_ask)
@@ -181,7 +182,7 @@ def part_c(rows):
                                      reliability=1.0) for j in rest]
         p_cut, _ = engine.pooled_posterior(prior, js2)
         cut.append((p_cut, r["label"]))
-        saved_lat.append((slow["latency_s"] or 0))
+        saved_lat.append(slow["latency_s"] or 0)
         saved_calls.append(1)  # ~1 judge call + its retries avoided
     c1 = {"full_panel": metrics(full), "drop_slowest": metrics(cut),
           "accuracy_delta": (metrics(cut)["accuracy"] or 0) -

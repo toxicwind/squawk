@@ -7,8 +7,8 @@ under the task store's channel mutation lock and emits one audit event.
 
 from __future__ import annotations
 
-import datetime as _dt
 import base64
+import datetime as _dt
 import json
 import math
 import os
@@ -29,7 +29,6 @@ from .task_model import (
     validate_transition,
 )
 from .task_store import TaskStore
-
 
 CLAIMS_DIRNAME = "claims"
 TRANSACTION_FILENAME = ".lease-transaction.json"
@@ -86,7 +85,7 @@ class LeaseRecord:
             _validate_reason(self.recovery_reason)
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "LeaseRecord":
+    def from_dict(cls, data: dict[str, Any]) -> LeaseRecord:
         if not isinstance(data, dict):
             raise LeaseError("LEASE_INVALID_RECORD", "lease record must be a JSON object")
         actual = set(data)
@@ -1877,9 +1876,9 @@ __all__ = [
     "LeaseRecord",
     "LeaseStore",
     "claim_task",
-    "recover_pending",
     "complete_task",
+    "recover_pending",
+    "recover_task",
     "release_task",
     "renew_task",
-    "recover_task",
 ]

@@ -27,8 +27,8 @@ for _d in ("bid-market", "fleet", "work", "ledger"):
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-import mechanism as mech  # noqa: E402
-import oracle_loop as ol  # noqa: E402
+import mechanism as mech
+import oracle_loop as ol
 
 mech.save_profiles({
     "forge": {"key_id": "k-forge", "bidder_id": "bidder-forge",
@@ -258,7 +258,7 @@ LOOP._maybe_start_next_work(TID_DIRECT)
 check("nextwork-idempotent", len(next_works(TID_DIRECT)) == 1)
 
 # 11. bidder Super Ralph command construction ------------------------------
-import bidder  # noqa: E402
+import bidder
 
 stub = TMP / "super-ralph-stub"
 stub.write_text("#!/bin/sh\n"

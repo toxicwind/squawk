@@ -50,8 +50,8 @@ import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import chat  # noqa: E402  -- reuse base primitives, do not re-implement
-import fleet_e2ee  # noqa: E402  -- decrypt priv-* digest snippets
+import chat
+import fleet_e2ee
 
 VECTORS_DIRNAME = ".vectors"
 DIGEST_BODY_LIMIT = 80

@@ -58,17 +58,17 @@ import time
 from pathlib import Path
 
 __all__ = [
-    "FRONTMATTER_FIELD",
     "CLOCKS_DIRNAME",
+    "FRONTMATTER_FIELD",
     "ClockError",
     "ClockLockError",
     "CorruptClockError",
-    "tick",
-    "observe",
-    "read_clock",
-    "message_lamport",
     "causal_sort",
     "clock_drift_report",
+    "message_lamport",
+    "observe",
+    "read_clock",
+    "tick",
 ]
 
 FRONTMATTER_FIELD = "lamport"
@@ -220,8 +220,7 @@ def observe(root, agent: str, remote_ts) -> int:
         remote = int(remote_ts)
     except (TypeError, ValueError):
         return read_clock(root, agent)
-    if remote < 0:
-        remote = 0
+    remote = max(remote, 0)
     root = Path(root)
     clock_path = _clock_path(root, agent)
     lock = _acquire_clock_lock(clock_path)

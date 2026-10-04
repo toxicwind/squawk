@@ -36,11 +36,11 @@ DATE_RES = [
 ]
 
 SOURCE_HINTS = [
-    (re.compile(r"\b(polymarket|kalshi|predictit)\b", re.I), "prediction-market"),
-    (re.compile(r"\b(fed|fomc|bls|cpi|payrolls)\b", re.I), "official-release"),
+    (re.compile(r"\b(polymarket|kalshi|predictit)\b", re.IGNORECASE), "prediction-market"),
+    (re.compile(r"\b(fed|fomc|bls|cpi|payrolls)\b", re.IGNORECASE), "official-release"),
     (re.compile(r"\$\b[A-Z]{1,5}\b"), "market-price"),
-    (re.compile(r"\b(election|vote|poll)\b", re.I), "election-result"),
-    (re.compile(r"\b(rain|temperature|hurricane|weather)\b", re.I), "weather-service"),
+    (re.compile(r"\b(election|vote|poll)\b", re.IGNORECASE), "election-result"),
+    (re.compile(r"\b(rain|temperature|hurricane|weather)\b", re.IGNORECASE), "weather-service"),
 ]
 
 # Anchor patterns for the vagueness guard: a resolvable question must name
@@ -48,7 +48,7 @@ SOURCE_HINTS = [
 # quoted span. Bare demonstratives ("Will this work?") name nothing.
 _ANCHOR_RES = [
     re.compile(r"\b(today|tomorrow|tonight|this\s+(week|month|year)|"
-               r"next\s+(week|month|year))\b", re.I),
+               r"next\s+(week|month|year))\b", re.IGNORECASE),
     re.compile(r"\d"),
     # proper noun, not sentence-initial:
     re.compile(r"(?<=[a-z]\s)[A-Z][a-z]+"),
@@ -65,18 +65,18 @@ _DIGIT_RES = re.compile(r"\d")
 # questions keep the single-anchor rule -- "Did Apollo 11 land humans on
 # the Moon in 1969?" is already fully specified by its anchors.
 _FUTURE_RES = [
-    re.compile(r"\bwill\b", re.I),
-    re.compile(r"\bgoing\s+to\b", re.I),
+    re.compile(r"\bwill\b", re.IGNORECASE),
+    re.compile(r"\bgoing\s+to\b", re.IGNORECASE),
 ]
-_PAST_LED_RES = re.compile(r"^\s*(did|was|were|has|have|had)\b", re.I)
+_PAST_LED_RES = re.compile(r"^\s*(did|was|were|has|have|had)\b", re.IGNORECASE)
 _DEADLINE_RES = [
     re.compile(r"\b(today|tomorrow|tonight|this\s+(week|month|year)|"
-               r"next\s+(week|month|year))\b", re.I),
+               r"next\s+(week|month|year))\b", re.IGNORECASE),
     re.compile(r"\bby\s+\d{4}-\d{2}-\d{2}\b"),
     re.compile(r"\bby\s+[A-Z][a-z]+\s+\d{1,2},?\s+\d{4}\b"),
     re.compile(r"\bbefore\s+[A-Z][a-z]+\s+\d{1,2},?\s+\d{4}\b"),
-    re.compile(r"\bin\s+Q[1-4]\s+\d{4}\b", re.I),
-    re.compile(r"\bby\s+end\s+of\s+\d{4}\b", re.I),
+    re.compile(r"\bin\s+Q[1-4]\s+\d{4}\b", re.IGNORECASE),
+    re.compile(r"\bby\s+end\s+of\s+\d{4}\b", re.IGNORECASE),
     re.compile(r"\b(19|20)\d{2}\b"),  # explicit year as deadline
 ]
 # Inherently binary, observable event verbs. Intentionally narrow: an
@@ -84,11 +84,11 @@ _DEADLINE_RES = [
 _BINARY_EVENT_RES = re.compile(
     r"\b(rise|set|occur|happen|take\s+place|launch|land|win|lose|"
     r"pass|fail|rain|snow|erupt|collapse|default|resign|die|"
-    r"eclipse)\b", re.I)
+    r"eclipse)\b", re.IGNORECASE)
 
 
 REFUSE_PATTERNS = [
-    (re.compile(r"^\s*(hi|hello|hey|yo)\b", re.I), "greeting, not a question"),
+    (re.compile(r"^\s*(hi|hello|hey|yo)\b", re.IGNORECASE), "greeting, not a question"),
     (re.compile(r"^\s*$"), "empty question"),
 ]
 
@@ -154,7 +154,7 @@ def frame_question(text, now=None):
                 "Please state the full question, e.g. 'Will X happen by <date>?'",
                 "raw": raw}
     if not raw.rstrip().endswith("?") and not re.search(
-            r"\b(will|is|are|does|did|has|have|can)\b", raw, re.I):
+            r"\b(will|is|are|does|did|has|have|can)\b", raw, re.IGNORECASE):
         return {"status": "refused", "refusal_reason": "not a resolvable question",
                 "clarification_request":
                 "I resolve yes/no questions. Please rephrase as one, e.g. "

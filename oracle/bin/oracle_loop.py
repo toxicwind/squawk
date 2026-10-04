@@ -54,8 +54,8 @@ from pathlib import Path
 
 BIN = Path(__file__).resolve().parent
 sys.path.insert(0, str(BIN))
-import sealed as sealed_mod          # noqa: E402
-import mechanism as mech            # noqa: E402
+import mechanism as mech
+import sealed as sealed_mod
 
 AGENT_DIR = BIN.parent
 # All paths are env-overridable: the staged defaults are hatch-local and MUST
@@ -336,7 +336,7 @@ def _parse_acceptance_report(output):
             continue
         body = s[1:].strip()
         m = re.match(r"(.+?)\s*:\s*(MET|UNMET|NOT MET|NOT-MET)\b\s*-?\s*(.*)$",
-                     body, re.I)
+                     body, re.IGNORECASE)
         if m:
             crit, status, note = m.group(1), m.group(2).upper(), m.group(3)
             met = (status == "MET")
@@ -538,7 +538,7 @@ class OracleLoop:
         """Least-loaded capable worker: fewest locked (in-flight) tasks;
         alphabetical tiebreak. Every registered bidder runs Super Ralph
         from the shared PATH, so all are capable of agentic tasks."""
-        cands = [(len((self.profiles[s].get("locked") or {})), s)
+        cands = [(len(self.profiles[s].get("locked") or {}), s)
                  for s in sorted(self.profiles)]
         return cands[0][1] if cands else None
 
@@ -1897,7 +1897,7 @@ class OracleLoop:
                 if d.state == "OPEN":
                     heapq.heappush(
                         self.timers,
-                        (d.soft_ts if d.soft_ts > now else now,
+                        (max(now, d.soft_ts),
                          "debate_chase", did))
                 heapq.heappush(self.timers, (d.hard_ts, "debate_hard",
                                              did))

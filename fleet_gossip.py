@@ -411,7 +411,7 @@ def digest_channel(root: _RootType, channel: str) -> str:
         pass
     entries.sort()
     h = hashlib.sha256()
-    h.update(f"{DIGEST_FORMAT} {channel} {len(entries)}\n".encode("utf-8"))
+    h.update(f"{DIGEST_FORMAT} {channel} {len(entries)}\n".encode())
     for line in entries:
         h.update(line.encode("utf-8"))
         h.update(b"\n")

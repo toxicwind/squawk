@@ -25,12 +25,12 @@ from types import SimpleNamespace
 from typing import Any, Callable, Iterable, Mapping
 
 import chat
+
 from ._advisory_lock import (
     AdvisoryFileLock,
     AdvisoryLockTimeout,
     acquire_advisory_file_lock,
 )
-
 
 LOCKS_DIRNAME = "locks"
 TRANSACTION_FILENAME = ".path-lock-transaction.json"
@@ -116,7 +116,7 @@ class LockedPath:
             )
 
     @classmethod
-    def from_dict(cls, data: Mapping[str, Any]) -> "LockedPath":
+    def from_dict(cls, data: Mapping[str, Any]) -> LockedPath:
         if not isinstance(data, Mapping):
             raise PathLockError("PATH_LOCK_INVALID_RECORD", "lock path must be an object")
         unknown = sorted(set(data) - set(_PATH_FIELDS))
@@ -195,7 +195,7 @@ class PathLockRecord:
                 "previous owner, expiry, and recovery reason must be recorded together",
             )
     @classmethod
-    def from_dict(cls, data: Mapping[str, Any]) -> "PathLockRecord":
+    def from_dict(cls, data: Mapping[str, Any]) -> PathLockRecord:
         if not isinstance(data, Mapping):
             raise PathLockError("PATH_LOCK_INVALID_RECORD", "lock record must be an object")
         actual = set(data)

@@ -24,7 +24,6 @@ from agent_chat.state_store import (
 from agent_chat.task_model import TaskRecord
 from agent_chat.task_store import TaskStore
 
-
 TIMESTAMP_FIXED = "2026-08-21T12:00:00+00:00"
 
 

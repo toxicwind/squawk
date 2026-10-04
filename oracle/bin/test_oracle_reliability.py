@@ -455,9 +455,8 @@ def test_provenance_quarantine():
     try:
         _seed_history(40, 38, source="bench")
         with open(cal.HISTORY_PATH, "a") as f:  # legacy: no label_source
-            for i in range(100):
-                f.write(json.dumps({"question_id": "legacy-%d" % i,
-                                    "correct": True}) + "\n")
+            f.writelines(json.dumps({"question_id": "legacy-%d" % i,
+                                    "correct": True}) + "\n" for i in range(100))
         decision, reason = engine.abstention_gate(0.9, 0.8)
         op = engine.gate_operating_point()
         check("quarantine: legacy rows do not inflate history_n",

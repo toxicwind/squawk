@@ -213,6 +213,11 @@ def build_fat(since: int, state: FeedState,
     messages = []
     last = since
     for p in paths:
+        # The filename seq is authoritative for cursor advancement: even a
+        # record whose body will not parse must not be refetched forever.
+        m = _MSG_RE.match(p.name)
+        if m:
+            last = max(last, int(m.group(1)))
         rec = fleet_relay.build_relay_record(
             p, channel=state.channel,
             identity=state.identity, key_dir=state.key_dir)

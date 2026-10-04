@@ -4,7 +4,6 @@ import * as $ from 'svelte/internal/client';
 const MAX_BACKOFF_MS = 30000;
 const BASE_BACKOFF_MS = 1000;
 const FLUSH_MS = 250;
-const PING_MS = 30000;
 const SYS_CAP = 20;
 
 function wsUrl(ticket) {
@@ -49,6 +48,7 @@ function normalize(d, fallbackChannel) {
 		uuid: d.uuid ?? "",
 		title: d.title ?? "msg",
 		signature: d.signature,
+		sealed: !!d.sealed,
 		text: typeof d.text === "string" ? d.text : ""
 	};
 }
@@ -76,16 +76,6 @@ class LiveConnection {
 		$.set(this.#attempt, value, true);
 	}
 
-	#latency = $.state(0);
-
-	get latency() {
-		return $.get(this.#latency);
-	}
-
-	set latency(value) {
-		$.set(this.#latency, value, true);
-	}
-
 	#tabs = $.state($.proxy({}));
 
 	get tabs() {
@@ -110,7 +100,6 @@ class LiveConnection {
 	ticket = "";
 	running = false;
 	backoffTimer = undefined;
-	pingTimer = undefined;
 	flushTimer = undefined;
 	buf = [];
 	seen = {};
@@ -278,8 +267,6 @@ class LiveConnection {
 	clearTimers() {
 		clearTimeout(this.backoffTimer);
 		this.backoffTimer = undefined;
-		clearInterval(this.pingTimer);
-		this.pingTimer = undefined;
 		clearTimeout(this.flushTimer);
 		this.flushTimer = undefined;
 	}
@@ -317,19 +304,9 @@ class LiveConnection {
 			this.attempt = 0;
 			this.sysLine(`live push connected — #${chans.join(" #")}`);
 
-			// keepalive: NATs and proxies kill idle sockets; the server answers pong
-			clearInterval(this.pingTimer);
-
-			this.pingTimer = setInterval(
-				() => {
-					if (sock.readyState === WebSocket.OPEN) {
-						try {
-							sock.send(JSON.stringify({ type: "ping", t: Date.now() }));
-						} catch {}
-					}
-				},
-				PING_MS
-			);
+			// keepalive is server-side: the WS server pings every 30s and the
+			// runtime answers automatically. No client JSON ping needed —
+			// the server ignores all post-subscribe frames.
 		};
 
 		sock.onmessage = (ev) => {
@@ -412,8 +389,6 @@ class LiveConnection {
 		if (d && d.type === "status") {
 			if (d.kind === "subscribed" && Array.isArray(d.channels)) {
 				this.sysLine(`server confirmed subscription: #${d.channels.join(" #")}`);
-			} else if (d.kind === "pong" && typeof d.t === "number") {
-				this.latency = Math.max(0, Math.round(Date.now() - d.t));
 			} else if (d.kind === "error") {
 				this.sysLine("server: " + String(d.message || "error"));
 			}

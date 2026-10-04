@@ -137,8 +137,7 @@ def run_harness(mode, bin_dir, timeout_s, out_path):
                 })
     rows.sort(key=lambda r: (r["question_idx"], r["slot"]))
     with open(out_path, "w") as f:
-        for r in rows:
-            f.write(json.dumps(r) + "\n")
+        f.writelines(json.dumps(r) + "\n" for r in rows)
 
     live = sum(1 for r in rows if not r["refused"])
     n = len(rows)

@@ -26,8 +26,9 @@ import json
 import os
 import secrets
 import time
-import tomllib
 from pathlib import Path
+
+import tomllib
 
 REGISTRY_DIR = Path(os.environ.get("ORACLE_REGISTRY_DIR",
                                    "/home/toxic/.openfang/stake-registry"))

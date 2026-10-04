@@ -120,13 +120,11 @@ def main(argv):
     print("normalized binary rows: %d" % len(norm))
     if a.full_out:
         with open(a.full_out, "w") as f:
-            for r in norm:
-                f.write(json.dumps(r) + "\n")
+            f.writelines(json.dumps(r) + "\n" for r in norm)
         print("full dump: %s" % a.full_out)
     sample = stratify(norm, a.n, a.seed)
     with open(a.out, "w") as f:
-        for r in sample:
-            f.write(json.dumps(r) + "\n")
+        f.writelines(json.dumps(r) + "\n" for r in sample)
     # distribution report
     from collections import Counter
     print("sampled: %d (seed=%d)" % (len(sample), a.seed))

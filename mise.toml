@@ -1,10 +1,13 @@
 # squawk-ui build tasks (mbx-cache enabled)
 # The Svelte 5 UI is precompiled to ui/dist/bundle.js and cached by mbx-cache.
 
+[task_config.cache]
+enabled = true
+
 [tasks.build]
 description = "Compile Svelte 5 UI -> ui/dist/bundle.js"
 run = "bun ui/build.ts"
-sources = ["ui/*.svelte", "ui/main.ts", "ui/markdown.ts", "ui/build.ts"]
+sources = ["ui/*.svelte", "ui/*.ts", "ui/*.js"]
 outputs = ["ui/dist/bundle.js"]
 
 [tasks.dev]

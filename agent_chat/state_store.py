@@ -18,10 +18,10 @@ from types import SimpleNamespace
 from typing import Any
 
 import chat
+
 from .path_locks import PathLockRecord, PathLockStore
 from .task_model import TaskRecord
 from .task_store import TaskStore
-
 
 STATE_FILENAME = "state.md"
 _ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*\Z")
@@ -787,15 +787,15 @@ def compact_state(
 
 __all__ = [
     "STATE_FILENAME",
-    "StateError",
-    "StateValidationError",
-    "DecisionRecord",
     "BlockerRecord",
+    "DecisionRecord",
     "OwnerAssignment",
-    "VerificationRecord",
-    "StateSummary",
+    "StateError",
     "StateStore",
+    "StateSummary",
+    "StateValidationError",
+    "VerificationRecord",
+    "compact_state",
     "load_state",
     "render_state",
-    "compact_state",
 ]

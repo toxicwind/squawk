@@ -16,12 +16,12 @@ from types import SimpleNamespace
 from typing import Any, Iterator, Mapping
 
 import chat
+
 from ._advisory_lock import (
     AdvisoryFileLock,
     AdvisoryLockTimeout,
     acquire_advisory_file_lock,
 )
-
 from .task_model import (
     TASK_FIELDS,
     TaskError,
@@ -30,7 +30,6 @@ from .task_model import (
     validate_task,
     validate_transition,
 )
-
 
 TASK_DIRNAME = "tasks"
 

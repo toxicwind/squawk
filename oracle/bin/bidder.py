@@ -42,9 +42,9 @@ sys.path.insert(0, str(BIN))
 _spec = importlib.util.spec_from_file_location("oracle_loop", ORACLE)
 ol = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(ol)
-import sealed as sealed_mod      # noqa: E402
-import mechanism as mech         # noqa: E402
-import keypool as keypool_mod    # noqa: E402  (provider key-pool rotation, SPEC §8)
+import keypool as keypool_mod
+import mechanism as mech
+import sealed as sealed_mod
 
 CHANNEL = ol.CHANNEL
 FLEET = ol.FLEET

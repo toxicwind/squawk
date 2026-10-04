@@ -6,12 +6,13 @@ import json
 import os
 import tempfile
 import unittest
-from unittest import mock
 from datetime import datetime, timezone
 from pathlib import Path
 from types import SimpleNamespace
+from unittest import mock
+
 import chat
-import agent_chat.path_locks as path_locks
+from agent_chat import path_locks
 from agent_chat.path_locks import PathLockError, PathLockStore
 
 
@@ -334,9 +335,8 @@ class PathLockStoreTests(unittest.TestCase):
             self.store,
             "_remove_transaction",
             side_effect=PathLockError("PATH_LOCK_STORAGE_ERROR", "cleanup failed"),
-        ):
-            with self.assertRaises(PathLockError) as error:
-                self.store.lock("alice", ["src/new2.py"], lease_seconds=60)
+        ), self.assertRaises(PathLockError) as error:
+            self.store.lock("alice", ["src/new2.py"], lease_seconds=60)
         self.assertEqual(error.exception.code, "PATH_LOCK_TRANSACTION_CLEANUP_FAILED")
         self.assertTrue(error.exception.details.get("transaction_pending"))
         self.assertTrue(self.store.transaction_path.exists())
@@ -451,9 +451,8 @@ class PathLockStoreTests(unittest.TestCase):
             self.store,
             "_restore_bytes",
             side_effect=OSError("rollback failed"),
-        ):
-            with self.assertRaises(PathLockError) as error:
-                self.store.lock("alice", ["src/new5.py"], lease_seconds=60)
+        ), self.assertRaises(PathLockError) as error:
+            self.store.lock("alice", ["src/new5.py"], lease_seconds=60)
         self.assertEqual(error.exception.code, "PATH_LOCK_AUDIT_ROLLBACK_FAILED")
         self.assertTrue(self.store.transaction_path.exists())
         recovered = PathLockStore(self.channel, root=self.root)
@@ -478,9 +477,8 @@ class PathLockStoreTests(unittest.TestCase):
             path_locks.os, "link", side_effect=link_and_raise
         ), mock.patch.object(
             Path, "read_bytes", side_effect=failing_read_bytes
-        ):
-            with self.assertRaises(PathLockError) as error:
-                self.store.lock("alice", ["src/new_unreadable.py"], lease_seconds=60)
+        ), self.assertRaises(PathLockError) as error:
+            self.store.lock("alice", ["src/new_unreadable.py"], lease_seconds=60)
         self.assertEqual(error.exception.code, "PATH_LOCK_AUDIT_ROLLBACK_FAILED")
         self.assertTrue(self.store.transaction_path.exists())
         recovered = PathLockStore(self.channel, root=self.root)

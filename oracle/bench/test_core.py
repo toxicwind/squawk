@@ -282,7 +282,7 @@ check("ask path never applies calibration",
       "calibration must live in engine.build_verdict only")
 
 # ---- resilient judge: bounded retry then local fallback ----
-class _FakeJP(object):
+class _FakeJP:
     def __init__(self, refused, posterior=0.7, judge_id="x"):
         self.refused = refused
         self.posterior = posterior

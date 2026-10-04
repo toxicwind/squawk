@@ -6,7 +6,7 @@ import sys
 import tempfile
 
 sys.path.insert(0, "/home/toxic/estate/ranch/squawk/oracle/bin")
-from oracle_intake import triage, _tags_for, ROUTES, TAG_HINTS
+from oracle_intake import ROUTES, TAG_HINTS, _tags_for, triage
 
 led = tempfile.mktemp()
 cases = [

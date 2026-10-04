@@ -49,7 +49,7 @@ from pathlib import Path
 # agent_chat/_advisory_lock.py is an flock-based lock with timeout
 # (O_NOFOLLOW, 0o600) -- sufficient for the roster write path.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from agent_chat._advisory_lock import acquire_advisory_file_lock  # noqa: E402
+from agent_chat._advisory_lock import acquire_advisory_file_lock
 
 ROSTER_PATH = Path(os.environ.get("FLEET_ROSTER", "/home/toxic/.fleet-bus/roster"))
 ROSTER_VERSION = 1

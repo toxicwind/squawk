@@ -10,7 +10,6 @@ from types import SimpleNamespace
 
 import chat
 
-
 TIMESTAMP = "2026-08-21T12:00:00+00:00"
 
 

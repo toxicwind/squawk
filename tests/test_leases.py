@@ -4,8 +4,8 @@ import contextlib
 import io
 import json
 import os
-import threading
 import tempfile
+import threading
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
@@ -14,7 +14,6 @@ import chat
 from agent_chat.lease_store import LeaseError, LeaseRecord, LeaseStore
 from agent_chat.task_model import TaskError, TaskRecord, TaskValidationError
 from agent_chat.task_store import TaskStore
-
 
 TIMESTAMP = "2026-08-21T12:00:00+00:00"
 EXPIRED = "2020-01-01T00:00:00+00:00"

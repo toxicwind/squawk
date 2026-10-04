@@ -80,7 +80,7 @@ def note_channel(root, name: str) -> Path:
     root = Path(root)
     root.mkdir(parents=True, exist_ok=True)
     ts = _dt.datetime.now().astimezone().isoformat(timespec="seconds")
-    line = f"{ts}\t{name}\n".encode("utf-8")
+    line = f"{ts}\t{name}\n".encode()
     path = root / INDEX_NAME
     fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o644)
     try:

@@ -6,7 +6,7 @@
   type Msg = {
     seq: number; file_seq?: number; from: string; sender?: string; to: string; channel: string;
     ts: string; status: string; uuid: string; title: string;
-    signature?: string; text: string;
+    signature?: string; sealed?: boolean; text: string;
   };
 
   // --- UI state (Svelte 5 runes); transport + message data live in the
@@ -17,6 +17,25 @@
   let draft = $state("");
   let sending = $state(false);
   let logEl: HTMLDivElement | null = $state(null);
+  // stuck = the user scrolled up; new arrivals surface a jump pill
+  // instead of yanking the scroll position.
+  let stuck = $state(false);
+  let newWhileStuck = $state(0);
+  let prevCount = 0;
+  let msgEl: HTMLTextAreaElement | null = $state(null);
+
+  // auto-growing composer: the textarea expands with content up to a cap,
+  // then scrolls internally. Enter sends, Shift+Enter inserts a newline.
+  function autogrow() {
+    const el = msgEl;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = Math.min(el.scrollHeight, 168) + "px";
+  }
+  // shrink back to one row whenever the draft clears (e.g. after send)
+  $effect(() => {
+    if (draft === "") autogrow();
+  });
 
   // message list for the active tab, derived from the live connection state
   let active = $derived(live.tabs[activeName] as { messages: Msg[]; cursor: number } | undefined
@@ -28,6 +47,7 @@
     : `reconnecting… (attempt ${live.attempt})`,
   );
   let tabCount = $derived(Object.keys(live.tabs).length);
+  let loading = $derived(active.messages.length === 0 && live.status !== "live");
 
   // --- boot: open the one websocket; the server replays since our cursor ---
   $effect(() => {
@@ -36,11 +56,18 @@
     return () => { live.disconnect(); };
   });
 
-  // --- scroll: stick to bottom when new messages arrive ---
+  // --- count arrivals while stuck (drives the jump pill) ---
+  $effect(() => {
+    const n = active.messages.length;
+    if (stuck && n > prevCount) newWhileStuck += n - prevCount;
+    prevCount = n;
+  });
+
+  // --- scroll: stick to bottom when new messages arrive (unless stuck) ---
   $effect(() => {
     const el = logEl;
     const n = active.messages.length;
-    const name = activeName;
+    void activeName;
     if (!el || !n) return;
     // run after DOM updates
     queueMicrotask(() => {
@@ -49,12 +76,26 @@
     });
   });
 
+  function onLogScroll() {
+    if (!logEl) return;
+    stuck = logEl.scrollHeight - logEl.scrollTop - logEl.clientHeight > 120;
+    if (!stuck) newWhileStuck = 0;
+  }
+
+  function jumpToLatest() {
+    if (logEl) logEl.scrollTop = logEl.scrollHeight;
+    stuck = false;
+    newWhileStuck = 0;
+  }
+
   function showTab(name: string) {
     if (logEl) {
       const t = live.tabs[activeName];
       if (t) (t as any).scrollTop = logEl.scrollTop;
     }
     activeName = name;
+    stuck = false;
+    newWhileStuck = 0;
     queueMicrotask(() => {
       if (logEl) logEl.scrollTop = (live.tabs[name] as any)?.scrollTop || logEl.scrollHeight;
     });
@@ -111,7 +152,6 @@
     >
       <span class="dot {dotClass}"></span>
       <span class="conn-label">{connLabel}</span>
-      {#if live.latency}<span class="conn-lat">{live.latency}ms</span>{/if}
     </div>
   </header>
 
@@ -146,31 +186,55 @@
     </div>
   </nav>
 
-  <div id="log" bind:this={logEl}>
+  <div id="log" bind:this={logEl} onscroll={onLogScroll}>
     {#each live.sysLines as s, i (i)}
       <div class="sys">{s}</div>
     {/each}
     {#if active.messages.length === 0}
-      <div class="empty">
-        <div class="empty-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z" />
-          </svg>
+      {#if loading}
+        <div class="skels" aria-hidden="true">
+          {#each [0, 1, 2, 3] as i (i)}
+            <div class="skel">
+              <div class="skel-row"><span class="skel-avatar"></span><span class="skel-name"></span><span class="skel-ts"></span></div>
+              <div class="skel-line"></div>
+              <div class="skel-line short"></div>
+            </div>
+          {/each}
         </div>
-        <p class="empty-title">nothing on #{activeName} yet</p>
-        <p class="empty-sub">messages land here live — say something below</p>
-      </div>
+      {:else}
+        <div class="empty">
+          <div class="empty-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12a8 8 0 0 1-8 8H4l2-3a8 8 0 1 1 15-5z" />
+            </svg>
+          </div>
+          <p class="empty-title">nothing on #{activeName} yet</p>
+          <p class="empty-sub">messages land here live — say something below</p>
+        </div>
+      {/if}
     {/if}
     {#each active.messages as m, i (keyOf(m))}
       <MessageCard {m} compact={i > 0 && active.messages[i - 1].from === m.from} />
     {/each}
   </div>
 
+  {#if stuck && newWhileStuck > 0}
+    <button id="jump" onclick={jumpToLatest} aria-label={`jump to latest, ${newWhileStuck} new messages`}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 5v14M5 12l7 7 7-7" />
+      </svg>
+      {newWhileStuck} new
+    </button>
+  {/if}
+
   <div id="composer">
     <div class="composer-bar">
-      <input
+      <textarea
         id="msg"
+        rows={1}
+        bind:this={msgEl}
         bind:value={draft}
+        oninput={autogrow}
         onkeydown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMsg(); } }}
         placeholder={`message #${activeName}`}
         autocomplete="off"
@@ -178,7 +242,7 @@
         aria-label="message"
         enterkeyhint="send"
         disabled={sending}
-      />
+      ></textarea>
       <button
         id="send"
         onclick={sendMsg}
@@ -192,7 +256,7 @@
       </button>
     </div>
     <div class="composer-meta" aria-hidden="true">
-      <span><kbd>enter</kbd> to send</span>
+      <span><kbd>enter</kbd> to send · <kbd>shift</kbd>+<kbd>enter</kbd> for a new line</span>
     </div>
   </div>
 

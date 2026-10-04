@@ -5,3 +5,5 @@ build/
 .ruff_cache/
 .pytest-out.txt
 ui.html.bak-*
+node_modules/
+ui/dist/

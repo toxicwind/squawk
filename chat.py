@@ -23,8 +23,8 @@ from __future__ import annotations
 
 import sys
 
-import chat_core
 import chat_commands
+import chat_core
 import chat_parser
 from chat_core import AdapterEventError, AgentChatError, die, root_dir
 from chat_parser import build_parser

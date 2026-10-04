@@ -34,8 +34,8 @@ import json
 import os
 import sys
 import time
-import urllib.request
 import urllib.error
+import urllib.request
 from pathlib import Path
 
 POOL_DIR = Path(os.environ.get("ORACLE_KEYPOOL_DIR",
@@ -274,9 +274,7 @@ def env_exports() -> dict:
     out = {}
     for provider, cfg in PROVIDERS.items():
         k = best_key(provider)
-        if k and not cfg.get("keyless"):
-            out[cfg["env"]] = k
-        elif k and cfg.get("keyless"):
+        if k and not cfg.get("keyless") or k and cfg.get("keyless"):
             out[cfg["env"]] = k
     prov, _ = best_any()
     if prov:

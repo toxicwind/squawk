@@ -27,7 +27,7 @@ import threading
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlsplit, parse_qs
+from urllib.parse import parse_qs, urlsplit
 
 # Graceful-stop mixin for blue-green deploys (estate/hotreload/graceful.py).
 # Provides /health (200 serving / 503 draining) and SIGTERM drain.

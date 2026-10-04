@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import argparse
 
+import chat_commands
 from chat_core import EVENT_TYPES, STATUS_VALUES
 
-import chat_commands
 
 class _TaskArgumentParser(argparse.ArgumentParser):
     def error(self, message: str):

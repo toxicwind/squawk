@@ -39,7 +39,7 @@ MAX_ATTEMPTS = 5
 SEEN_CAP = 10000
 SWEEP_INTERVAL = 30.0
 DEBOUNCE = 1.0
-RELAY_KEY_RE = re.compile(r"^relay_key:\s*(\S+)\s*$", re.M)
+RELAY_KEY_RE = re.compile(r"^relay_key:\s*(\S+)\s*$", re.MULTILINE)
 
 
 def load_state():
@@ -105,8 +105,8 @@ def reconcile_channel_keys():
 def _chat_stack():
     """Import the squawk signed-post stack (same code the CLI uses)."""
     sys.path.insert(0, str(C.SQUAWK_CODE))
-    import fleet_relay
     import chat_commands
+    import fleet_relay
     fleet_relay.ensure_keys_env(root=C.CHAT_ROOT)
     key_dir = fleet_relay.resolve_key_dir(None, root=C.CHAT_ROOT)
     return chat_commands, key_dir

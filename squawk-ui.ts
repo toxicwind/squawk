@@ -226,7 +226,7 @@ async function uiHtml(): Promise<string> {
   const js = await uiBundle();
   return `<!doctype html><html><head><meta charset="utf-8">`
     + `<meta name="viewport" content="width=device-width,initial-scale=1">`
-    + `<title>SQUAWK</title><meta name="color-scheme" content="dark"><style>${uiStyle()}</style></head>`
+    + `<title>SQUAWK</title><meta name="color-scheme" content="dark"><meta name="theme-color" content="#0b0908"><style>${uiStyle()}</style></head>`
     + `<body><div id="root"></div>`
     + `<script>window.SERVER_AUTH=true;</script>`
     + `<script type="module">${js}</script>`

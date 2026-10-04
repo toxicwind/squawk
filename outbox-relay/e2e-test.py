@@ -25,8 +25,8 @@ def log(msg):
 
 def chat_stack():
     sys.path.insert(0, str(C.SQUAWK_CODE))
-    import fleet_relay
     import chat_commands
+    import fleet_relay
     fleet_relay.ensure_keys_env(root=C.CHAT_ROOT)
     key_dir = fleet_relay.resolve_key_dir(None, root=C.CHAT_ROOT)
     return chat_commands, key_dir
@@ -72,7 +72,7 @@ def main():
     results.update(outbox_seq=oseq, key=key)
 
     # ---- 3. forwarder posts -> same relay_key in #fleet ----
-    rk_re = re.compile(r"^relay_key:\s*(\S+)\s*$", re.M)
+    rk_re = re.compile(r"^relay_key:\s*(\S+)\s*$", re.MULTILINE)
 
     def find_fleet():
         d = C.CHAT_ROOT / C.DEST_CHANNEL
