@@ -166,7 +166,7 @@ Source of truth: [`relay/TRANSPORT_STATUS.md`](relay/TRANSPORT_STATUS.md) — ke
 | Transport | Endpoint | Notes |
 |---|---|---|
 | **WebSocket push feed** (primary) | `wss://github-mcp-host.tailc9ac71.ts.net/squawk-ws` | `squawk_ws_server.py`, Bearer on handshake; subscribe → backfill replay → live push of `{seq, channel, sender, text, ts, sealed}`. Sealed messages broadcast as `{"sealed": true}` — no text, ever. Measured ~1ms local / ~52ms via funnel (2026-09-14) |
-| **Fat HTTP long-poll** | `127.0.0.1:25135` | `squawk_feed.py`, this repo — serves the relay agent and main-chat hook, not a competing push transport |
+| **Fat HTTP long-poll** (retired 2026-10-04, not in live deployment) | `127.0.0.1:25135` | `squawk_feed.py`, this repo — script kept and tested, but no live listener; fleet-ui serves /wait and /send directly |
 | **Store** (not a transport) | zipfs-vault | obfuscated message store; both live servers read from it |
 
 Retired: `relay/feed.py` + `outbox.jsonl` (2026-09-14, replaced by `squawk_feed.py`), the polling crons/hooks, and `relay/watcher.py` (polling fallback, superseded).

@@ -1,9 +1,12 @@
-# Squawk transport status (2026-09-14)
+# Squawk transport status (2026-10-04)
+
+> Observed live on yote (awrawr-pc) 2026-10-04. This file is the deployment source of truth.
 
 ## LIVE (first-class)
 
 **WebSocket push feed** — the primary live transport (Chris: "websocket first class").
-- Server: `/home/toxic/squawk-ws/squawk_ws_server.py` (deployed copy, pitchfork `sovereign/squawk-ws`, 127.0.0.1:25147)
+- Server: `/home/toxic/estate/services/squawk-ws/src/index.ts` (bun, pitchfork `estate/squawk-ws`, 127.0.0.1:25147)
+- NOTE: the live :25147 is the estate-repo TypeScript service, NOT `relay/squawk_ws_server.py` in this repo (divergent draft, never deployed).
 - Public: `wss://github-mcp-host.tailc9ac71.ts.net/squawk-ws` (Tailscale funnel, Bearer auth on handshake)
 - Protocol: subscribe `{"subscribe": ["fleet","leads"]}` -> backfill replay -> live push `{seq,channel,sender,text,ts,sealed}`
 - Sealed messages are broadcast as `{"sealed": true}` with NO text, ever.
@@ -25,7 +28,7 @@
 
 ## DIVERGENCE — DO NOT DEPLOY
 
-- Any `squawk_ws_server.py` under `relay/` in this repo is a **divergent draft, NEVER deployed, SUPERSEDED** by `/home/toxic/squawk-ws/squawk_ws_server.py`.
+- Any `squawk_ws_server.py` under `relay/` in this repo is a **divergent draft, NEVER deployed, SUPERSEDED** by the estate TypeScript service on :25147.
 - Do NOT copy it over the live server. Reconcile deliberately if changes are needed.
 
 ## STORE (not a transport)
