@@ -80,6 +80,120 @@ function wsTarget(pathname: string, search: string): string {
   return base + search;
 }
 
+// --- cell-primary reverse tunnel (2026-10-03) ---
+// The cell dials in on /squawk-tunnel (WSS via funnel, token-authenticated).
+// When the tunnel is up, squawk traffic (/, /ui, /wait, /channels, /send,
+// /health, and WS /squawk-ws) is proxied to the cell-primary server;
+// local serving is the fallback when the tunnel is down.
+// Browser -> Funnel -> Yote -> Cell.
+const TUNNEL_TOKEN_PATH = "/home/toxic/.config/squawk-tunnel.token";
+let tunnelToken = "";
+let tunnelTokenMtimeMs = 0;
+function getTunnelToken(): string {
+  try {
+    const st = statSync(TUNNEL_TOKEN_PATH);
+    if (st.mtimeMs !== tunnelTokenMtimeMs) {
+      tunnelToken = readFileSync(TUNNEL_TOKEN_PATH, "utf8").trim();
+      tunnelTokenMtimeMs = st.mtimeMs;
+    }
+  } catch { /* keep whatever we have */ }
+  return tunnelToken;
+}
+
+const TUNNELED_PATHS = new Set(["/", "/ui", "/wait", "/channels", "/send", "/health"]);
+const TUNNEL_HOP_HEADERS = new Set(["connection", "transfer-encoding", "keep-alive",
+  "proxy-authenticate", "proxy-authorization", "te", "trailer", "upgrade", "host"]);
+
+let tunnelSock: ServerWebSocket<SockData> | null = null;
+let tunnelSeq = 0;
+const tunnelHttpPending = new Map<string, {
+  resolve: (r: Response) => void; reject: (e: Error) => void; timer: Timer;
+}>();
+// bridge id -> browser websocket, for WS connections shuttled through the tunnel
+const tunnelWsBridges = new Map<string, ServerWebSocket<SockData>>();
+
+function tunnelSend(obj: any): boolean {
+  if (!tunnelSock) return false;
+  try {
+    tunnelSock.send(JSON.stringify(obj));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function tunnelHttp(method: string, path: string, headers: Headers, body: ArrayBuffer | null): Promise<Response> {
+  return new Promise((resolve, reject) => {
+    const id = "h" + (++tunnelSeq) + "-" + Date.now().toString(36);
+    const timer = setTimeout(() => {
+      tunnelHttpPending.delete(id);
+      reject(new Error("tunnel http timeout"));
+    }, 30000);
+    tunnelHttpPending.set(id, { resolve, reject, timer });
+    const h: Record<string, string> = {};
+    headers.forEach((v, k) => {
+      if (!TUNNEL_HOP_HEADERS.has(k.toLowerCase())) h[k] = v;
+    });
+    const ok = tunnelSend({
+      type: "http", id, method, path, headers: h,
+      body_b64: body ? Buffer.from(body).toString("base64") : "",
+    });
+    if (!ok) {
+      clearTimeout(timer);
+      tunnelHttpPending.delete(id);
+      reject(new Error("tunnel down"));
+    }
+  });
+}
+
+function handleTunnelMessage(raw: string | Buffer) {
+  let msg: any;
+  try {
+    msg = JSON.parse(typeof raw === "string" ? raw : Buffer.from(raw).toString());
+  } catch { return; }
+  const t = msg?.type;
+  if (t === "http-res" && msg.id) {
+    const p = tunnelHttpPending.get(msg.id);
+    if (!p) return;
+    tunnelHttpPending.delete(msg.id);
+    clearTimeout(p.timer);
+    const body = msg.body_b64 ? Buffer.from(msg.body_b64, "base64") : null;
+    p.resolve(new Response(body, {
+      status: Number(msg.status) || 200,
+      headers: msg.headers || {},
+    }));
+    return;
+  }
+  if (t === "ws-data" && msg.id) {
+    const bws = tunnelWsBridges.get(msg.id);
+    if (!bws) return;
+    try {
+      if (msg.text !== undefined && msg.text !== null) bws.send(msg.text);
+      else if (msg.b64) bws.send(Buffer.from(msg.b64, "base64"));
+    } catch {}
+    return;
+  }
+  if (t === "ws-opened" && msg.id) {
+    return; // ack; the bridge is already registered
+  }
+  if (t === "ws-close" && msg.id) {
+    const bws = tunnelWsBridges.get(msg.id);
+    tunnelWsBridges.delete(msg.id);
+    if (bws) {
+      try { bws.close(Number(msg.code) || 1000, String(msg.reason || "")); } catch {}
+    }
+    return;
+  }
+  if (t === "ping") {
+    tunnelSend({ type: "pong" });
+    return;
+  }
+  if (t === "hello") {
+    console.log("squawk-tunnel: cell hello received, tunnel live");
+    return;
+  }
+}
+
 // --- channel store: read/write message files directly for true tab isolation ---
 const VALID_CHANNEL = /^[a-z0-9-_]{1,32}$/;
 
@@ -233,7 +347,10 @@ async function uiHtml(): Promise<string> {
     + `</body></html>`;
 }
 
-type SockData = { target: string; backend?: WebSocket; pending: (string | Buffer)[] };
+type SockData = {
+  target?: string; backend?: WebSocket; pending?: (string | Buffer)[];
+  tunnel?: boolean; tunnelBridge?: boolean; bridgeId?: string;
+};
 
 Bun.serve<SockData>({
   port: 25136,
@@ -250,6 +367,20 @@ Bun.serve<SockData>({
     }
     // --- websocket upgrade: shuttle to the real backend, don't fetch-proxy ---
     if (req.headers.get("upgrade")?.toLowerCase() === "websocket") {
+      // --- cell reverse tunnel: the cell dials in here (token-authenticated) ---
+      if (url.pathname === "/squawk-tunnel") {
+        const tok = url.searchParams.get("token") || req.headers.get("x-tunnel-token") || "";
+        if (tok && tok === getTunnelToken()) {
+          if (server.upgrade(req, { data: { tunnel: true } })) return;
+          return new Response("upgrade failed", { status: 426 });
+        }
+        return new Response("forbidden", { status: 403 });
+      }
+      // --- squawk-ws via tunnel when the cell is connected ---
+      if (url.pathname === "/squawk-ws" && tunnelSock) {
+        if (server.upgrade(req, { data: { tunnelBridge: true, bridgeId: "", pending: [] } })) return;
+        return new Response("upgrade failed", { status: 426 });
+      }
       const target = wsTarget(url.pathname, url.search);
       if (target && server.upgrade(req, { data: { target, pending: [] } })) {
         return; // upgraded: the socket now lives in the websocket handlers
@@ -267,6 +398,18 @@ Bun.serve<SockData>({
     if (url.pathname === "/wait" && req.method === "GET") return handleWait(url);
     if (url.pathname === "/channels" && req.method === "GET") return handleChannels();
     if (url.pathname === "/send" && req.method === "POST") return handleSend(req);
+    // --- cell-primary tunnel: proxy squawk traffic to the cell when connected ---
+    if (tunnelSock && TUNNELED_PATHS.has(url.pathname)) {
+      try {
+        const bodyBuf = (req.method === "GET" || req.method === "HEAD")
+          ? null : await req.arrayBuffer();
+        return await tunnelHttp(req.method, url.pathname + url.search, req.headers, bodyBuf);
+      } catch (e) {
+        console.log("squawk-tunnel: http proxy failed, local fallback:",
+          String(e).slice(0, 80));
+        // fall through to local serving
+      }
+    }
     // proxy everything else to the legacy feed
     // the feed serves everything under /squawk-feed/*; the client speaks
     // bare relative paths, so add the prefix here (unless already present)
@@ -281,16 +424,38 @@ Bun.serve<SockData>({
   },
   websocket: {
     open(ws) {
+      const d = ws.data;
+      // --- cell tunnel connection ---
+      if (d.tunnel) {
+        if (tunnelSock) {
+          try { tunnelSock.close(1000, "replaced"); } catch {}
+        }
+        tunnelSock = ws;
+        console.log("squawk-tunnel: cell connected");
+        return;
+      }
+      // --- browser WS bridged through the tunnel to the cell ---
+      if (d.tunnelBridge) {
+        const id = "w" + (++tunnelSeq) + "-" + Date.now().toString(36);
+        d.bridgeId = id;
+        tunnelWsBridges.set(id, ws);
+        if (!tunnelSend({ type: "ws-open", id, path: "/squawk-ws" })) {
+          tunnelWsBridges.delete(id);
+          try { ws.close(1011, "tunnel down"); } catch {}
+        }
+        return;
+      }
+      // --- legacy: shuttle to the loopback backend ---
       let backend: WebSocket;
       try {
-        backend = new WebSocket(ws.data.target);
+        backend = new WebSocket(d.target!);
       } catch {
         try { ws.close(1011, "backend dial failed"); } catch {}
         return;
       }
-      ws.data.backend = backend;
+      d.backend = backend;
       backend.onopen = () => {
-        for (const m of ws.data.pending.splice(0)) {
+        for (const m of (d.pending || []).splice(0)) {
           try { backend.send(m); } catch {}
         }
       };
@@ -305,15 +470,61 @@ Bun.serve<SockData>({
       };
     },
     message(ws, message) {
-      const b = ws.data.backend;
+      const d = ws.data;
+      // --- messages from the cell tunnel ---
+      if (d.tunnel) {
+        handleTunnelMessage(message);
+        return;
+      }
+      // --- browser messages on a tunnel-bridged socket ---
+      if (d.tunnelBridge) {
+        const id = d.bridgeId;
+        if (id) {
+          if (typeof message === "string") {
+            tunnelSend({ type: "ws-data", id, text: message });
+          } else {
+            tunnelSend({ type: "ws-data", id,
+              b64: Buffer.from(message).toString("base64") });
+          }
+        }
+        return;
+      }
+      // --- legacy shuttle ---
+      const b = d.backend;
       if (b && b.readyState === WebSocket.OPEN) {
         try { b.send(message); } catch {}
       } else {
-        ws.data.pending.push(message); // queue the subscribe frame until dial completes
+        (d.pending || (d.pending = [])).push(message);
       }
     },
     close(ws) {
-      try { ws.data.backend?.close(); } catch {}
+      const d = ws.data;
+      // --- tunnel dropped: fail pending, close bridges, fall back to local ---
+      if (d.tunnel) {
+        if (tunnelSock === ws) tunnelSock = null;
+        for (const [, p] of tunnelHttpPending) {
+          clearTimeout(p.timer);
+          p.reject(new Error("tunnel closed"));
+        }
+        tunnelHttpPending.clear();
+        for (const [, bws] of tunnelWsBridges) {
+          try { bws.close(1011, "tunnel closed"); } catch {}
+        }
+        tunnelWsBridges.clear();
+        console.log("squawk-tunnel: cell disconnected, local fallback active");
+        return;
+      }
+      // --- bridged browser socket closed ---
+      if (d.tunnelBridge) {
+        const id = d.bridgeId;
+        if (id) {
+          tunnelWsBridges.delete(id);
+          tunnelSend({ type: "ws-close", id });
+        }
+        return;
+      }
+      // --- legacy ---
+      try { d.backend?.close(); } catch {}
     },
   },
 });
