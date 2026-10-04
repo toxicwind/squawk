@@ -16,6 +16,7 @@
 """
 import ctypes
 import ctypes.util
+import importlib.util
 import json
 import os
 import re
@@ -34,10 +35,9 @@ from urllib.parse import urlsplit, parse_qs
 _HOTRELOAD_DIR = Path(__file__).resolve().parents[3] / "hotreload"
 if str(_HOTRELOAD_DIR) not in sys.path:
     sys.path.insert(0, str(_HOTRELOAD_DIR))
-try:
-    from graceful import ShutdownFlag
+if importlib.util.find_spec("graceful") is not None:
     _HAVE_GRACEFUL = True
-except ImportError:
+else:
     _HAVE_GRACEFUL = False
     print("feed: graceful.py not found, SIGTERM will be abrupt", flush=True)
 

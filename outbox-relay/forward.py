@@ -26,7 +26,6 @@ squawk-relay), so the forwarder's own posts are never re-ingested.
 Lane: main d23c8a01. pitchfork daemon: squawk-relay-forward.
 """
 import json
-import os
 import re
 import subprocess
 import sys

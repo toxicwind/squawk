@@ -30,10 +30,10 @@ import tempfile
 BIN = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, BIN)
 
-import engine
-import calibration as cal
+import engine  # noqa: E402  (after sys.path.insert for sibling-dir import)
+import calibration as cal  # noqa: E402  (after sys.path.insert for sibling-dir import)
 
-import importlib.util
+import importlib.util  # noqa: E402  (after sys.path.insert for sibling-dir import)
 _spec = importlib.util.spec_from_file_location(
     "oracle_ask_under_test", os.path.join(BIN, "oracle_ask.py"))
 _oa = importlib.util.module_from_spec(_spec)

@@ -36,8 +36,8 @@ _oracle_work = os.environ.get("ORACLE_WORK")
 if _oracle_work:
     os.environ["ORACLE_WORK"] = _oracle_work
 
-import engine
-import calibration as cal
+import engine  # noqa: E402  (after sys.path.insert for sibling-dir import)
+import calibration as cal  # noqa: E402  (after sys.path.insert for sibling-dir import)
 
 
 def load_rows(path):

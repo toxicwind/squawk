@@ -27,7 +27,6 @@ Event-driven throughout: the main loop is select() on inotify fds.
 No timers, no polling.
 """
 
-import base64
 import ctypes
 import fcntl
 import importlib.util

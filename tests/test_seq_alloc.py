@@ -6,7 +6,6 @@ new durable-mark fast path.
 
 Run: python3 -m pytest tests/test_seq_alloc.py -q   (or plain python3)
 """
-import os
 import sys
 import tempfile
 import unittest
@@ -20,7 +19,6 @@ from chat_core import (
     _read_seqhigh,
     _release_lock,
     _seed_seqhigh,
-    max_seq,
 )
 
 

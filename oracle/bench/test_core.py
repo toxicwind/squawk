@@ -5,7 +5,6 @@ Run: python3 bench/test_core.py
 Covers: bayes guards, calibration math, engine pooling/gates,
 evidence partitioning, escalation routing, sizing invariants.
 """
-import math
 import os
 import sys
 
@@ -13,12 +12,12 @@ BIN = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "bin")
 sys.path.insert(0, BIN)
 os.environ.setdefault("ORACLE_WORK", "/tmp/oracle-test-work")
 
-import bayes
-import calibration as cal
-import engine
-import evidence as ev
-import escalation
-import sizing
+import bayes  # noqa: E402  (after sys.path.insert for sibling-dir import)
+import calibration as cal  # noqa: E402  (after sys.path.insert for sibling-dir import)
+import engine  # noqa: E402  (after sys.path.insert for sibling-dir import)
+import evidence as ev  # noqa: E402  (after sys.path.insert for sibling-dir import)
+import escalation  # noqa: E402  (after sys.path.insert for sibling-dir import)
+import sizing  # noqa: E402  (after sys.path.insert for sibling-dir import)
 
 PASS = 0
 FAIL = 0
@@ -69,7 +68,7 @@ check("bias CI ordered", bc_lo <= 0.875 <= bc_hi, "%s %s" % (bc_lo, bc_hi))
 check("norm_ppf", approx(cal.norm_ppf(0.5), 0.0, 1e-9))
 check("norm roundtrip", approx(cal.norm_cdf(cal.norm_ppf(0.7)), 0.7, 1e-9))
 check("nll sane", cal.nll([0.9, 0.1], [1, 0]) < cal.nll([0.5, 0.5], [1, 0]))
-import tempfile as _tf
+import tempfile as _tf  # noqa: E402  (after sys.path.insert for sibling-dir import)
 _tmpd = _tf.mkdtemp(prefix="tc-gate-")
 cal.CAL_DIR = _tmpd
 cal.HISTORY_PATH = _tmpd + "/accepted_history.jsonl"
@@ -136,7 +135,8 @@ tier3, _ = escalation.route([], 0.5, False)
 check("human tier empty", tier3 == "HUMAN", tier3)
 tier4, _ = escalation.route([0.7, 0.75], 0.7, True, invariant_ok=False)
 check("invariant violation debates", tier4 == "DEBATE", tier4)
-mock = lambda model, prompt, timeout_s: {"content": "0.6"}
+def mock(model, prompt, timeout_s):
+    return {"content": "0.6"}
 d = escalation.debate_tier("Q?", "crit", "ev", ["oracle-judge-a"], mock,
                            k=2, max_rounds=2)
 check("debate budgeted", d["rounds"] <= 2 and 0.01 <= d["posterior"] <= 0.99)
@@ -163,41 +163,29 @@ check("implication violation", len(viol2) == 1)
 #!/usr/bin/env python3
 """Rebuilt hardening test sections for bench/test_core.py (appended before the
 final print). Deterministic: no model calls, no network."""
-import threading
-import time
+import threading  # noqa: E402  (after sys.path.insert for sibling-dir import)
+import time  # noqa: E402  (after sys.path.insert for sibling-dir import)
 
-import framing
-import oracle_ask
-
-
-#!/usr/bin/env python3
-"""Rebuilt hardening test sections for bench/test_core.py (appended before the
-final print). Deterministic: no model calls, no network."""
-import threading
-import time
-
-import framing
-import oracle_ask
+import framing  # noqa: E402  (after sys.path.insert for sibling-dir import)
+import oracle_ask  # noqa: E402  (after sys.path.insert for sibling-dir import)
 
 
 #!/usr/bin/env python3
 """Rebuilt hardening test sections for bench/test_core.py (appended before the
 final print). Deterministic: no model calls, no network."""
-import threading
-import time
 
-import framing
-import oracle_ask
 
 
 #!/usr/bin/env python3
 """Rebuilt hardening test sections for bench/test_core.py (appended before the
 final print). Deterministic: no model calls, no network."""
-import threading
-import time
 
-import framing
-import oracle_ask
+
+
+#!/usr/bin/env python3
+"""Rebuilt hardening test sections for bench/test_core.py (appended before the
+final print). Deterministic: no model calls, no network."""
+
 
 # ---- framing: fail-closed question intake ----
 _framing_cases = [
@@ -426,8 +414,8 @@ check("debate final rebuilt by engine",
       "%s %s" % (_dv["status"], _dv["verdict_sha256"]))
 
 # ---- canonical verdict hash: recompute and match the ledger row ----
-import hashlib as _hl
-import json as _json
+import hashlib as _hl  # noqa: E402  (after sys.path.insert for sibling-dir import)
+import json as _json  # noqa: E402  (after sys.path.insert for sibling-dir import)
 _hv = engine.build_verdict({"binary_question": "Q?", "base_rate_prior": 0.5,
                             "question_id": "hash1",
                             "resolution_criteria": "c"},

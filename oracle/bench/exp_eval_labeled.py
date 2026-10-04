@@ -217,7 +217,7 @@ def main(argv):
     import escalation as esc_mod
 
     with open(a.questions) as f:
-        questions = [json.loads(l) for l in f if l.strip()]
+        questions = [json.loads(line) for line in f if line.strip()]
     if a.limit:
         questions = questions[:a.limit]
     rng = random.Random(20260920)
@@ -461,4 +461,4 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    sys.exit(main(sy
+    sys.exit(main(sys.argv[1:]))

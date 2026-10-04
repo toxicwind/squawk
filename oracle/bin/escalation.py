@@ -97,7 +97,6 @@ def _advocate_round(chat_fn, model, prompt, prior, timeout_s):
 
 
 def _prompt_for(side, question, criteria, evidence_text, other_posts, rnd):
-    opp = "NO" if side == "YES" else "YES"
     ctx = ""
     if other_posts:
         ctx = ("\nOpposing advocates' latest posteriors: %s\n"

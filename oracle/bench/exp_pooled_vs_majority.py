@@ -19,7 +19,7 @@ BIN = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "bin")
 sys.path.insert(0, BIN)
 os.environ.setdefault("ORACLE_WORK", "/tmp/oracle-exp-work")
 
-import engine
+import engine  # noqa: E402  (after sys.path.insert for sibling-dir import)
 
 random.seed(20260921)
 

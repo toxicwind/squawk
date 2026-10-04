@@ -19,7 +19,6 @@ Claim: {"claim_id","text","stance","llr","cluster_id","rationale","urls",
         "verified","credibility","revision_of"}.
 """
 import hashlib
-import time
 
 import bayes
 
@@ -92,8 +91,8 @@ def apply_claims(prior, claims, prior_cluster_counts=None, retrieval_trace=None)
         [c.get("cluster_id", "") for c, _ in guarded], eff,
         prior_cluster_counts)
     final_llrs = []
-    for (c, guards), f, l in zip(guarded, factors, eff):
-        fl = l * f
+    for (c, guards), f, weight in zip(guarded, factors, eff):
+        fl = weight * f
         if f < 1.0:
             guards.append("cluster_discount_x%.2f" % f)
         final_llrs.append(fl)

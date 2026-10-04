@@ -22,7 +22,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 BIN = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, BIN)
 
-import oracle_ask
+import oracle_ask  # noqa: E402  (after sys.path.insert for sibling-dir import)
 
 LISTEN = os.environ.get("ORACLE_CORE_LISTEN", "127.0.0.1:25151")
 LOG = os.path.join(os.environ.get("ORACLE_WORK",

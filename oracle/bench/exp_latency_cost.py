@@ -29,7 +29,6 @@ Usage: python3 bench/exp_latency_cost.py --rows bench/results/eval_<ts>.jsonl
 import argparse
 import concurrent.futures as cf
 import json
-import math
 import os
 import random
 import sys
@@ -84,14 +83,14 @@ def part_a(rows):
             s = max(live, key=lambda x: x[1])[0]
             slowest[s] = slowest.get(s, 0) + 1
     return {"phase_splits": phases, "per_tier": per_tier,
-            "slowest_judge_counts": slowest, "n_emitted": len(emitted)}
+            "slowest_judge_counts": slowest, "n_emitted": len(scorable)}
 
 
 def part_b(questions_path, concurrencies, seed):
     sys.path.insert(0, BIN)
     import oracle_ask
     with open(questions_path) as f:
-        qs = [json.loads(l) for l in f if l.strip()]
+        qs = [json.loads(line) for line in f if line.strip()]
     rng = random.Random(seed)
     rng.shuffle(qs)
     sub = qs[:12]
@@ -209,7 +208,7 @@ def main(argv):
     a = ap.parse_args(argv)
     ts = int(time.time())
     with open(a.rows) as f:
-        rows = [json.loads(l) for l in f if l.strip()]
+        rows = [json.loads(line) for line in f if line.strip()]
     out = {"ts": ts, "rows_path": a.rows,
            "partA_phase_analysis": part_a(rows)}
     if a.sweep:

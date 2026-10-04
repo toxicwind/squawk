@@ -7,6 +7,12 @@ Endpoints (all under /squawk-feed):
   GET /squawk-feed/wait?since=N        bearer auth -> {"seq": M, "messages": [...]}
   GET /squawk-feed/subscribe?since=N   same handler as /wait (alias)
 
+Optional query params on /wait and /subscribe:
+  tail=N     one-shot boot snapshot of the N most recent messages, answered
+             immediately (never parks); clamped server-side to TAIL_CAP (500)
+  channel=X  serve a different channel dir under the chat root; unknown or
+             unsafe names -> 404 (never reveals what exists); empty = default
+
 Auth: `Authorization: Bearer <token>`, constant-time compare
 (hmac.compare_digest); missing or invalid -> 404 with an empty body, never
 revealing the endpoint exists. The token comes from the SQUAWK_FEED_TOKEN
@@ -53,9 +59,11 @@ import fleet_relay
 TOKEN_ENV = "SQUAWK_FEED_TOKEN"
 HOLD_SECONDS = 55.0
 MAX_MESSAGES = 50
+TAIL_CAP = 500  # server-side cap on ?tail= boot snapshots
 TEXT_CAP = 500
 WATCH_MASK = 0x00000008 | 0x00000100  # IN_CLOSE_WRITE | IN_MOVED_TO
 _MSG_RE = re.compile(r"^(\d+)-.*\.md$")
+_CHANNEL_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]*")
 
 
 # ---------------------------------------------------------------------------
@@ -113,16 +121,22 @@ def _channel_high(chan_dir: Path) -> int:
 
 
 def _new_messages(chan_dir: Path, since: int) -> list:
-    out = []
+    """Paths for messages with seq > since, oldest first (numeric seq order).
+
+    The filename's leading number is the ordering authority -- lexicographic
+    sorting misorders 9 vs 10 vs 100, so sort by int(seq).
+    """
+    matched = []
     try:
         names = os.listdir(chan_dir)
     except OSError:
-        return out
-    for name in sorted(names):
+        return []
+    for name in names:
         m = _MSG_RE.match(name)
         if m and int(m.group(1)) > since:
-            out.append(chan_dir / name)
-    return out
+            matched.append((int(m.group(1)), name))
+    matched.sort(key=lambda t: t[0])
+    return [chan_dir / name for _, name in matched]
 
 
 class FeedState:
@@ -191,7 +205,9 @@ def build_fat(since: int, state: FeedState,
 
     M is the seq of the last message in the batch (== channel high-water
     when nothing was capped), so the client can re-poll to drain.
+    tail > 0 is clamped to TAIL_CAP server-side.
     """
+    tail = min(tail, TAIL_CAP) if tail > 0 else 0
     paths = _new_messages(state.chan_dir, since)
     paths = paths[-tail:] if tail > 0 else paths[:max_messages]
     messages = []
@@ -202,7 +218,13 @@ def build_fat(since: int, state: FeedState,
             identity=state.identity, key_dir=state.key_dir)
         rec["body"] = _truncate(rec.get("body"))
         messages.append(rec)
-        last = max(last, int(rec["seq"]))
+        seq = rec.get("seq") or 0
+        if seq <= 0:
+            # Unparseable body (poison file): fall back to the filename seq
+            # so the cursor still advances past it -- no infinite refetch.
+            m = _MSG_RE.match(p.name)
+            seq = int(m.group(1)) if m else since
+        last = max(last, int(seq))
     if not messages:
         with state.cond:
             last = state.high
@@ -262,9 +284,28 @@ class _Handler(http.server.BaseHTTPRequestHandler):
             except (TypeError, ValueError):
                 tail = 0
             tail = max(tail, 0)
+            tail = min(tail, TAIL_CAP)
+            chan = (qs.get("channel", [""])[0] or "").strip()
             state = self.server.state
+            if chan:
+                # Explicit channel: validate, resolve, serve one-shot.
+                # Unknown or unsafe names -> 404 (never reveal what exists).
+                if not _CHANNEL_RE.fullmatch(chan):
+                    self._send_404()
+                    return
+                chan_dir = self.server.root / chan
+                if not chan_dir.is_dir():
+                    self._send_404()
+                    return
+                one_shot = FeedState(chan_dir, chan, state.identity,
+                                     state.key_dir)
+                self._send_json(200, build_fat(since, one_shot, tail=tail))
+                return
             with state.cond:
-                if state.high <= since:
+                # tail=N is a boot snapshot: answer immediately even when the
+                # cursor is already at (or past) the high-water mark. Only the
+                # classic drain path parks the long-poll.
+                if tail == 0 and state.high <= since:
                     state.cond.wait(timeout=self.server.hold)
             self._send_json(200, build_fat(since, state, tail=tail))
             return
@@ -287,7 +328,18 @@ class FeedServer(socketserver.ThreadingMixIn, http.server.HTTPServer):
         self.state = state
         self.token = token
         self.hold = hold
+        self.root = None
+        self._watcher = None
         super().__init__(addr, _Handler)
+
+    def stop_watchers(self):
+        """Signal the inotify watch thread to exit and join it."""
+        state = getattr(self, "feed_state", None) or self.state
+        if state is not None:
+            state.stop.set()
+        watcher = getattr(self, "_watcher", None)
+        if watcher is not None:
+            watcher.join(timeout=5)
 
 
 def _ensure_keys_env(root: Path) -> None:
@@ -315,6 +367,8 @@ def serve(*, root: Path, channel: str, identity: str, key_dir: Path,
     watcher.start()
     server = FeedServer((bind, port), state, token, hold)
     server.feed_state = state
+    server.root = root
+    server._watcher = watcher
     return server
 
 

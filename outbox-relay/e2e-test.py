@@ -6,11 +6,9 @@ Usage: python3 e2e-test.py
 """
 import json
 import re
-import subprocess
 import sys
 import time
 import uuid
-from pathlib import Path
 
 sys.path.insert(0, "/home/toxic/.fleet-bus/squawk-relay")
 import relay_common as C
@@ -89,7 +87,7 @@ def main():
     results["fleet_file"] = fname
 
     # ---- 4. re-inject SAME key as a new outbox record (at-least-once dup) ----
-    max_seq = max(int(json.loads(l)["seq"]) for l in C.OUTBOX.read_text().splitlines() if l.strip())
+    max_seq = max(int(json.loads(line)["seq"]) for line in C.OUTBOX.read_text().splitlines() if line.strip())
     dup = dict(rec)
     dup["seq"] = max_seq + 1
     dup["ingest_ts"] = C.now_iso()

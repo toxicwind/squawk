@@ -25,8 +25,8 @@ sys.path.insert(0, str(BIN))
 _spec = importlib.util.spec_from_file_location("bidder", BIN / "bidder.py")
 bidder = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(bidder)
-import sealed as sealed_mod
-import mechanism as mech
+import sealed as sealed_mod  # noqa: E402  (after sys.path.insert for sibling-dir import)
+import mechanism as mech  # noqa: E402  (after sys.path.insert for sibling-dir import)
 
 
 def load_control_hmac_key() -> bytes:

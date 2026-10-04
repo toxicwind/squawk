@@ -17,7 +17,7 @@ for _cand in (_here, os.path.join(_here, "..")):
     if os.path.exists(os.path.join(_cand, "history_search.py")):
         sys.path.insert(0, _cand)
         break
-import history_search as hs
+import history_search as hs  # noqa: E402  (after sys.path.insert for sibling-dir import)
 
 
 def msg(seq, sender, channel, ts, title, body, status="discussion"):
@@ -66,7 +66,7 @@ def run(root, *argv):
 def test_parsing_and_query():
     root = fixture_root()
     out = run(root, "--json", "race")
-    recs = [json.loads(l) for l in out.splitlines()]
+    recs = [json.loads(line) for line in out.splitlines()]
     seqs = sorted(r["seq"] for r in recs)
     assert seqs == ["2", "4"], seqs  # title+body substring, case-insensitive
     r2 = [r for r in recs if r["seq"] == "2"][0]
@@ -78,7 +78,7 @@ def test_parsing_and_query():
 def test_bak_and_malformed_skipped():
     root = fixture_root()
     out = run(root, "--json")
-    recs = [json.loads(l) for l in out.splitlines()]
+    recs = [json.loads(line) for line in out.splitlines()]
     seqs = sorted(r["seq"] for r in recs)
     assert "5" not in seqs, seqs  # .bak not scanned
     assert len(recs) == 4, recs   # bad.md skipped
@@ -87,23 +87,23 @@ def test_bak_and_malformed_skipped():
 
 def test_filters():
     root = fixture_root()
-    assert len([json.loads(l) for l in
+    assert len([json.loads(line) for line in
                 run(root, "--json", "--channel", "leads").splitlines()]) == 1
-    recs = [json.loads(l) for l in
+    recs = [json.loads(line) for line in
             run(root, "--json", "--from", "ember").splitlines()]
     assert sorted(r["seq"] for r in recs) == ["2", "3"], recs
-    recs = [json.loads(l) for l in
+    recs = [json.loads(line) for line in
             run(root, "--json", "--status", "shipped").splitlines()]
     assert [r["seq"] for r in recs] == ["2"], recs
-    recs = [json.loads(l) for l in
+    recs = [json.loads(line) for line in
             run(root, "--json", "--seq-min", "2", "--seq-max", "3").splitlines()]
     assert sorted(r["seq"] for r in recs) == ["2", "3"], recs
-    recs = [json.loads(l) for l in run(
+    recs = [json.loads(line) for line in run(
         root, "--json", "--since", "2026-09-20T10:30:00-06:00",
         "--until", "2026-09-20T11:30:00-06:00").splitlines()]
     assert [r["seq"] for r in recs] == ["3"], recs
     # combined filters AND together
-    recs = [json.loads(l) for l in run(
+    recs = [json.loads(line) for line in run(
         root, "--json", "--channel", "fleet", "--from", "ember",
         "hedged").splitlines()]
     assert [r["seq"] for r in recs] == ["3"], recs
@@ -112,10 +112,10 @@ def test_filters():
 
 def test_regex_and_limit():
     root = fixture_root()
-    recs = [json.loads(l) for l in
+    recs = [json.loads(line) for line in
             run(root, "--json", "--regex", r"backups? fire").splitlines()]
     assert [r["seq"] for r in recs] == ["3"], recs
-    recs = [json.loads(l) for l in
+    recs = [json.loads(line) for line in
             run(root, "--json", "--limit", "2").splitlines()]
     assert [r["seq"] for r in recs] == ["1", "2"], recs  # seq order, bounded
     print("PASS test_regex_and_limit")

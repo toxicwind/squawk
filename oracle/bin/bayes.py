@@ -46,8 +46,8 @@ def logit(p):
     return math.log(c / (1.0 - c))
 
 
-def inv_logit(l):
-    return 1.0 / (1.0 + math.exp(-l))
+def inv_logit(x):
+    return 1.0 / (1.0 + math.exp(-x))
 
 
 def effective_llr(stance, raw_llr):
@@ -114,10 +114,10 @@ def confirmation_ratio(prior_prob, llrs):
     if lean == 0:
         return None
     confirming = total = 0.0
-    for l in llrs:
-        m = abs(l)
+    for v in llrs:
+        m = abs(v)
         total += m
-        if (l > 0) - (l < 0) == lean:
+        if (v > 0) - (v < 0) == lean:
             confirming += m
     return confirming / total if total > 0 else None
 

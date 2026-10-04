@@ -48,7 +48,10 @@ MODELS = ["oracle-judge-a", "oracle-judge-b", "oracle-judge-c"]
 
 def debated_final(question_text, timeout_s=90.0, work=None):
     """Mirror of oracle_ask.run_ask's debate block (same code path)."""
-    import framing, engine, escalation, oracle_ask
+    import framing
+    import engine
+    import escalation
+    import oracle_ask
     framed = framing.frame_question(question_text)
     if framed.get("status") == "refused":
         return None, "framing_refused"
@@ -104,7 +107,7 @@ def main(argv):
     sys.path.insert(0, BIN)
 
     with open(a.rows) as f:
-        rows = [json.loads(l) for l in f if l.strip()]
+        rows = [json.loads(line) for line in f if line.strip()]
 
     # ---- part 1: policy-DEBATE rows -- run the production debate path
     # and compare the debate final against the panel vote.

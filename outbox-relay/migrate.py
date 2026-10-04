@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import relay_common as C
 
 # 1. backfill idempotency keys
-lines = [l for l in C.OUTBOX.read_text().splitlines() if l.strip()]
+lines = [line for line in C.OUTBOX.read_text().splitlines() if line.strip()]
 out, filled = [], 0
 for line in lines:
     e = json.loads(line)

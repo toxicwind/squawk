@@ -40,10 +40,10 @@ from pathlib import Path
 
 _HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(_HERE.parent))  # squawk project dir
-import fleet_relay
-from squawk_feed import _Inotify, _MSG_RE
+import fleet_relay  # noqa: E402  (after sys.path.insert for sibling-dir import)
+from squawk_feed import _Inotify, _MSG_RE  # noqa: E402  (after sys.path.insert for sibling-dir import)
 
-import nats
+import nats  # noqa: E402  (after sys.path.insert for sibling-dir import)
 
 NATS_URL = os.environ.get("SQUAWK_NATS_URL", "nats://127.0.0.1:4222")
 SQUAWK_ROOT = Path(os.environ.get("SQUAWK_ROOT", "/home/toxic/.fleet-bus/squawk-root"))
@@ -308,7 +308,8 @@ async def _run() -> None:
             pass
     await tailer.stop.wait()
 
-    hb.cancel(); fb.cancel()
+    hb.cancel()
+    fb.cancel()
     for _, ino in watches:
         try:
             loop.remove_reader(ino.fd)

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Stalled-task audit: reads the canonical ledger, classifies every task."""
-import json, time, sys
+import json
+import time
 from collections import defaultdict
 
 LEDGER = '/home/toxic/estate/ranch/squawk/oracle/ledger/ledger.jsonl'

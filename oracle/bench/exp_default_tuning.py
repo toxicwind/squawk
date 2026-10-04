@@ -39,7 +39,6 @@ Without --live, only offline sweeps (T1,T2,T4,T5) run.
 import argparse
 import concurrent.futures as cf
 import json
-import math
 import os
 import random
 import sys
@@ -82,7 +81,6 @@ def t1_unanimity_bar(rows):
             if emit and r["probability"] is not None:
                 emitted.append((r["probability"], r["label"]))
         m = acc_brier(emitted)
-        auto_acc = None
         out["%.2f" % bar] = {**m, "emit_rate":
                              len(emitted) / len(rows) if rows else 0,
                              "tiers": tiers}
@@ -273,7 +271,10 @@ def t5_abstention(rows):
 
 
 def t6_debate_budget(rows, concurrency):
-    import framing, engine, escalation, oracle_ask
+    import framing
+    import engine
+    import escalation
+    import oracle_ask
     # Policy-DEBATE rows (disagreement-routed, gate_ok=True): the questions
     # where production would actually pay for a debate. status is not
     # required -- the debate runs on the question text.
@@ -359,7 +360,7 @@ def main(argv):
     sys.path.insert(0, BIN)
 
     with open(a.rows) as f:
-        rows = [json.loads(l) for l in f if l.strip()]
+        rows = [json.loads(line) for line in f if line.strip()]
 
     out = {"ts": ts, "rows_path": a.rows, "oracle_work": work,
            "T1_unanimity_bar": t1_unanimity_bar(rows)}

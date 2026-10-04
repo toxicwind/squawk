@@ -26,7 +26,6 @@ os.environ["FLEET_KEYS_DIR"] = str(_KEYS)
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-import fleet_identity  # noqa: E402
 import fleet_relay  # noqa: E402
 import squawk_seal  # noqa: E402
 
