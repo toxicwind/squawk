@@ -18,11 +18,38 @@ TAG_HINTS = {
     "docs": ("doc", "readme", "writeup", "document"),
 }
 
+# Known-broken components (2026-10-18): intake signatures that must never be
+# auctioned into the market's agentic lanes, because the lane itself is the
+# broken component. Repair of these components happens in a direct lane with
+# an explicit brief -- never through the market. Entries are
+# (signature_id, required_keywords); every keyword must appear in the
+# lowercased intake text for the signature to match. The quarantine check
+# runs before every other route rule (including !urgent): a broken lane
+# cannot be hurried.
+KNOWN_BROKEN = (
+    # smthrs 0.35.0 selector API mismatch: the corral/super-ralph workflow
+    # renderer throws on undefined `focuses` at selectReviewTickets. Both
+    # agentic execution paths die on it, so auctioning its repair through
+    # the market only burns bidder runs (intakes 2617, 2628, 2638, 2648,
+    # 2658, 2690 all died this way; bonds returned, no money moved).
+    ("corral-render-selectReviewTickets",
+     ("selectreviewtickets", "focuses")),
+)
+
 
 def _tags_for(text):
     tl = text.lower()
     tags = [t for t, kws in TAG_HINTS.items() if any(k in tl for k in kws)]
     return tags or ["probe"]
+
+
+def _known_broken_sig(text):
+    """Return the known-broken signature id matching text, or None."""
+    tl = (text or "").lower()
+    for sig, kws in KNOWN_BROKEN:
+        if all(k in tl for k in kws):
+            return sig
+    return None
 
 
 def triage(request, ledger_path):
@@ -33,8 +60,15 @@ def triage(request, ledger_path):
     """
     text = (request.get("text") or "").strip()
     frm = request.get("from", "?")
+    sig = _known_broken_sig(text)
     if not text:
         route, reason = "REJECT", "empty request"
+    elif sig:
+        route, reason = (
+            "REJECT",
+            "known-broken component %s: repair runs in a direct lane, "
+            "never auctioned through the broken lane" % sig,
+        )
     elif text.startswith("!urgent"):
         route, reason = "DIRECT", "urgent flag"
     elif "petition" in text.lower() and "upgrade" in text.lower():
@@ -55,6 +89,8 @@ def triage(request, ledger_path):
         "reason": reason,
         "request": text[:500],
     }
+    if sig:
+        decision["known_broken"] = sig
     if route == "TASK":
         decision["tags"] = _tags_for(text)
         decision["acceptance"] = \
