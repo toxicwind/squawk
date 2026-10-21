@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """oracle-core daemon: HTTP front door for the fused Oracle.
 
-Supervised by pitchfork as sovereign/oracle-core (see pitchfork.toml).
+Supervised by pitchfork as estate/oracle-core (see pitchfork.toml).
 Endpoints (localhost only):
   GET  /health  -> {"ok": true, "uptime_s": ..., "verdicts": n}
   POST /ask     -> {"question": str, "models"?: [...], "timeout_s"?: float,

@@ -11,7 +11,7 @@
 #
 # RESOLUTION: $SQUAWK_ROOT (default /home/toxic/.shingle/squawk-root, resolved
 # via readlink -f so the shingle <-> .shingle symlink and the planned
-# sovereign/hatch/agents/ember reorg both keep working). The squawk wrapper
+# estate/hatch/agents/ember reorg both keep working). The squawk wrapper
 # (/home/toxic/shingle/bin/squawk) and the hatch-side CLI
 # (~/workspace/bin/squawk) both resolve profiles from this file.
 #

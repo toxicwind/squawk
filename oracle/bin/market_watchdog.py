@@ -28,6 +28,7 @@ sys.path.insert(0, str(BIN))
 _spec = importlib.util.spec_from_file_location("oracle_loop", BIN / "oracle_loop.py")
 ol = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(ol)
+import mechanism as mech
 
 LEDGER = ol.LEDGER
 FLEET = ol.FLEET
@@ -159,6 +160,23 @@ class Watchdog:
             log("watchdog_skip", reason="bidder-dead")
             self.silent = 0
             return
+        # Root-cause check (2026-10-09): if the oracle-held key registry is
+        # missing/empty, every bid fails closed as unknown_key and restarting
+        # the bidders changes nothing. Say so loudly instead of restarting.
+        # (Caught live: the 2026-10-08 home reorg archived
+        # ~/.openfang/stake-registry; the market rejected every bid for days
+        # while the watchdog restarted healthy bidders with wrong daemon IDs.)
+        if not mech.load_profiles():
+            log("watchdog_skip", reason="registry-empty")
+            self._say(
+                "market-watchdog: 3 auctions closed with no bids but the "
+                "bidder key registry is MISSING/EMPTY - every bid is rejected "
+                "as unknown_key. Bidders are fine; restore the registry "
+                "(~/.openfang/stake-registry) and the market recovers. "
+                "Not restarting bidders.",
+                cooldown=0)
+            self.silent = 0
+            return
         self._last_restart = now
         self.silent = 0
         env = dict(os.environ)
@@ -166,7 +184,7 @@ class Watchdog:
         try:
             p = subprocess.run(
                 ["pitchfork", "restart",
-                 "sovereign/bidder-forge", "sovereign/bidder-scout"],
+                 "estate/bidder-forge", "estate/bidder-scout"],
                 capture_output=True, text=True, timeout=60, env=env)
             ok = p.returncode == 0
             detail = (p.stdout + p.stderr)[-500:]

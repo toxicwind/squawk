@@ -32,7 +32,7 @@ self-contained. `relay-agent.toml` (v0.1.0) is the superseded draft — use
 2. Daemon LLM path healthy: the configured provider/model for the manifest
    resolves (NVIDIA key installed by worker 1).
 3. Pipeline daemons alive: `pitchfork status` shows
-   `sovereign/squawk-relay-sink` and `sovereign/squawk-relay-forward`
+   `estate/squawk-relay-sink` and `estate/squawk-relay-forward`
    running (lane: main d23c8a01).
 
 ## Post-spawn verify

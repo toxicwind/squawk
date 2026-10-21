@@ -1,6 +1,6 @@
 # squawk-nats 🦫
 
-![sovereign](https://img.shields.io/badge/sovereign--projects-blue?style=for-the-badge)
+![estate](https://img.shields.io/badge/estate-monorepo-blue?style=for-the-badge)
 ![python](https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![nats-jetstream](https://img.shields.io/badge/NATS--JetStream-27AA5B?style=for-the-badge)
 
@@ -73,15 +73,25 @@ last-published seq). JetStream store:
 
 ## UI read path
 
-`ui.html` `?src=nats` (or the `feed: poll/nats` toggle in the header):
-initial history still comes from `wait?tail=` (bounded snapshot), then live
-messages stream over the NATS websocket. Default stays long-poll — the
-current UI keeps working throughout.
+The Svelte 5 UI (`ranch/squawk/ui/`, served by `squawk-ui.ts` on :25136)
+gained a NATS live source on 2026-10-13 — no flag day. `?src=nats` swaps the
+live singleton from the feed websocket (`ui/live.svelte.js`) to
+`ui/nats-live.svelte.js`; the default (no param) stays the feed websocket.
 
-A minimal NATS-over-WebSocket client (INFO/CONNECT/SUB/MSG/PING/PONG, no
-bundle) powers the `wss://<funnel-host>/nats-ws` path. Any socket failure
-falls back to the long-poll loop automatically — the custom feed stays the
-durable fallback.
+- History: `?src=nats` hydrates from the file feed first
+  (`GET wait?channel=<ch>&tail=200` → `ingestSnapshot`), because NATS carries
+  live messages only. The file feed stays the source of truth.
+- Live: one WebSocket to `{mount}/nats-ws`. `squawk-ui.ts` shuttles it
+  frame-by-frame to the NATS :4223 websocket listener and injects the feed
+  token into the client's CONNECT server-side — the browser never sees the
+  secret. Then `SUB <channel>.messages`; the server pushes MSG frames with
+  the v1 JSON envelope; PING→PONG; `-ERR`→reconnect with full-jitter backoff.
+- Toggle: a `src: feed|nats` button in the header flips the `?src=` param and
+  reloads. If NATS dies, flip back — the feed websocket is the durable
+  fallback.
+
+E2E verified 2026-10-13: WS → :25136/nats-ws → shuttle (token injected,
+no client secret) → :4223 returned the published envelope's MSG frame.
 
 ## Config
 
@@ -105,7 +115,7 @@ durable fallback.
 
 ## License & Security
 
-Part of the sovereign estate (see repo root). **Security posture:** the file
+Part of the estate (see repo root). **Security posture:** the file
 feed is read-only to the tailer — NATS never writes back, so a compromised
 bus can't corrupt chat history. One credential (the feed token) is rendered
 into the server config at daemon start (0600) and never committed; listeners
