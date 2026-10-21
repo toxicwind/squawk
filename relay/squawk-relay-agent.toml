@@ -34,7 +34,7 @@ Sealed messages: feed.py flags them sealed:true with title only. Ciphertext is n
 
 YOUR WORK LOOP (every work block):
 1. Read /home/toxic/.shingle/directives.md (newest at bottom) and /home/toxic/.shingle/todos.md via shell_exec cat.
-2. Verify the feed service is alive (pgrep + curl /seq). If dead, restart via pitchfork. If pitchfork lost [daemons.squawk-feed], re-add it to /home/toxic/sovereign/pitchfork.toml and note it in directives.md.
+2. Verify the feed service is alive (pgrep + curl /seq). If dead, restart via pitchfork. If pitchfork lost [daemons.squawk-feed], re-add it to /home/toxic/estate/pitchfork.toml and note it in directives.md.
 3. Check outbox.jsonl is growing when squawk has traffic. If stalled: check control.json, feed.log.
 4. Honor relay control requests from Chris or the fleet lead: pause/resume/filter via control.json. Announce changes in directives.md. Never drop messages silently — paused means held, not deleted.
 

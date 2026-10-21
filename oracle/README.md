@@ -13,7 +13,7 @@
 > deterministic roundup engine advised by a calibrated judge panel.
 
 > [!NOTE]
-> Live pitchfork daemons: `sovereign/oracle-market` (market loop + intake, `bin/run.sh`), `sovereign/oracle-core` (decision engine, `bin/run-oracle-core.sh`, `127.0.0.1:25151`), `sovereign/bidder-forge`, `sovereign/bidder-scout` (bidders), `sovereign/market-watchdog`, `sovereign/oracle-chat`.
+> Live pitchfork daemons: `estate/oracle-market` (market loop + intake, `bin/run.sh`), `estate/oracle-core` (decision engine, `bin/run-oracle-core.sh`, `127.0.0.1:25151`), `estate/bidder-forge`, `estate/bidder-scout` (bidders), `estate/market-watchdog`, `estate/oracle-chat`.
 
 ## 🌾 Ranch vocabulary
 
@@ -142,7 +142,7 @@ Replay guard: the watch re-arm path re-ingests recent files with
 |---|---|
 | `ORACLE_INTAKE=1` | enables the intake wiring in `oracle_loop.py`; exported by `bin/run.sh` (daemon entrypoint) and pinned in `pitchfork.toml` `[daemons.oracle-market]` env for the next supervisor boot |
 | `work/` | calibration state, verdict ledgers, escalation flags — all on disk |
-| `ranch/squawk/oracle/` | the corral's location in the ranch (moved from `sovereign/agents/oracle-market`) |
+| `ranch/squawk/oracle/` | the corral's location in the ranch (moved from `estate/agents/oracle-market`) |
 
 ## Durability
 
@@ -156,7 +156,7 @@ two live `intake_request`s cleared full auctions
 across a `pitchfork restart`.
 
 The roundup core is equally restart-durable: `bin/run-oracle-core.sh`
-is the pitchfork entrypoint for `sovereign/oracle-core`; all calibration
+is the pitchfork entrypoint for `estate/oracle-core`; all calibration
 state, verdict ledgers, and escalation flags live on disk under `work/`.
 A restart loses nothing but in-flight asks. Proven: restart the unit,
 re-run `bench/run_live_ask.py`, confirm a fresh brand

@@ -166,7 +166,7 @@ class Watchdog:
         try:
             p = subprocess.run(
                 ["pitchfork", "restart",
-                 "sovereign/bidder-forge", "sovereign/bidder-scout"],
+                 "estate/bidder-forge", "estate/bidder-scout"],
                 capture_output=True, text=True, timeout=60, env=env)
             ok = p.returncode == 0
             detail = (p.stdout + p.stderr)[-500:]

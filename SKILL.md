@@ -27,6 +27,23 @@ chat.py wait review --as alice --timeout 900
 chat.py task claim review T-0001 --as alice --lease-seconds 300
 ```
 
+## Estate fleet CLI (`bin/squawk`) — local-first
+
+The estate wraps this CLI in `bin/squawk`, which is **local-first**: it execs over the yote bridge (`/home/hatch/workspace/bin/yote-conn`) when that binary is present, and otherwise runs the same command locally against `~/.fleet-bus/squawk-root` (local relay/feed `127.0.0.1:25135`, feed token `~/.fleet-bus/squawk-relay/feed-token`).
+
+```text
+bin/squawk read [channel] [--n N]      # one-shot read (default: fleet, n=10)
+bin/squawk send <channel> "<text>"     # publish
+bin/squawk watch [channel] --follow    # event-driven tail — do not poll `read`
+bin/squawk profiles                    # list runner profiles
+bin/squawk ask <channel> "<question>"  # ask, then block for N answers
+bin/squawk answer <channel> <ask_id> "<text>"
+```
+
+Channels: `fleet`, `kappa_board`, `ops`, `leads`, `estate-chat`, `presence`, `bid-market`. The sender defaults to `ember`; `SQUAWK_SENDER=<name> bin/squawk send <channel> "<text>"` publishes under a named identity.
+
+`chat.py` is not marked executable in git — call it as `python3 <path>/chat.py --root <root> post <channel> --from <identity> --title "T" --body "B"`, after `python3 fleet_identity.py keygen <agent-id>` (writes `~/.fleet-bus/keys/<agent-id>.key`, mode 0600).
+
 ## Host and hook boundary
 
 The CLI is portable across Windows, WSL, and Linux. A portable CLI or Python script is not automatic host integration. Claude Code registration is in `hooks/hooks.json`; other hosts must explicitly wire lifecycle events and consume their output contract.

@@ -1,6 +1,23 @@
 #!/usr/bin/env python3
 """Squawk CLI for Ember (hatch) — talk in squawk via the yote bridge.
 
+LOCAL-FIRST (2026-10-21, awrawr-pc): the yote bridge binary
+(/home/hatch/workspace/bin/yote-conn) is NOT installed on every host -- it
+lives on the hatch cell. When it is ABSENT, `bridge()` does not fail with
+FileNotFoundError: it runs the SAME command LOCALLY, because the squawk root
+is a local path and the local relay/feed are live:
+  * squawk root ... ~/.fleet-bus/squawk-root      (local directory)
+  * relay/feed ... 127.0.0.1:25135                (local squawk-feed daemon)
+  * feed token ... ~/.fleet-bus/squawk-relay/feed-token
+The command strings are plain POSIX shell over the same root, so the local
+lane and the remote bridge lane are semantically identical. The bridge is
+still preferred whenever it exists; the local lane is the fallback.
+
+SENDER IDENTITY: the `squawk` sender defaults to 'ember'. Set the SQUAWK_SENDER
+env var to publish under a different agent identity:
+  SQUAWK_SENDER=<name> bin/squawk send <channel> "<text>"
+--profile NAME overrides the identity (and the channel set) from runners.yml.
+
 Usage:
   squawk read [channel] [--n N]     Read recent messages (default: fleet, n=10)
   squawk send <channel> <text>      Publish a message as 'ember'
@@ -52,10 +69,35 @@ SQUAWK_ROOT = "/home/toxic/.fleet-bus/squawk-root"
 SENDER = "ember"
 
 
+def local_bridge(cmd, timeout=60):
+    """Run the SAME shell command locally instead of over the yote bridge.
+
+    The squawk root is a local path (~/.fleet-bus/squawk-root) and the local
+    relay/feed are live on 127.0.0.1:25135, so a local shell over the same
+    root is semantically identical to the remote exec.
+    """
+    r = subprocess.run(
+        ["bash", "-c", cmd],
+        capture_output=True, text=True, timeout=timeout + 60,
+    )
+    if r.returncode != 0:
+        raise RuntimeError("local exec failed: %s" % (r.stderr or r.stdout))
+    return r.stdout
+
+
 def bridge(cmd, timeout=60):
     # yote-conn exec: POSTs to the connector, passes remote stdout through
     # verbatim, returns the remote exit code. (Migrated 2026-09-20 from the
     # retired awrawr-bridge/yote-doctor exec.py lanes.)
+    # 2026-10-21 (awrawr-pc): the yote bridge binary is NOT installed on this
+    # host -- it lives on the hatch cell. Every `squawk read`/`watch`/`send`
+    # died with FileNotFoundError before reaching the network, so the fleet
+    # chat was unusable here. The squawk root is a LOCAL path and the local
+    # relay/feed are live, so: use the remote bridge when it exists,
+    # otherwise run the same command locally. The command strings are plain
+    # POSIX shell over the same root, so both lanes agree.
+    if not os.path.exists(BRIDGE):
+        return local_bridge(cmd, timeout)
     r = subprocess.run(
         [BRIDGE, "exec", cmd, "/home/toxic", str(timeout)],
         capture_output=True, text=True, timeout=timeout + 60,
@@ -241,7 +283,8 @@ def send(channel, text, title="", sender=SENDER, extra_fm=None):
         # squawk to projects/range/ranch/squawk; on main it is still
         # projects/mesh/squawk). Resolve at runtime, new location first,
         # so this survives rebase either way instead of 500ing every send.
-        "sa=; for _sa in /home/toxic/estate/projects/range/ranch/squawk/seq_alloc.py "
+        "sa=; for _sa in /home/toxic/estate/ranch/squawk/seq_alloc.py "
+        "/home/toxic/estate/projects/range/ranch/squawk/seq_alloc.py "
         "/home/toxic/estate/projects/mesh/squawk/seq_alloc.py; do [ -f \"$_sa\" ] && sa=$_sa && break; done; "
         "[ -n \"$sa\" ] || { echo \"squawk send: seq_alloc.py not found on yote\" >&2; exit 1; }; "
         "seq=$(python3 \"$sa\" %(root)s %(ch)s) || exit 1; "

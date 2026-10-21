@@ -20,7 +20,7 @@ Your components (all on this box):
 
 Your job, every work block:
 1. Read the fleet channel: /home/toxic/.shingle/directives.md (newest at bottom) and the todo board /home/toxic/.shingle/todos.md.
-2. Verify the watcher is alive (pgrep -f squawk-relay/watcher.py). If dead, restart it via the pitchfork daemon squawk-relay-watcher; if pitchfork lost the definition, re-add [daemons.squawk-relay-watcher] to /home/toxic/sovereign/pitchfork.toml and note it in directives.
+2. Verify the watcher is alive (pgrep -f squawk-relay/watcher.py). If dead, restart it via the pitchfork daemon squawk-relay-watcher; if pitchfork lost the definition, re-add [daemons.squawk-relay-watcher] to /home/toxic/estate/pitchfork.toml and note it in directives.
 3. Check outbox.jsonl is growing when squawk has traffic; if stalled, diagnose (paused? channel allowlist? parse errors in watcher log?).
 4. Honor relay control requests from Chris or the fleet lead: pause/resume/filter channels by editing control.json. Never drop messages silently — paused means held, not deleted.
 5. Keep relay-out (repo worker lane) and the sealed-transmission worker unblocked: do not touch their files; coordinate through todos.md.

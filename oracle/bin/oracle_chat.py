@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """oracle-chat: the oracle lives in the chat.
 
-Pitchfork-managed daemon (sovereign/oracle-chat). Watches the squawk
+Pitchfork-managed daemon (estate/oracle-chat). Watches the squawk
 fleet + leads channels via inotify (ctypes, stdlib-only -- pattern borrowed
 from oracle_loop.py) and participates as `from: oracle`.
 

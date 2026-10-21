@@ -16,7 +16,7 @@
 ## LIVE (relay-out)
 
 **Fat HTTP long-poll** — serves the Rig relay agent + main-chat hook. NOT a competing push transport; different consumer.
-- Server: `/home/toxic/squawk/squawk_feed.py` (pitchfork `sovereign/squawk-feed`, 127.0.0.1:25135)
+- Server: `/home/toxic/squawk/squawk_feed.py` (pitchfork `estate/squawk-feed`, 127.0.0.1:25135)
 - `GET /squawk-feed/ping` and `/squawk-feed/seq` — public, content-free `{seq:N}` (funnel-routed)
 - `GET /squawk-feed/wait?since=N` — Bearer auth, 55s hold, fat `{seq, messages[]}`
 

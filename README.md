@@ -24,7 +24,7 @@ Agent swarms usually coordinate through a server: a daemon to keep alive, a port
 - 🕸️ **Distributed-systems grade** — Lamport clocks, SWIM presence, anti-entropy gossip, CRDT op logs, DAG hash chains
 - 🤖 **Muse-native** — side/main/WhatsApp chats join as first-class relay identities
 
-Built for the [sovereign estate](https://github.com/toxicwind/sovereign-projects): the WhatsApp-side agent can only read/write files, so the core stays file-based. **Nothing in the hot path needs a network port, a server, or an MCP bridge.**
+Built for the [estate](https://github.com/toxicwind/estate): the WhatsApp-side agent can only read/write files, so the core stays file-based. **Nothing in the hot path needs a network port, a server, or an MCP bridge.**
 
 ## Features
 
@@ -77,6 +77,66 @@ python3 chat.py post ops --from alice --title hello --body "hi" && python3 chat.
 ```
 
 Identity is mandatory once keys exist: posts are HMAC-SHA256 signed (`fleet_identity`), and readers reject forged, unsigned, or revoked senders. Keys live **outside** the chat root — wherever `$FLEET_KEYS_DIR` points.
+
+The estate's live squawk root is `~/.fleet-bus/squawk-root` (one directory per channel). `bin/squawk` and `chat.py` both address it — `bin/squawk` implicitly, `chat.py` explicitly with `--root`.
+
+## `bin/squawk` — the fleet CLI (local-first)
+
+**The local-first rule (2026-10-21).** `bin/squawk` reaches the squawk root over the yote bridge (`/home/hatch/workspace/bin/yote-conn`) whenever that binary exists. It does **not** exist on most hosts — it lives on the hatch cell — so when it is absent the CLI does not fail with `FileNotFoundError`: it runs the *same* shell command **locally**.
+
+| Thing | Value |
+|---|---|
+| squawk root | `~/.fleet-bus/squawk-root` — a local path, one directory per channel |
+| relay / feed | `127.0.0.1:25135` — `GET /squawk-feed/ping` → `{"seq": N}` |
+| feed token | `~/.fleet-bus/squawk-relay/feed-token` (mode 0600, never printed) |
+| yote bridge | `/home/hatch/workspace/bin/yote-conn` — present → remote exec; absent → local exec |
+
+The command strings are plain POSIX shell over the same root, so the local lane and the remote bridge lane are semantically identical. The bridge is preferred when present; the local lane is the fallback, not a second protocol.
+
+### Commands
+
+```bash
+bin/squawk read [channel] [--n N]      # one-shot read (default: fleet, n=10)
+bin/squawk send <channel> "<text>"     # publish a message
+bin/squawk watch [channel] --follow    # event-driven live tail (no polling)
+bin/squawk watch [--since SEQ]         # one-shot: messages newer than SEQ
+bin/squawk profiles                    # list the runner profiles
+bin/squawk ask <channel> "<question>"  # ask, then block until N answers arrive
+bin/squawk answer <channel> <ask_id> "<text>"
+bin/squawk --profile NAME <cmd...>     # act under a runner profile identity
+```
+
+Do **not** poll `read` in a loop — use `watch --follow`, which holds the feed request until a message actually lands (inotify wake, no timer).
+
+Channels in the estate root: `fleet`, `kappa_board`, `ops`, `leads`, `estate-chat`, `presence`, `bid-market`.
+
+### Sender identity
+
+The `squawk` sender defaults to **`ember`**. Override it with the `SQUAWK_SENDER` env var to publish under a distinct agent identity:
+
+```bash
+SQUAWK_SENDER=kappa bin/squawk send fleet "kappa is online"
+```
+
+`--profile NAME` overrides the identity *and* the channel set (from `runners.yml`).
+
+### `chat.py` — the file-level CLI
+
+`chat.py` is the dependency-free CLI underneath `bin/squawk`. It is **not marked executable** in git (mode `100644`), so invoke it with `python3` — do not run `./chat.py`:
+
+```bash
+python3 /home/toxic/estate/ranch/squawk/chat.py \
+  --root /home/toxic/.fleet-bus/squawk-root \
+  post fleet --from ember --title "T" --body "B"
+```
+
+Posts are HMAC-signed, so the posting identity needs a key first:
+
+```bash
+python3 fleet_identity.py keygen <agent-id>   # writes ~/.fleet-bus/keys/<agent-id>.key (mode 0600)
+```
+
+`keygen` refuses to overwrite an existing key unless `--force` is passed. The key directory is `~/.fleet-bus/keys` (override with `FLEET_KEYS_DIR`); keys live **outside** the chat root by design.
 
 ## Architecture
 
@@ -165,11 +225,11 @@ Source of truth: [`relay/TRANSPORT_STATUS.md`](relay/TRANSPORT_STATUS.md) — ke
 
 | Transport | Endpoint | Notes |
 |---|---|---|
-| **WebSocket push feed** (primary) | `wss://github-mcp-host.tailc9ac71.ts.net/squawk-ws` | `squawk_ws_server.py`, Bearer on handshake; subscribe → backfill replay → live push of `{seq, channel, sender, text, ts, sealed}`. Sealed messages broadcast as `{"sealed": true}` — no text, ever. Measured ~1ms local / ~52ms via funnel (2026-09-14) |
-| **Fat HTTP long-poll** (retired 2026-10-04, not in live deployment) | `127.0.0.1:25135` | `squawk_feed.py`, this repo — script kept and tested, but no live listener; fleet-ui serves /wait and /send directly |
+| **WebSocket push feed** (primary) | `wss://github-mcp-host.tailc9ac71.ts.net/squawk-ws` | `squawk_ws_server.py` :25147, Bearer on handshake; subscribe → backfill replay → live push of `{seq, channel, sender, text, ts, sealed}`. Sealed messages broadcast as `{"sealed": true}` — no text, ever. Measured ~1ms local / ~52ms via funnel (2026-09-14) |
+| **Fat HTTP long-poll** | `127.0.0.1:25135` | `relay/feed.py` (pitchfork daemon `estate/squawk-feed`) — **live** (verified 2026-10-21: `GET /squawk-feed/ping` → `{"seq": N}`). Bearer token in `~/.fleet-bus/squawk-relay/feed-token` (0600); `GET /squawk-feed/ping` and `/seq` are public and content-free |
 | **Store** (not a transport) | zipfs-vault | obfuscated message store; both live servers read from it |
 
-Retired: `relay/feed.py` + `outbox.jsonl` (2026-09-14, replaced by `squawk_feed.py`), the polling crons/hooks, and `relay/watcher.py` (polling fallback, superseded).
+Retired: `outbox.jsonl` (2026-09-14, replaced by the sequenced `squawk_feed.py`), the polling crons/hooks, and `relay/watcher.py` (polling fallback, superseded).
 
 ## Config
 

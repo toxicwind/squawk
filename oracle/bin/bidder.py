@@ -55,7 +55,7 @@ RALPH_CAP_S = 1740  # 29 min ceiling: Super Ralph runs are slow (~11 min
                     # observed for a trivial run)
 RALPH_MODEL = os.environ.get("RALPH_MODEL", "kimi-k3-nim")
 RALPH_BASE_URL = os.environ.get("RALPH_BASE_URL",
-                                "http://127.0.0.1:25104/v1")  # sovereign TS router; :25200 (cuttinggate test) is dead
+                                "http://127.0.0.1:25104/v1")  # estate TS router; :25200 (cuttinggate test) is dead
 # cuttinggate's auth gate requires a "Bearer " prefix (any non-empty value;
 # the upstream key comes from cuttinggate's own credential plane).
 RALPH_API_KEY = os.environ.get("RALPH_API_KEY", "oracle-market-bidder")
@@ -154,7 +154,7 @@ def _summarize_ralph_nodes(workdir):
 RALPH_MODEL_CANDIDATES = [
     os.environ.get("RALPH_MODEL") or "",  # explicit operator override
     # 2026-10-03: :25200 (cuttinggate test instance) is DEAD — nothing
-    # listening. :25104 (sovereign TS router) is the live backend, verified
+    # listening. :25104 (estate TS router) is the live backend, verified
     # 2026-10-03 with non-empty completions on every candidate below.
     "gemini-eap-openai/gemini-3.8-flash",
     "google/gemini-3.8-flash",
@@ -221,10 +221,10 @@ def _resolve_ralph_model(base_url, timeout=15):
 # overlapping work. The oracle rejects unattested bids
 # (bid_rejected{reason:no-attestation}, SPEC §10) — so a bidder
 # that cannot attest must skip the bid loudly, never bid blind.
-KB_COMMITS_API = ("https://api.github.com/repos/toxicwind/sovereign-projects"
+KB_COMMITS_API = ("https://api.github.com/repos/toxicwind/estate"
                   "/commits?path=docs/fleet-knowledgebase.md&per_page=1")
 KB_RAW_URL = ("https://raw.githubusercontent.com/toxicwind/"
-              "sovereign-projects/main/docs/fleet-knowledgebase.md")
+              "estate/main/docs/fleet-knowledgebase.md")
 KB_CACHE = BIN.parent / "work" / "kb-attestation-cache.json"  # runtime cache: regenerable, untracked
 KB_HTTP_TIMEOUT = 10
 
