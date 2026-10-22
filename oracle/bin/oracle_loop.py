@@ -59,7 +59,6 @@ from pathlib import Path
 BIN = Path(__file__).resolve().parent
 sys.path.insert(0, str(BIN))
 import mechanism as mech
-import calibration as cal_mod
 import engine as engine_mod
 import sealed as sealed_mod
 
