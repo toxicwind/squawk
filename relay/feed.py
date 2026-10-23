@@ -14,6 +14,7 @@
 - Sealed messages are flagged sealed:true with title only; unsealing is the
   repo relay-out lane (relay identity key), not this path.
 """
+
 import ctypes
 import ctypes.util
 import importlib.util
@@ -46,8 +47,19 @@ _draining = threading.Event()
 _active_requests = 0
 _active_lock = threading.Lock()
 
-CHAT_ROOT = Path(os.environ.get("SQUAWK_CHAT_ROOT", "/home/toxic/.shingle/squawk-root"))
-RELAY_DIR = Path(os.environ.get("SQUAWK_RELAY_DIR", "/home/toxic/.shingle/squawk-relay"))
+
+def _default_chat_root() -> Path:
+    p = Path("/home/toxic/.fleet-bus/squawk-root")
+    return p if p.exists() else Path("/home/toxic/.shingle/squawk-root")
+
+
+def _default_relay_dir() -> Path:
+    p = Path("/home/toxic/.fleet-bus/squawk-relay")
+    return p if p.exists() else Path("/home/toxic/.shingle/squawk-relay")
+
+
+CHAT_ROOT = Path(os.environ.get("SQUAWK_CHAT_ROOT", str(_default_chat_root())))
+RELAY_DIR = Path(os.environ.get("SQUAWK_RELAY_DIR", str(_default_relay_dir())))
 OUTBOX = RELAY_DIR / "outbox.jsonl"
 STATE = RELAY_DIR / "state.json"
 CONTROL = RELAY_DIR / "control.json"
@@ -80,8 +92,10 @@ _wd_to_path = {}
 
 
 def _add_watch(path, mask):
-    wd = _check(_libc.inotify_add_watch(_inotify_fd, str(path).encode(), mask),
-                "inotify_add_watch %s" % path)
+    wd = _check(
+        _libc.inotify_add_watch(_inotify_fd, str(path).encode(), mask),
+        "inotify_add_watch %s" % path,
+    )
     _wd_to_path[wd] = str(path)
     return wd
 
@@ -93,7 +107,7 @@ def _read_events():
     while i + _EVENT_SIZE <= len(data):
         wd, mask, _cookie, elen = struct.unpack_from(_EVENT_FMT, data, i)
         i += _EVENT_SIZE
-        name = data[i:i + elen].split(b"\0", 1)[0].decode(errors="replace")
+        name = data[i : i + elen].split(b"\0", 1)[0].decode(errors="replace")
         i += elen
         events.append((wd, mask, name))
     return events
@@ -133,8 +147,8 @@ def parse_msg(path):
 # ---------------- shared feed state ----------------
 _lock = threading.Lock()
 _feed_seq = 0
-_channels_last = {}   # channel -> last msg_seq processed
-_buffer = []          # recent outbox entries (dicts), oldest-first
+_channels_last = {}  # channel -> last msg_seq processed
+_buffer = []  # recent outbox entries (dicts), oldest-first
 
 
 def load_state():
@@ -155,9 +169,13 @@ def load_state():
 
 def save_state():
     tmp = STATE.with_suffix(".tmp")
-    tmp.write_text(json.dumps(
-        {"feed_seq": _feed_seq, "channels": _channels_last},
-        indent=2, sort_keys=True))
+    tmp.write_text(
+        json.dumps(
+            {"feed_seq": _feed_seq, "channels": _channels_last},
+            indent=2,
+            sort_keys=True,
+        )
+    )
     tmp.replace(STATE)
 
 
@@ -224,14 +242,20 @@ def scan_channels():
                     if not MSG_FILE_RE.match(f.name):
                         continue
                     msg = parse_msg(f)
-                    if (msg and msg["msg_seq"] > last
-                            and msg["author"] not in skip_authors):
+                    if (
+                        msg
+                        and msg["msg_seq"] > last
+                        and msg["author"] not in skip_authors
+                    ):
                         msgs.append(msg)
                 msgs.sort(key=lambda m: m["msg_seq"])
                 for msg in msgs:
                     _feed_seq += 1
-                    text = ("[sealed message: %s]" % (msg["title"] or "sealed")
-                            if msg["sealed"] else msg["body"][:2000])
+                    text = (
+                        "[sealed message: %s]" % (msg["title"] or "sealed")
+                        if msg["sealed"]
+                        else msg["body"][:2000]
+                    )
                     entry = {
                         "seq": _feed_seq,
                         "ts": msg["ts"],
@@ -287,8 +311,12 @@ def inotify_loop():
         try:
             for wd, mask, name in _read_events():
                 # new dir under chat root -> watch it if it's a channel
-                if (wd in _wd_to_path and _wd_to_path[wd] == str(CHAT_ROOT)
-                        and (mask & IN_ISDIR) and (mask & (IN_CREATE | IN_MOVED_TO))):
+                if (
+                    wd in _wd_to_path
+                    and _wd_to_path[wd] == str(CHAT_ROOT)
+                    and (mask & IN_ISDIR)
+                    and (mask & (IN_CREATE | IN_MOVED_TO))
+                ):
                     cand = CHAT_ROOT / name
                     if cand.is_dir():
                         try:
@@ -331,6 +359,12 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         parts = urlsplit(self.path)
+        if parts.path in ("/", "/index.html"):
+            target = os.environ.get("DELEND_SQUAWK_REDIRECT", "/squawk-feed/seq")
+            self.send_response(302)
+            self.send_header("Location", target)
+            self.end_headers()
+            return
         if parts.path == "/health":
             # Blue-green health probe: 200 when serving, 503 when draining.
             if _draining.is_set():
@@ -381,16 +415,24 @@ class Handler(BaseHTTPRequestHandler):
 def main():
     RELAY_DIR.mkdir(parents=True, exist_ok=True)
     if not CONTROL.exists():
-        CONTROL.write_text(json.dumps({
-            "paused": False,
-            "channels": None,
-            "skip_authors": ["relay", "squawk-relay"],
-            "note": "paused=true pauses relay; channels=[...] allowlists; skip_authors avoids echo loops",
-        }, indent=2))
+        CONTROL.write_text(
+            json.dumps(
+                {
+                    "paused": False,
+                    "channels": None,
+                    "skip_authors": ["relay", "squawk-relay"],
+                    "note": "paused=true pauses relay; channels=[...] allowlists; skip_authors avoids echo loops",
+                },
+                indent=2,
+            )
+        )
     load_state()
     load_outbox_tail()
     n = scan_channels()  # catch-up on startup
-    print("squawk-feed starting: catch-up relayed %d, feed_seq=%d" % (n, _feed_seq), flush=True)
+    print(
+        "squawk-feed starting: catch-up relayed %d, feed_seq=%d" % (n, _feed_seq),
+        flush=True,
+    )
     ensure_watches()
     t = threading.Thread(target=inotify_loop, daemon=True)
     t.start()
@@ -428,8 +470,10 @@ def main():
         with _active_lock:
             remaining = _active_requests
         if remaining:
-            print("squawk-feed: %d requests still active, closing anyway" % remaining,
-                  flush=True)
+            print(
+                "squawk-feed: %d requests still active, closing anyway" % remaining,
+                flush=True,
+            )
         srv.server_close()
         print("squawk-feed: stop complete", flush=True)
 
