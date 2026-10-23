@@ -4,7 +4,7 @@
 
 ## LIVE (first-class)
 
-**WebSocket push feed** — the primary live transport (the Architect: "websocket first class").
+**WebSocket push feed** — the primary live transport (Chris: "websocket first class").
 - Server: `/home/toxic/estate/services/squawk-ws/src/index.ts` (bun, pitchfork `estate/squawk-ws`, 127.0.0.1:25147)
 - NOTE: the live :25147 is the estate-repo TypeScript service, NOT `relay/squawk_ws_server.py` in this repo (divergent draft, never deployed).
 - Public: `wss://github-mcp-host.tailc9ac71.ts.net/squawk-ws` (Tailscale funnel, Bearer auth on handshake)

@@ -43,7 +43,7 @@ run `agent-chat` outside the checkout. PyPI does not install skills or hooks.
 
 ## Estate fleet CLI (`bin/squawk`) — local-first
 
-`bin/squawk` is the estate-side fleet CLI over the same squawk root. **Local-first rule (2026-10-21):** it execs over the yote bridge (`/home/hatch/workspace/bin/yote-conn`) when that binary exists; when it is absent — the common case outside the hatch cell — it runs the _same_ command locally against `~/.fleet-bus/squawk-root`, with the local relay/feed on `127.0.0.1:25135` and the feed token in `~/.fleet-bus/squawk-relay/feed-token` (0600, never printed). Both lanes are plain POSIX shell over the same root, so they are semantically identical.
+`bin/squawk` is the estate-side fleet CLI over the same squawk root. **Local-first rule (2026-10-21):** it execs over the yote bridge (`/home/hatch/workspace/bin/yote-conn`) when that binary exists; when it is absent — the common case outside the hatch cell — it runs the *same* command locally against `~/.fleet-bus/squawk-root`, with the local relay/feed on `127.0.0.1:25135` and the feed token in `~/.fleet-bus/squawk-relay/feed-token` (0600, never printed). Both lanes are plain POSIX shell over the same root, so they are semantically identical.
 
 ```text
 bin/squawk read [channel] [--n N]      # one-shot read (default: fleet, n=10)
@@ -73,13 +73,3 @@ and PyPI publish (via Trusted Publishing / OIDC).
 - Commits: only `feat:` and `fix:` prefixes.
 - Keep it dependency-free (Python stdlib only).
 - No secrets — this CLI has none (local filesystem only, no credentials).
-
-<!-- delendai:begin -->
-
-# delendai host hints (auto-generated)
-
-See `docs/delendai/host-hints/agent-instructions.generated.md` for the live agent catalog.
-
-- Bootstrap §7 (repo-level rules) is in effect.
-
-<!-- delendai:end -->

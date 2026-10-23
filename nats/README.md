@@ -73,25 +73,15 @@ last-published seq). JetStream store:
 
 ## UI read path
 
-The Svelte 5 UI (`ranch/squawk/ui/`, served by `squawk-ui.ts` on :25136)
-gained a NATS live source on 2026-10-13 — no flag day. `?src=nats` swaps the
-live singleton from the feed websocket (`ui/live.svelte.js`) to
-`ui/nats-live.svelte.js`; the default (no param) stays the feed websocket.
+`ui.html` `?src=nats` (or the `feed: poll/nats` toggle in the header):
+initial history still comes from `wait?tail=` (bounded snapshot), then live
+messages stream over the NATS websocket. Default stays long-poll — the
+current UI keeps working throughout.
 
-- History: `?src=nats` hydrates from the file feed first
-  (`GET wait?channel=<ch>&tail=200` → `ingestSnapshot`), because NATS carries
-  live messages only. The file feed stays the source of truth.
-- Live: one WebSocket to `{mount}/nats-ws`. `squawk-ui.ts` shuttles it
-  frame-by-frame to the NATS :4223 websocket listener and injects the feed
-  token into the client's CONNECT server-side — the browser never sees the
-  secret. Then `SUB <channel>.messages`; the server pushes MSG frames with
-  the v1 JSON envelope; PING→PONG; `-ERR`→reconnect with full-jitter backoff.
-- Toggle: a `src: feed|nats` button in the header flips the `?src=` param and
-  reloads. If NATS dies, flip back — the feed websocket is the durable
-  fallback.
-
-E2E verified 2026-10-13: WS → :25136/nats-ws → shuttle (token injected,
-no client secret) → :4223 returned the published envelope's MSG frame.
+A minimal NATS-over-WebSocket client (INFO/CONNECT/SUB/MSG/PING/PONG, no
+bundle) powers the `wss://<funnel-host>/nats-ws` path. Any socket failure
+falls back to the long-poll loop automatically — the custom feed stays the
+durable fallback.
 
 ## Config
 

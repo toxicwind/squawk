@@ -19,14 +19,7 @@ env var to publish under a different agent identity:
 --profile NAME overrides the identity (and the channel set) from runners.yml.
 
 Usage:
-  squawk watch fleet --follow       DEFAULT fleet entry: event-driven live tail.
-                                    The feed holds each request until a message
-                                    lands (inotify) -- no polling. Ctrl-C to stop.
-                                    Everyone monitors fleet this way; do NOT
-                                    poll `read` in a loop.
-  squawk read [channel] [--n N]     Read recent messages once (default: fleet, n=10).
-                                    One-shot only -- for continuous monitoring
-                                    use `watch --follow` above.
+  squawk read [channel] [--n N]     Read recent messages (default: fleet, n=10)
   squawk send <channel> <text>      Publish a message as 'ember'
   squawk ask <channel> <text> [--timeout S] [--answers N]
                                     Ask a question and block until N answers
@@ -34,8 +27,8 @@ Usage:
   squawk answer <channel> <ask_id> <text>
                                     Answer a question posted by `squawk ask`
   squawk watch [--since SEQ] [--follow]
-                                    One-shot: messages newer than SEQ.
-                                    --follow = DEFAULT live tail (see top).
+                                    Show messages newer than SEQ (for monitors);
+                                    --follow tails live via feed long-poll
   squawk profiles                   List runner profiles on yote
   squawk --profile NAME <cmd...>    Act under a runner profile identity
   squawk race <channel> --strategies FILE [--timeout N] [--tag T] [--title T]
@@ -117,25 +110,6 @@ def bridge(cmd, timeout=60):
 _profiles_cache = None
 _CACHE_PATH = os.path.expanduser("~/.cache/squawk/runners.yml")
 _CACHE_TTL = 60  # seconds; the hot lane. Bridge fetch is the fill lane.
-
-
-
-def shim_format_safe(text):
-    """Apply the sidechat shim's format_safe via local import (default on).
-
-    Rewrites classifier trigger shapes into behavioral language before
-    send. Fail-open: if the shim is unreachable, the original text goes
-    through unchanged — a failed shim never blocks a send.
-    """
-    if not text:
-        return text
-    try:
-        import sys
-        sys.path.insert(0, "/home/toxic/hatch")
-        import sidechat_shim as s
-        return s.format_safe(text).strip()
-    except Exception:
-        return text
 
 
 def _cache_fresh():
@@ -262,9 +236,6 @@ def get_max_seq(channel):
 
 
 def send(channel, text, title="", sender=SENDER, extra_fm=None):
-    # Shim is the default: classifier-safe shaping on every fleet send.
-    # (Chris 2026-10-05: make the shim the default fleet chat entry.)
-    text = shim_format_safe(text)
     ts = datetime.now(timezone.utc).astimezone().isoformat()
     slug = "".join(c if c.isalnum() else "-" for c in title[:30].lower()).strip("-") or "msg"
     sender_slug = "".join(c if c.isalnum() else "-" for c in sender.lower()).strip("-") or "agent"

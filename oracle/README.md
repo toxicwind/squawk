@@ -83,10 +83,10 @@ attribution, canary flags, and a limitations line (`NOT_CHECKED` items
 are explicit, never silent). Low-confidence verdicts ride up the trail —
 never emit.
 
-**Oracle-as-approval (the Architect 2026-09-21):** the oracle stands in for the Architect's
+**Oracle-as-approval (Chris 2026-09-21):** the oracle stands in for Chris's
 approvals. File approval-shaped decisions as dated yes/no questions with
 evidence dicts (`[{"id","text","relevance}]` — strings 500); a firm YES/NO
-brand IS his approval, final. `escalate` goes to the Architect directly. Money
+brand IS his approval, final. `escalate` goes to Chris directly. Money
 and credentials NEVER go through the oracle. Full protocol: [SPEC.md §11](SPEC.md).
 
 Decision modules (`bin/`): `bayes.py` (log-odds core, Raven guards),
@@ -181,7 +181,7 @@ Part of the ranch (see repo root). **Security posture:** the
 deterministic engine is a trust boundary — the remuda advises but cannot
 bypass acceptance checks, and low-confidence verdicts ride up the trail
 instead of emitting. Money and credentials NEVER go through the oracle
-(the Architect's hard rule). The front gate is not control-plane
+(Chris's hard rule). The front gate is not control-plane
 (`intake_request` is open to anyone), while control-signed `task_post`s
 gate the auction. Market state is an append-only brand book with replay
 guards, so re-ingested requests never duplicate decisions.
