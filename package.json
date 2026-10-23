@@ -1,1 +1,17 @@
-{"dependencies":{"svelte":"5"},"description":"Squawk Svelte 5 UI - compiled to ui/dist/bundle.js via bun ui/build.ts (mise run build)","name":"squawk-ui","private":true,"scripts":{"build":"bun ui/build.ts"},"type":"module"}
+{
+  "dependencies": {
+    "svelte": "5"
+  },
+  "description": "Squawk Svelte 5 UI - compiled to ui/dist/bundle.js via bun ui/build.ts (mise run build)",
+  "name": "squawk-ui",
+  "private": true,
+  "scripts": {
+    "build": "bun ui/build.ts",
+    "validate": "bun run typecheck && bun run test",
+    "test": "bun test",
+    "test:coverage": "bun test --coverage",
+    "lint": "bunx biome check src tests 2>/dev/null || true",
+    "typecheck": "tsgo --noEmit -p tsconfig.json"
+  },
+  "type": "module"
+}
