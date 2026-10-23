@@ -2,6 +2,31 @@
 
 <!-- version list -->
 
+## v0.8.2 (2026-10-23)
+
+### Bug Fixes
+
+- Update feed test for deliberate no-truncation behavior
+  ([`ddaced7`](https://github.com/toxicwind/squawk/commit/ddaced73290305e84bb5f85405aa24cc01dfc94d))
+
+### Continuous Integration
+
+- Fix all 104 ruff violations; repair squawk_feed to match test contract
+  ([`fc1e0e0`](https://github.com/toxicwind/squawk/commit/fc1e0e0b1c0970b8466e673bf65d72e3a27ef25f))
+
+- Fold in previous worker WIP (2026-10-03) - ui-build CI job + ruff pass over oracle/bench,
+  oracle/bin, chat stack
+  ([`08323f8`](https://github.com/toxicwind/squawk/commit/08323f86c6918436b0dec2e18a0609735ebca28c))
+
+- Fold remaining ruff WIP + bidder newline fix
+  ([`61a6000`](https://github.com/toxicwind/squawk/commit/61a600075c82a53777ffb8a5eaa0e6dad7855883))
+
+### Documentation
+
+- TRANSPORT_STATUS.md + README reflect observed 2026-10-04 deployment
+  ([`e05d7b3`](https://github.com/toxicwind/squawk/commit/e05d7b340ec59fee5a7453b10b1d3703fee2f813))
+
+
 ## v0.8.1 (2026-10-03)
 
 ### Bug Fixes
