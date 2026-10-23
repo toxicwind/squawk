@@ -1305,6 +1305,7 @@ class Bidder:
                     fr = choices[0].get("finish_reason", "")
                     if fr:
                         finish_reason = f" finishReason={fr}"
+                errors.append("%s: empty content%s" % (base, finish_reason))
             except Exception as e:
                 if isinstance(e, urllib.error.HTTPError):
                     errors.append("%s -> HTTP %s %s" % (base, e.code, e.reason))
@@ -1410,7 +1411,7 @@ class Bidder:
                         )
                     return True, out_text, err_text or "", dur
                 errors.append("%s: exit %d" % (label, p.returncode))
-            except subprocess.TimeoutExpired as te:
+            except subprocess.TimeoutExpired:
                 errors.append("%s: timeout after 30s" % label)
             except Exception as e:  # noqa: BLE001
                 errors.append("%s: %s" % (label, str(e)[:200]))
