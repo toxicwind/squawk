@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.9.2 (2026-10-23)
+
+### Bug Fixes
+
+- Update feed test for deliberate no-truncation behavior
+  ([`c08d265`](https://github.com/toxicwind/squawk/commit/c08d2651ac3dfa4799eaedc79d537b05c345fe3f))
+
+
 ## v0.9.1 (2026-10-23)
 
 ### Bug Fixes
