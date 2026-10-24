@@ -165,7 +165,7 @@ def read_channel(channel, n=10, full=False):
     # stale reads (scar 2026-09-30: read showed 9/27 msgs while 9/29
     # posts existed). Two bridge round-trips keep the sort exact.
     listing = bridge(
-        "ls %s/%s/*.md 2>/dev/null | sed 's/.*\\///' "
+        "ls -U %s/%s 2>/dev/null | grep '\\.md$' "
         "| sort -t- -k1,1n | tail -%d" % (SQUAWK_ROOT, channel, n)
     ).strip().split()
 
@@ -226,7 +226,7 @@ def feed_wait(channel, since, timeout=65):
 
 def get_max_seq(channel):
     out = bridge(
-        "ls %s/%s/*.md 2>/dev/null | sed 's/.*\\///; s/-.*//' | sort -n | tail -1"
+        "ls -U %s/%s 2>/dev/null | grep '\\.md$' | sed 's/-.*//' | sort -n | tail -1"
         % (SQUAWK_ROOT, channel)
     ).strip()
     try:
