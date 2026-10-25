@@ -1,6 +1,4 @@
-# squawk-ui build tasks (mbx-cache enabled)
-# The Svelte 5 UI is precompiled to ui/dist/bundle.js and cached by mbx-cache.
-
+# squawk build + daemon tasks (mbx-cache enabled)
 [task_config.cache]
 enabled = true
 
@@ -13,3 +11,76 @@ outputs = ["ui/dist/bundle.js"]
 [tasks.dev]
 description = "Build and watch for changes"
 run = "bun --watch ui/build.ts"
+
+[tasks.ui]
+description = "Run squawk web UI daemon on 127.0.0.1:25136"
+run = "bun squawk-ui.ts"
+
+[tasks.feed]
+description = "Run squawk fleet feed daemon"
+run = "bun fleet-feed.ts"
+
+[tasks.start]
+description = "Build Svelte UI and start squawk-ui"
+depends = ["build"]
+run = "bun squawk-ui.ts"
+
+[tasks.watchdog]
+description = "Check health of squawk daemons (ui :25136, feed :25135, ws :25147)"
+run = "bun -e 'const endpoints = [{ name: \"ui\", url: \"http://127.0.0.1:25136/fleet\" }, { name: \"feed\", url: \"http://127.0.0.1:25135/squawk-feed/seq\" }, { name: \"ws\", url: \"http://127.0.0.1:25147/health\" }]; for (const ep of endpoints) { try { const res = await fetch(ep.url, { signal: AbortSignal.timeout(3000) }); console.log(`[OK] ${ep.name}: status ${res.status}`); } catch (err) { console.log(`[DOWN] ${ep.name}: ${err.message}`); } }'"
+
+# Campfire — chatty fleet helper (merged into squawk)
+[tasks.campfire]
+description = "Run campfire chatty fleet helper"
+run = "bun src/campfire/index.ts"
+
+[tasks.campfire-dry-run]
+description = "Run campfire in dry-run mode (log only, no posts)"
+run = "bun src/campfire/index.ts --dry-run"
+
+[tasks.campfire-watchdog]
+description = "Check health of campfire daemon"
+run = "bun -e 'try { const res = await fetch(\"http://127.0.0.1:25136/campfire\"); console.log(\"[OK] campfire: status \" + res.status); } catch (err) { console.log(\"[DOWN] campfire: \" + err.message); }'"
+depends = ["watchdog"]
+
+# --- Merged fleet coordination server (estate-chat + fleet-chat + fleetd) ---
+[tasks.chat]
+description = "Run the merged squawk chat server on 127.0.0.1:25122"
+run = "bun bun/index.ts"
+env = { SQUAWK_CHAT_PORT = "25122", SQUAWK_CHAT_STATE_DIR = "/home/toxic/.squawk" }
+
+[tasks.chat-mcp]
+description = "Run the merged squawk chat as a stdio MCP adapter"
+run = "bun bun/index.ts mcp"
+
+[tasks.chat-typecheck]
+description = "Typecheck the squawk bun modules"
+run = "bunx tsc --noEmit -p tsconfig.json"
+
+[tasks.chat-test]
+description = "Run the squawk bun unit tests"
+run = "bun test bun/test"
+
+[tasks.chat-coverage]
+description = "Run squawk bun tests with coverage"
+run = "bun test bun/test --coverage"
+
+# --- kappa board bridge (Bun port of kappa_board_bridge.py) ---
+[tasks.bridge]
+description = "Run the two-way kappa board <-> squawk chat bridge (Bun)"
+run = "bun bun/bridge/index.ts --watch --root /home/toxic/.squawk-bus/squawk-root --db /home/toxic/.local/share/kappa/kappa-main.db"
+
+# --- hindsight MCP (Bun port of hindsight_mcp_server.py) ---
+[tasks.hindsight-mcp]
+description = "Run the Hindsight recall/retain/reflect MCP server (Bun, stdio)"
+run = "bun bun/hindsight-mcp.ts"
+
+[tasks.bridge-once]
+description = "Run one two-way sync pass, then exit"
+run = "bun bun/bridge/index.ts --root /home/toxic/.squawk-bus/squawk-root --db /home/toxic/.local/share/kappa/kappa-main.db"
+
+# --- squawk-ws (merged from standalone repo) ---
+[tasks.ws]
+description = "Run squawk WebSocket push feed on 127.0.0.1:25147"
+run = "python3 core/ws.py"
+env = { SQUAWK_WS_PORT = "25147", SQUAWK_CHAT_ROOT = "/home/toxic/.squawk-bus/squawk-root" }
