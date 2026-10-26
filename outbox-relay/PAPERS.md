@@ -5,7 +5,7 @@ web search, 2026-09-20); the mappings below are how the relay implements them.
 
 ## 1. Transactional outbox (pattern)
 
-Chris Richardson, *Microservices Patterns* (2018), "Transactional outbox"
+the Architect Richardson, *Microservices Patterns* (2018), "Transactional outbox"
 pattern (microservices.io). Grounded via ADR writeup:
 
 - https://github.com/mansiverma897993/atlas/blob/HEAD/docs/adr/0006-transactional-outbox.md

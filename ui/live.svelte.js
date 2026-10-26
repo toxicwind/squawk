@@ -35,6 +35,34 @@ function wsUrl(ticket) {
 // identity key unifying the poll seq space (file_seq) and the ws seq space.
 // file_seq is 0 (not undefined) for live-tail messages not yet on disk,
 // so use || not ?? — a 0 must fall through to the gseq.
+/**
+ * Adapt one fleet-feed message ({seq,from,to,ts,title,body,unix}) to the UI
+ * Msg shape. fleet-feed does not verify signatures, so signature stays
+ * undefined and the card shows the quiet unverified badge (honest default).
+ * Sealed messages never carry body text.
+ * @param {any} raw
+ * @param {string} channel
+ * @returns {Msg|null}
+ */
+function normalizeFleetMsg(raw, channel) {
+  if (!raw || typeof raw.seq !== "number") return null;
+  const sealed = !!raw.sealed;
+  return {
+    seq: raw.seq,
+    file_seq: undefined,
+    from: raw.from || "?",
+    to: raw.to || "all",
+    channel: channel,
+    ts: raw.ts || "",
+    status: "discussion",
+    uuid: "",
+    title: raw.title || "msg",
+    signature: undefined,
+    sealed: sealed,
+    text: sealed ? "" : (typeof raw.body === "string" ? raw.body : ""),
+  };
+}
+
 /** @param {Msg} m */
 export function keyOf(m) { return m.file_seq || m.seq; }
 
@@ -61,7 +89,7 @@ function normalize(d, fallbackChannel) {
     title: d.title ?? "msg",
     signature: d.signature,
     sealed: !!d.sealed,
-    text: typeof d.text === "string" ? d.text : "",
+    text: typeof d.text === "string" ? d.text : (typeof d.body === "string" ? d.body : ""),
   };
 }
 
@@ -273,6 +301,30 @@ class LiveConnection {
   onFrame(data) {
     let d;
     try { d = JSON.parse(data); } catch { return; }
+
+    // fleet-feed (/ws/fleet) protocol — the live backend since 2026-10-13.
+    // {type:"fleet:init", messages:[...]} — snapshot on connect; dedupe by
+    // seq key makes the overlap with the resume cursor harmless.
+    if (d && d.type === "fleet:init" && Array.isArray(d.messages)) {
+      for (const raw of d.messages) {
+        const m = normalizeFleetMsg(raw, "fleet");
+        if (m && this.tabs["fleet"]) this.buf.push({ channel: "fleet", msg: m });
+      }
+      this.scheduleFlush();
+      return;
+    }
+    // {type:"squawk", channel, message} — one live message.
+    if (d && d.type === "squawk" && d.message) {
+      const ch = typeof d.channel === "string" ? d.channel : "fleet";
+      const m = normalizeFleetMsg(d.message, ch);
+      if (m && this.tabs[ch]) {
+        this.buf.push({ channel: ch, msg: m });
+        this.scheduleFlush();
+      }
+      return;
+    }
+    // {type:"hello"} / {type:"agent", agent} — no UI action.
+    if (d && (d.type === "hello" || d.type === "agent")) return;
 
     // {type:"messages", channel, messages:[...]} — replay + live, same shape
     if (d && d.type === "messages") {

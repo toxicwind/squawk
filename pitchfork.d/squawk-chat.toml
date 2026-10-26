@@ -1,0 +1,14 @@
+# ranch/squawk — squawk-chat daemon manifest.
+# Merged fleet coordination server (:25122): bun/bindex.ts
+# Consolidates estate-chat + fleet-chat + fleetd into one modular Bun server.
+
+[daemons.squawk-chat]
+port = 25122
+run = "exec /home/toxic/.bun/bin/bun /home/toxic/pens/ranch/squawk/bun/index.ts"
+dir = "/home/toxic/pens/ranch/squawk"
+mise = false
+retry = true
+boot_start = true
+ready_http = "http://127.0.0.1:25122/health"
+env = { SQUAWK_CHAT_PORT = "25122", SQUAWK_CHAT_STATE_DIR = "/home/toxic/.squawk" }
+auto = ["start"]

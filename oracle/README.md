@@ -13,7 +13,7 @@
 > deterministic roundup engine advised by a calibrated judge panel.
 
 > [!NOTE]
-> Live pitchfork daemons: `estate/oracle-market` (market loop + intake, `bin/run.sh`), `estate/oracle-core` (decision engine, `bin/run-oracle-core.sh`, `127.0.0.1:25151`), `estate/bidder-forge`, `estate/bidder-scout` (bidders), `estate/market-watchdog`, `estate/oracle-chat`.
+> Live pitchfork daemons: `estate-scripts/oracle-market` (market loop + intake, `bin/run.sh`), `estate-scripts/oracle-core` (decision engine, `bin/run-oracle-core.sh`, `127.0.0.1:25151`), `estate-scripts/bidder-forge`, `estate-scripts/bidder-scout` (bidders), `estate-scripts/market-watchdog`, `estate-scripts/oracle-chat`.
 
 ## 🌾 Ranch vocabulary
 
@@ -83,10 +83,10 @@ attribution, canary flags, and a limitations line (`NOT_CHECKED` items
 are explicit, never silent). Low-confidence verdicts ride up the trail —
 never emit.
 
-**Oracle-as-approval (Chris 2026-09-21):** the oracle stands in for Chris's
+**Oracle-as-approval (the Architect 2026-09-21):** the oracle stands in for the Architect's
 approvals. File approval-shaped decisions as dated yes/no questions with
 evidence dicts (`[{"id","text","relevance}]` — strings 500); a firm YES/NO
-brand IS his approval, final. `escalate` goes to Chris directly. Money
+brand IS his approval, final. `escalate` goes to the Architect directly. Money
 and credentials NEVER go through the oracle. Full protocol: [SPEC.md §11](SPEC.md).
 
 Decision modules (`bin/`): `bayes.py` (log-odds core, Raven guards),
@@ -142,7 +142,7 @@ Replay guard: the watch re-arm path re-ingests recent files with
 |---|---|
 | `ORACLE_INTAKE=1` | enables the intake wiring in `oracle_loop.py`; exported by `bin/run.sh` (daemon entrypoint) and pinned in `pitchfork.toml` `[daemons.oracle-market]` env for the next supervisor boot |
 | `work/` | calibration state, verdict ledgers, escalation flags — all on disk |
-| `ranch/squawk/oracle/` | the corral's location in the ranch (moved from `estate/agents/oracle-market`) |
+| `ranch/squawk/oracle/` | the corral's location in the ranch (moved from `estate-scripts/agents/oracle-market`) |
 
 ## Durability
 
@@ -156,7 +156,7 @@ two live `intake_request`s cleared full auctions
 across a `pitchfork restart`.
 
 The roundup core is equally restart-durable: `bin/run-oracle-core.sh`
-is the pitchfork entrypoint for `estate/oracle-core`; all calibration
+is the pitchfork entrypoint for `estate-scripts/oracle-core`; all calibration
 state, verdict ledgers, and escalation flags live on disk under `work/`.
 A restart loses nothing but in-flight asks. Proven: restart the unit,
 re-run `bench/run_live_ask.py`, confirm a fresh brand
@@ -181,7 +181,7 @@ Part of the ranch (see repo root). **Security posture:** the
 deterministic engine is a trust boundary — the remuda advises but cannot
 bypass acceptance checks, and low-confidence verdicts ride up the trail
 instead of emitting. Money and credentials NEVER go through the oracle
-(Chris's hard rule). The front gate is not control-plane
+(the Architect's hard rule). The front gate is not control-plane
 (`intake_request` is open to anyone), while control-signed `task_post`s
 gate the auction. Market state is an append-only brand book with replay
 guards, so re-ingested requests never duplicate decisions.

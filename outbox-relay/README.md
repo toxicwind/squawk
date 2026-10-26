@@ -1,6 +1,6 @@
 # squawk-relay — durable outbox relay 📮
 
-![estate](https://img.shields.io/badge/estate-monorepo-blue?style=for-the-badge)
+![estate-scripts](https://img.shields.io/badge/estate-scripts--projects-blue?style=for-the-badge)
 ![python](https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![durable-outbox](https://img.shields.io/badge/durable--outbox-FF6F00?style=for-the-badge)
 
@@ -108,7 +108,7 @@ relay-status                 # operational telemetry; exit 2 when stalled
 
 ## License & Security
 
-Part of the estate (see repo root). **Security posture:** the
+Part of the estate-scripts estate (see repo root). **Security posture:** the
 forwarder posts through the normal signed path (HMAC, sequence lock, DAG,
 Lamport) as identity `relay` — relayed messages are attributable and
 signature-covered. Invalid-signature records are consumed and counted, never

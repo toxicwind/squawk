@@ -46,10 +46,10 @@ from squawk_feed import _Inotify, _MSG_RE  # noqa: E402  (after sys.path.insert 
 import nats  # noqa: E402  (after sys.path.insert for sibling-dir import)
 
 NATS_URL = os.environ.get("SQUAWK_NATS_URL", "nats://127.0.0.1:4222")
-SQUAWK_ROOT = Path(os.environ.get("SQUAWK_ROOT", "/home/toxic/.fleet-bus/squawk-root"))
+SQUAWK_ROOT = Path(os.environ.get("SQUAWK_ROOT", "/home/toxic/.squawk-bus/squawk-root"))
 CHANNELS = [c.strip() for c in os.environ.get("SQUAWK_NATS_CHANNELS", "fleet,leads").split(",") if c.strip()]
 AGENT = os.environ.get("SQUAWK_NATS_AGENT", "taps")
-TOKEN_FILE_DEFAULT = str(Path.home() / ".fleet-bus" / "squawk-relay" / "feed-token")
+TOKEN_FILE_DEFAULT = str(Path.home() / ".squawk-bus" / "squawk-relay" / "feed-token")
 STATE_DIR = Path(os.environ.get("SQUAWK_NATS_STATE_DIR",
                                 "/home/toxic/.local/state/squawk-nats-tail"))
 CURSOR_FILE = STATE_DIR / "cursor.json"
@@ -134,14 +134,23 @@ def _envelope(rec: dict) -> dict:
 
 
 async def _ensure_stream(js) -> None:
-    try:
-        await js.stream_info(STREAM)
-        return
-    except Exception:
-        pass
     # NOTE: nats-server 2.14.5 rejects a leading-wildcard subject here
     # (overlap check vs the JetStream API); explicit per-channel subjects.
     subjects = [f"{c}.messages" for c in CHANNELS]
+    try:
+        info = await js.stream_info(STREAM)
+    except Exception:
+        info = None
+    if info is not None:
+        # Reconcile subjects with the configured channel set (Pry, 2026-10-19):
+        # channels added to SQUAWK_NATS_CHANNELS after the stream was created
+        # must join it, or their publishes have nowhere to land.
+        current = list(info.config.subjects or [])
+        if set(current) != set(subjects):
+            info.config.subjects = subjects
+            await js.update_stream(config=info.config)
+            print(f"squawk-nats-tail: updated stream {STREAM} subjects -> {subjects}", flush=True)
+        return
     await js.add_stream(
         name=STREAM,
         subjects=subjects,
@@ -194,8 +203,12 @@ class Tailer:
         env = _envelope(rec)
         env["seq"] = seq  # filename seq is canonical, always
         data = json.dumps(env, ensure_ascii=False).encode("utf-8")
-        # nats-py 2.x dedups via the Nats-Msg-Id header (no msg_id kwarg)
-        headers = {"Nats-Msg-Id": f"squawk:{channel}:{seq}"}
+        # nats-py 2.x dedups via the Nats-Msg-Id header (no msg_id kwarg).
+        # The id is per-FILE, not per-seq (Pry, 2026-10-19): distinct messages
+        # can share a filename seq (804 such groups in fleet), and a seq-only
+        # id made JetStream dedup silently eat the second one. Per-file ids
+        # still dedup replays of the same file after a cursor loss.
+        headers = {"Nats-Msg-Id": f"squawk:{channel}:{seq}:{path.name}"}
         try:
             await self.js.publish(f"{channel}.messages", data, headers=headers)
         except Exception as e:

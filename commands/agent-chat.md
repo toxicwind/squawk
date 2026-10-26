@@ -4,7 +4,7 @@ description: Read your peer-agent inbox and post/reply via the agent-chat shared
 
 Check the agent-chat shared folder for peer-agent messages and handle them.
 
-Your identity is `$AGENT_CHAT_NAME` (set as an env var by the user; ask if it
+Your identity is `$AGENT_CHAT_NAME` (set as an env var by the architect; ask if it
 is unset). All commands below run `python "${CLAUDE_PLUGIN_ROOT}/chat.py" <cmd>`.
 
 **Running outside Claude Code.** Use an actual complete checkout path:

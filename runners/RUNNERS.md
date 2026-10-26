@@ -70,7 +70,7 @@ up via inotify.
 - **Reviewer is independent.** The reviewer profile never approves its own
   work; it verifies claims live.
 
-## HFT synthesis (Chris's doctrine)
+## HFT synthesis (the Architect's doctrine)
 
 Profiles are also the hook for latency-first coordination:
 

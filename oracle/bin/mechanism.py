@@ -111,15 +111,72 @@ def provision_bidder(bidder_id: str, capabilities, max_class="standard",
     return key_id, master_hex
 
 
+_PROFILE_REQUIRED = ("key_id", "bidder_id", "secret")
+
+def validate_profile(bidder_id, profile) -> list:
+    """Return problem strings; empty means valid. Every problem names its
+    fix (guider) so the operator is never left guessing."""
+    if not isinstance(profile, dict):
+        return [f"profile is not a table (got {type(profile).__name__}); "
+                f"re-provision: python3 bin/mechanism.py --provision {bidder_id} --tags <caps>"]
+    problems = []
+    for field in _PROFILE_REQUIRED:
+        if not profile.get(field):
+            problems.append(
+                f"missing '{field}'; re-provision: "
+                f"python3 bin/mechanism.py --provision {bidder_id} --tags <capabilities>")
+    try:
+        float(profile.get("stake", 0.0))
+    except (TypeError, ValueError):
+        problems.append(f"stake={profile.get('stake')!r} not numeric; set stake to a number")
+    return problems
+
+
+def _quarantine_profiles(bad: dict, where: str):
+    """Auto-fixer: move malformed profiles aside as JSON (never silently
+    dropped) and return the quarantine path. Loud on stdout with the fix."""
+    import os as _os
+    ts = time.strftime("%Y%m%dT%H%M%S")
+    qp = PROFILES.parent / f"quarantine-malformed-{ts}.json"
+    with open(qp, "w", encoding="utf-8") as f:
+        json.dump({"quarantined_ts": ts, "where": where,
+                   "reason": "missing one of %s" % (list(_PROFILE_REQUIRED),),
+                   "profiles": bad}, f, indent=2)
+    _os.chmod(qp, 0o600)
+    print(f"{where}: quarantined malformed profiles {sorted(bad)} -> {qp}; "
+          f"re-provision each with: python3 bin/mechanism.py --provision <bidder_id> --tags <caps>",
+          flush=True)
+    return qp
+
 def load_profiles() -> dict:
     if not PROFILES.exists():
         return {}
     with open(PROFILES, "rb") as f:
-        return tomllib.load(f)
+        data = tomllib.load(f)
+    # 2026-10-12: a malformed profile (e.g. [warden] with only stake=)
+    # used to pass load cleanly and then crash save_profiles with
+    # KeyError('key_id'), surfacing as no_assign{stake-lock-failed} on
+    # EVERY auction -- one bad entry DoS'd the whole market. Validate on
+    # load: quarantine malformed entries (data preserved as JSON, never
+    # silently dropped) and keep the market running on the valid ones.
+    bad = {bid: prof for bid, prof in data.items()
+           if validate_profile(bid, prof)}
+    if bad:
+        _quarantine_profiles(bad, "load_profiles")
+        for bid in bad:
+            del data[bid]
+    return data
 
 
 def save_profiles(profiles: dict):
     _ensure_dirs()
+    # Auto-fixer: one malformed entry must never crash the save and block
+    # provisioning for every other bidder. Quarantine the bad ones loudly,
+    # persist the valid rest.
+    bad = {bid: p for bid, p in profiles.items() if validate_profile(bid, p)}
+    if bad:
+        _quarantine_profiles(bad, "save_profiles")
+        profiles = {bid: p for bid, p in profiles.items() if bid not in bad}
     lines = []
     for bidder_id in sorted(profiles):
         p = profiles[bidder_id]
@@ -236,6 +293,38 @@ def class_allowed(task_class: str, rep_score: int) -> bool:
     return rep_score >= CLASS_REP.get(task_class, 0)
 
 
+def audit_registry() -> str:
+    """Guider: human-readable registry health report with fix instructions
+    for every problem found."""
+    lines = ["== oracle bidder registry audit ==",
+             f"registry: {PROFILES}"]
+    if not PROFILES.exists():
+        return "\n".join(lines + [
+            "MISSING: no profiles.toml yet.",
+            "fix: python3 bin/mechanism.py --provision <bidder_id> --tags probe,research"])
+    data = tomllib.load(open(PROFILES, "rb"))
+    if not data:
+        lines.append("EMPTY: no bidder profiles registered.")
+    broken = 0
+    for bid in sorted(data):
+        problems = validate_profile(bid, data[bid])
+        p = data[bid]
+        if problems:
+            broken += 1
+            lines.append(f"BROKEN [{bid}]:")
+            for pr in problems:
+                lines.append(f"  - {pr}")
+        else:
+            lines.append(f"OK [{bid}]: key_id={p['key_id']} stake={p.get('stake')} "
+                         f"caps={p.get('capabilities')} max_class={p.get('max_class')}")
+    qfiles = sorted(PROFILES.parent.glob("quarantine-malformed-*.json"))
+    if qfiles:
+        lines.append(f"quarantine: {len(qfiles)} file(s), latest {qfiles[-1].name}")
+    lines.append("registry healthy." if broken == 0
+                 else f"action needed: re-provision the {broken} BROKEN entr(y/ies) above.")
+    return "\n".join(lines)
+
+
 if __name__ == "__main__":
     import argparse
     ap = argparse.ArgumentParser()
@@ -248,6 +337,9 @@ if __name__ == "__main__":
                          "(SPEC §1.5); prints the key_id fingerprint only, "
                          "never the key")
     ap.add_argument("--ledger", default="")
+    ap.add_argument("--audit", action="store_true",
+                    help="audit the bidder registry: validate every profile, "
+                         "report problems with fix instructions")
     args = ap.parse_args()
     if args.provision_control:
         import hashlib as _h
@@ -262,3 +354,5 @@ if __name__ == "__main__":
         print(f"provisioned {args.provision} key_id={key_id}")
     elif args.reputation:
         print(json.dumps(reputation(Path(args.ledger)), indent=1))
+    elif args.audit:
+        print(audit_registry())

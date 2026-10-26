@@ -278,7 +278,7 @@ try:
     check("ralph-ok", ok is True, err[:200])
     check("ralph-model-env", "model=kimi-k3-nim" in out, out[:200])
     check("ralph-bypass-env", "bypass=1" in out, out[:200])
-    check("ralph-base-env", "base=http://127.0.0.1:25100/v1" in out, out[:200])
+    check("ralph-base-env", "base=http://127.0.0.1:25193/v1" in out, out[:200])
     check("ralph-skip-questions", "--skip-questions" in out, out[:300])
     check("ralph-final-reply", "FINAL-REPLY-OK" in out)
     check("ralph-prompt-file", (wd / "prompt.md").read_text() == "do things")

@@ -89,7 +89,7 @@ bin/oracle_ask.py "Will the herd serve 100 models by 2026-12-31?" --json
 # canary sweep (gaming tripwires)
 bin/oracle_ask.py --canaries
 
-# daemon (pitchfork: estate/oracle-core)
+# daemon (pitchfork: estate-scripts/oracle-core)
 curl -s -X POST 127.0.0.1:25151/ask -d '{"question":"..."}'
 curl -s 127.0.0.1:25151/health
 ```

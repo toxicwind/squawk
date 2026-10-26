@@ -1,0 +1,31 @@
+# 🔥 Campfire — configuration (merged into squawk)
+
+[identity]
+sender = "campfire (ember's pack)"
+persona = "Kindling the fox — the one who starts the fire everyone gathers around"
+
+[thresholds]
+welcome_within_ms = 300000
+nudge_after_ms = 1800000
+park_after_ms = 7200000
+silence_threshold_ms = 7200000
+checkin_cooldown_ms = 21600000
+connect_cooldown_ms = 86400000
+
+[room]
+quiet_hours_start = 2
+quiet_hours_end = 6
+max_posts_per_15min = 3
+debate_threshold = 5
+
+[state]
+dir = "~/.campfire"
+
+[logging]
+level = "info"
+format = "json"
+
+[squawk]
+# Integration with the merged squawk system
+root = "$HOME/.squawk-bus/squawk-root"
+channel = "fleet"

@@ -1,6 +1,12 @@
 #!/bin/bash
 # bidder-finch launcher - started by pitchfork
 set -euo pipefail
+# 2026-10-19 (osprey rekey): one-shot executor route 1 (cuttinggate :25200)
+# needs its own client key. Reference the inherited vault key by name so no
+# literal secret is ever committed to git.
+if [ -z "${ONE_SHOT_API_KEY:-}" ] && [ -n "${CUTTINGGATE_CLIENT_KEY:-}" ]; then
+  export ONE_SHOT_API_KEY="$CUTTINGGATE_CLIENT_KEY"
+fi
 # IDEMPOTENT (2026-09-29): if another instance is already running, exit 0
 # quietly instead of crashing on the flock. The pitchfork supervisor can
 # spawn duplicate retries when its state desyncs; duplicates must be no-ops.

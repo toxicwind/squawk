@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """oracle-chat: the oracle lives in the chat.
 
-Pitchfork-managed daemon (estate/oracle-chat). Watches the squawk
+Pitchfork-managed daemon (estate-scripts/oracle-chat). Watches the squawk
 fleet + leads channels via inotify (ctypes, stdlib-only -- pattern borrowed
 from oracle_loop.py) and participates as `from: oracle`.
 
@@ -47,10 +47,10 @@ sys.path.insert(0, str(BIN))
 AGENT_DIR = BIN.parent
 
 SQUAWK_ROOT = Path(os.environ.get("ORACLE_SQUAWK_ROOT",
-                                  "/home/toxic/.fleet-bus/squawk-root"))
+                                  "/home/toxic/.squawk-bus/squawk-root"))
 CHANNELS = [c for c in os.environ.get("ORACLE_CHAT_CHANNELS", "fleet,leads").split(",") if c]
 BID_MARKET = Path(os.environ.get("ORACLE_CHANNEL",
-                                 "/home/toxic/.fleet-bus/squawk-root/bid-market"))
+                                 "/home/toxic/.squawk-bus/squawk-root/bid-market"))
 ORACLE_CORE = os.environ.get("ORACLE_CORE_URL", "http://127.0.0.1:25151")
 LEDGER = Path(os.environ.get("ORACLE_LEDGER",
                              str(AGENT_DIR / "ledger" / "ledger.jsonl")))

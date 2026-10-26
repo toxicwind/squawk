@@ -56,7 +56,7 @@ RELAY_IDENTITY_DEFAULT = "relay"
 # Keys live OUTSIDE the chat root, never inside it. The hosting lane owns
 # this directory (0600 files); the relay only reads.
 KEYS_DIR_ENV = "FLEET_KEYS_DIR"
-KEYS_DIR_DEFAULT = Path("/home/toxic/.fleet-bus/keys")
+KEYS_DIR_DEFAULT = Path("/home/toxic/.squawk-bus/keys")
 
 
 class SealError(Exception):
@@ -73,7 +73,7 @@ def resolve_key_dir(cli_value: str | None = None, root=None) -> Path:
 
     The <root>/keys preference exists because the canonical deployment
     keeps identities next to the chat root (e.g.
-    /home/toxic/.fleet-bus/squawk-root/keys/relay.key). Pass the chat root
+    /home/toxic/.squawk-bus/squawk-root/keys/relay.key). Pass the chat root
     when you have it.
     """
     if cli_value or os.environ.get(KEYS_DIR_ENV):
@@ -367,7 +367,7 @@ def ensure_keys_env(root=None) -> None:
     """Make FLEET_KEYS_DIR resolve for import-time readers (squawk_seal).
 
     Never overrides an explicit setting. The service definition should
-    set FLEET_KEYS_DIR=/home/toxic/.fleet-bus/squawk-root/keys; this is the
+    set FLEET_KEYS_DIR=/home/toxic/.squawk-bus/squawk-root/keys; this is the
     fallback so <root>/keys wins over the stale compiled-in default.
     """
     if "FLEET_KEYS_DIR" not in os.environ:

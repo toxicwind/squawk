@@ -49,12 +49,12 @@ _active_lock = threading.Lock()
 
 
 def _default_chat_root() -> Path:
-    p = Path("/home/toxic/.fleet-bus/squawk-root")
+    p = Path("/home/toxic/.squawk-bus/squawk-root")
     return p if p.exists() else Path("/home/toxic/.shingle/squawk-root")
 
 
 def _default_relay_dir() -> Path:
-    p = Path("/home/toxic/.fleet-bus/squawk-relay")
+    p = Path("/home/toxic/.squawk-bus/squawk-relay")
     return p if p.exists() else Path("/home/toxic/.shingle/squawk-relay")
 
 
@@ -359,13 +359,14 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         parts = urlsplit(self.path)
-        if parts.path in ("/", "/index.html"):
-            target = os.environ.get("DELEND_SQUAWK_REDIRECT", "/squawk-feed/seq")
-            self.send_response(302)
-            self.send_header("Location", target)
-            self.end_headers()
-            return
-        if parts.path == "/health":
+        # Accept BOTH the canonical /squawk-feed/* paths and the tailscale
+        # prefix-stripped short forms (/seq, /messages, /wait). The tailscale
+        # path mount strips the mount prefix, so external consumers hit the
+        # short forms; localhost clients use the full /squawk-feed/* contract.
+        stripped = parts.path
+        if stripped.startswith("/squawk-feed/"):
+            stripped = "/" + stripped[len("/squawk-feed/") :]
+        if stripped == "/health":
             # Blue-green health probe: 200 when serving, 503 when draining.
             if _draining.is_set():
                 self._json({"ok": False, "draining": True}, 503)
@@ -374,12 +375,15 @@ class Handler(BaseHTTPRequestHandler):
                     seq = _feed_seq
                 self._json({"ok": True, "seq": seq})
             return
-        if parts.path == "/squawk-feed/seq" or parts.path == "/squawk-feed/ping":
+        if parts.path in ("/squawk-feed/seq", "/squawk-feed/ping") or stripped in (
+            "/seq",
+            "/ping",
+        ):
             # content-free counter. safe for public funnel (no auth).
             with _lock:
                 seq = _feed_seq
             self._json({"seq": seq})
-        elif parts.path == "/squawk-feed/messages":
+        elif parts.path == "/squawk-feed/messages" or stripped == "/messages":
             qs = parse_qs(parts.query)
             try:
                 since = int(qs.get("since", ["0"])[0])
@@ -389,7 +393,10 @@ class Handler(BaseHTTPRequestHandler):
                 seq = _feed_seq
                 msgs = [m for m in _buffer if m["seq"] > since][-200:]
             self._json({"seq": seq, "messages": msgs})
-        elif parts.path in ("/squawk-feed/wait", "/squawk-feed/subscribe"):
+        elif parts.path in (
+            "/squawk-feed/wait",
+            "/squawk-feed/subscribe",
+        ) or stripped in ("/wait", "/subscribe"):
             # long-poll: hold up to ~50s, respond the instant seq advances.
             # content-free (seq only). connection hygiene: client re-holds.
             qs = parse_qs(parts.query)

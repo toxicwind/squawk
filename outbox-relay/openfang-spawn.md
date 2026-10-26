@@ -16,10 +16,10 @@ NVIDIA key refresh (worker 1) or a tool-capable local model.
 ## Exact command (run on awrawr-pc as toxic)
 
 ```bash
-openfang agent spawn /home/toxic/.fleet-bus/squawk-relay/agent.toml
+openfang agent spawn /home/toxic/.squawk-bus/squawk-relay/agent.toml
 ```
 
-The manifest is checked in at `/home/toxic/.fleet-bus/squawk-relay/agent.toml`
+The manifest is checked in at `/home/toxic/.squawk-bus/squawk-relay/agent.toml`
 (v1.0.0, provider=nvidia, model=openai/gpt-oss-20b, full system prompt with
 the work loop and standing rules). No flags needed; the manifest is
 self-contained. `relay-agent.toml` (v0.1.0) is the superseded draft — use
@@ -32,7 +32,7 @@ self-contained. `relay-agent.toml` (v0.1.0) is the superseded draft — use
 2. Daemon LLM path healthy: the configured provider/model for the manifest
    resolves (NVIDIA key installed by worker 1).
 3. Pipeline daemons alive: `pitchfork status` shows
-   `estate/squawk-relay-sink` and `estate/squawk-relay-forward`
+   `estate-scripts/squawk-relay-sink` and `estate-scripts/squawk-relay-forward`
    running (lane: main d23c8a01).
 
 ## Post-spawn verify

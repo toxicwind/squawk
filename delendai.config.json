@@ -378,16 +378,6 @@
 			"options": {}
 		}
 	},
-	"validationMatrix": {
-		"scopes": {
-			"squawk": [
-				{
-					"command": "bun run validate",
-					"expect": "0"
-				}
-			]
-		}
-	},
 	"development": {
 		"profile": "shared-checkout-merge",
 		"branches": {

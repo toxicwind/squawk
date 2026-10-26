@@ -22,7 +22,7 @@
 // so UI edits land without a daemon restart.
 //
 // Channel-aware (2026-10-03): /wait and /send are served directly from the
-// channel store (/home/toxic/.fleet-bus/squawk-root/<channel>/*.md) so tabs
+// channel store (/home/toxic/.squawk-bus/squawk-root/<channel>/*.md) so tabs
 // actually isolate per channel. The legacy feed proxy at :25135 remains for
 // CLI/other consumers; the UI no longer depends on its /wait channel filtering.
 import { readFileSync, statSync, mkdirSync, writeFileSync, readdirSync } from "node:fs";
@@ -32,7 +32,7 @@ const FEED = "http://127.0.0.1:25135";
 const SQUAWK_DIR = "/home/toxic/estate/ranch/squawk";
 const UI_ENTRY = join(SQUAWK_DIR, "ui", "dist", "bundle.js");
 const FEED_TOKEN_PATH = "/home/toxic/hatch/agents/ember/squawk-relay/feed-token";
-const SQUAWK_ROOT = "/home/toxic/.fleet-bus/squawk-root";
+const SQUAWK_ROOT = "/home/toxic/.squawk-bus/squawk-root";
 
 // websocket upgrade targets: client path -> backend ws url.
 const WS_TARGETS: Record<string, string> = {
@@ -243,7 +243,13 @@ function parseMsgFile(path: string, fallbackSeq: number): Msg | null {
   };
 }
 
-// GET /wait?since=<seq>&channel=<name>&tail=<n> -> {ok, messages, cursor}
+// GET /wait?since=<seq>&channel=<name>&tail=<n> -> {ok, messages, cursor, oldest, has_more}
+// GET /wait?before=<seq>&channel=<name>&tail=<n> -> the page of history
+// immediately older than <seq> (history paging for the UI: the boot snapshot
+// is tail-capped, so without `before` older messages are unreachable).
+// `before` is exclusive, matching the UI's seq-keyed dedupe identity.
+// Response `oldest` is the first returned seq; `has_more` says whether any
+// message older than `oldest` exists in the channel.
 function handleWait(url: URL): Response {
   const channel = (url.searchParams.get("channel") || "fleet").toLowerCase();
   if (!VALID_CHANNEL.test(channel)) {
@@ -251,22 +257,78 @@ function handleWait(url: URL): Response {
   }
   const since = Number(url.searchParams.get("since") || 0);
   const tail = Math.min(Math.max(Number(url.searchParams.get("tail") || 200), 1), 1000);
+  const beforeRaw = url.searchParams.get("before");
+  const before = beforeRaw ? Number(beforeRaw) : null;
   const dir = join(SQUAWK_ROOT, channel);
   let files: string[];
   try { files = readdirSync(dir); } catch { files = []; }
   // filenames start with <seq>-... so filter by name before reading
+  if (before !== null && Number.isFinite(before)) {
+    // Name-first paging: sort candidate filenames by seq and parse only the
+    // page — never parse the whole channel store for one history page.
+    const cand: { f: string; seq: number }[] = [];
+    for (const f of files) {
+      if (!f.endsWith(".md")) continue;
+      const seq = Number(f.split("-")[0]);
+      if (!Number.isFinite(seq) || seq >= before) continue;
+      cand.push({ f, seq });
+    }
+    cand.sort((a, b) => a.seq - b.seq);
+    const page = cand.slice(-tail);
+    const msgs: Msg[] = [];
+    for (const { f, seq } of page) {
+      const msg = parseMsgFile(join(dir, f), seq);
+      if (msg) msgs.push(msg);
+    }
+    msgs.sort((a, b) => a.seq - b.seq);
+    const cursor = msgs.length ? msgs[msgs.length - 1].seq : before;
+    const oldest = msgs.length ? msgs[0].seq : null;
+    return Response.json({ ok: true, messages: msgs, cursor, oldest, has_more: cand.length > page.length });
+  }
   const msgs: Msg[] = [];
+  let minSeq = Infinity;
   for (const f of files) {
     if (!f.endsWith(".md")) continue;
     const seq = Number(f.split("-")[0]);
-    if (!Number.isFinite(seq) || seq <= since) continue;
+    if (!Number.isFinite(seq)) continue;
+    if (seq < minSeq) minSeq = seq;
+    if (seq <= since) continue;
     const msg = parseMsgFile(join(dir, f), seq);
     if (msg) msgs.push(msg);
   }
   msgs.sort((a, b) => a.seq - b.seq);
   const sliced = msgs.slice(-tail);
   const cursor = sliced.length ? sliced[sliced.length - 1].seq : since;
-  return Response.json({ ok: true, messages: sliced, cursor });
+  const oldest = sliced.length ? sliced[0].seq : null;
+  const has_more = oldest !== null && minSeq < oldest;
+  return Response.json({ ok: true, messages: sliced, cursor, oldest, has_more });
+}
+
+const HISTORY = "http://127.0.0.1:25152";
+
+// GET /pack?channel=<name>&q=<query>&budget=<tokens> -> squawk-history /pack
+// proxy. The history service (JetStream index, C1+C3 packer) requires the
+// feed token; this server already holds it (getFeedToken) and the browser
+// never sees it — same pattern as the feed proxy's authHeaders.
+async function handlePack(url: URL): Promise<Response> {
+  const channel = (url.searchParams.get("channel") || "fleet").toLowerCase();
+  if (!VALID_CHANNEL.test(channel)) {
+    return Response.json({ ok: false, error: "invalid channel" }, { status: 400 });
+  }
+  const q = url.searchParams.get("q") || "";
+  const budget = Math.min(Math.max(Number(url.searchParams.get("budget") || 4000), 1000), 16000);
+  const target = `${HISTORY}/pack?channel=${encodeURIComponent(channel)}`
+    + `&q=${encodeURIComponent(q)}&budget=${budget}`;
+  try {
+    const resp = await fetch(target, {
+      headers: { authorization: "Bearer " + getFeedToken() },
+      signal: AbortSignal.timeout(45000),
+    });
+    const body = await resp.text();
+    return new Response(body, { status: resp.status, headers: { "Content-Type": "application/json" } });
+  } catch {
+    return Response.json({ ok: false, error: "history service unreachable" }, { status: 502 });
+  }
 }
 
 // GET /channels -> {ok, channels: [...]}
@@ -274,7 +336,10 @@ function handleChannels(): Response {
   let dirs: string[];
   try { dirs = readdirSync(SQUAWK_ROOT, { withFileTypes: true }).filter(d => d.isDirectory()).map(d => d.name); }
   catch { dirs = []; }
-  return Response.json({ ok: true, channels: dirs.filter(d => VALID_CHANNEL.test(d)).sort() });
+  // Canonical channel list (Pry, 2026-10-19): same rule as squawk-ws --
+  // exclude the key store, the presence dir, and dash-prefixed junk dirs.
+  const RESERVED = new Set(["keys", "presence"]);
+  return Response.json({ ok: true, channels: dirs.filter(d => VALID_CHANNEL.test(d) && !RESERVED.has(d) && !d.startsWith("-")).sort() });
 }
 
 // POST /send {channel, text} -> {ok, seq}
@@ -396,6 +461,7 @@ Bun.serve<SockData>({
     }
     // --- channel-aware endpoints served from the local store ---
     if (url.pathname === "/wait" && req.method === "GET") return handleWait(url);
+    if (url.pathname === "/pack" && req.method === "GET") return handlePack(url);
     if (url.pathname === "/channels" && req.method === "GET") return handleChannels();
     if (url.pathname === "/send" && req.method === "POST") return handleSend(req);
     // --- cell-primary tunnel: proxy squawk traffic to the cell when connected ---

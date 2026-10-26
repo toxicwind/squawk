@@ -86,7 +86,7 @@ def _advocate_round(chat_fn, model, prompt, prior, timeout_s):
     except Exception:
         return prior, model, False
     try:
-        content = (resp or {}).get("content") or ""
+        content = (resp or {}).get("content") or (resp or {}).get("reasoning_content") or (resp or {}).get("reasoning") or ""
         if not content:
             # empty/null content is a failed round, not a fabricated one:
             # ok=False triggers the one bounded retry on the next alias.

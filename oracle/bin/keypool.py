@@ -9,7 +9,8 @@ call), and revalidates lazily so recovered keys rejoin automatically.
 Routing doctrine (Chris): FREE BEATS LOCAL.
   free cloud (OpenRouter free tier, Pollinations, Gemini free tiers)
     > paid cloud
-    > local (herd / beellama / herd-local — fallback only, never default)
+    > local (beellama -- fallback only, never default;
+      herd :25100 removed 2026-10-13 per Chris corrective)
 
 Pool location (OUTSIDE the repo, dir 700 / files 600):
   /home/toxic/.openfang/key-pool/<provider>.keys   (one key per line, # comments)
@@ -95,12 +96,9 @@ PROVIDERS = {
         "probe": ("GET", "https://api.moonshot.ai/v1/models",
                   "Bearer {key}"),
     },
-    "herd": {
-        "tier": "local",
-        "env": "HERD_URL",
-        "keyless": "http://127.0.0.1:25100",
-        "probe": ("GET", "http://127.0.0.1:25100/v1/models", None),
-    },
+    # "herd" provider REMOVED 2026-10-13 (Chris corrective): local herd
+    # models on :25100 are not ready -- never select them. Inference goes
+    # through flock :25193 (NIM-backed) or the cloud tiers in this pool.
     "beellama": {
         "tier": "local",
         "env": "BEELLAMA_URL",

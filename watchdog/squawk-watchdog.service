@@ -1,0 +1,7 @@
+[Unit]
+Description=Squawk watchdog (squawk-ws + squawk-feed liveness)
+After=default.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/toxic/.local/share/squawk-watchdog/squawk-watchdog.sh

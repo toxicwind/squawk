@@ -1,0 +1,20 @@
+# 🔥 Campfire — pitchfork daemon config (merged into squawk)
+
+[daemon]
+id = "ranch/campfire"
+name = "Campfire chatty helper"
+type = "bun"
+command = "bun"
+args = ["src/campfire/index.ts"]
+working_dir = "/home/toxic/pens/ranch/squawk"
+
+[healthcheck]
+enabled = true
+interval = "30s"
+timeout = "10s"
+# No HTTP healthcheck yet — uses process health.
+
+[logging]
+# Pipe logs to the estate log-sink.
+level = "info"
+format = "text"

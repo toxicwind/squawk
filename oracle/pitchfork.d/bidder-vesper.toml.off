@@ -1,0 +1,6 @@
+[daemons.bidder-vesper]
+run = "exec /home/toxic/estate/ranch/squawk/oracle/bin/bidder-vesper.sh"
+dir = "/home/toxic/estate/ranch/squawk/oracle"
+mise = false
+retry = true
+auto = ["start"]

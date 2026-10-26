@@ -1,0 +1,14 @@
+# ranch/squawk - project-owned daemon manifest. Source of truth for 'squawk-history'.
+#
+# Paged + compacted history reads over the JetStream stream (Pry, 2026-10-19):
+# /history seq-cursor pages, /pack hybrid-scored context packs with episode
+# digests for pruned spans. Loopback :25152, feed-token auth like the feed.
+
+[daemons.squawk-history]
+port = 25152
+run = "exec /home/toxic/estate/ranch/squawk/nats/run-history.sh"
+dir = "/home/toxic/estate/ranch/squawk/nats"
+mise = false
+retry = true
+boot_start = true
+ready_http = "http://127.0.0.1:25152/health"

@@ -1,0 +1,11 @@
+# ranch/squawk — kappa-board bridge daemon manifest.
+# Two-way board <-> chat mirror in Bun (:bridging kappa-main.db to squawk-bus).
+# Merged into the squawk monorepo at bun/bridge (2026-10-24 consolidation).
+
+[daemons.bridge]
+run = "exec /home/toxic/.bun/bin/bun /home/toxic/pens/ranch/squawk/bun/bridge/index.ts --watch --root /home/toxic/.squawk-bus/squawk-root --db /home/toxic/.local/share/kappa/kappa-main.db"
+dir = "/home/toxic/pens/ranch/squawk"
+mise = false
+retry = true
+boot_start = true
+auto = ["start"]

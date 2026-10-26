@@ -396,7 +396,7 @@ def main(argv):
         "rows_path": rows_path,
         "conditions": {
             "git_sha": gitsha,
-            "repo": "toxicwind/estate",
+            "repo": "toxicwind/estate-scripts-projects",
             "question_source": "2084Collective/kalshibench-v2 via datasets-server API",
             "eval_set": a.questions,
             "sample_seed": 20260920,

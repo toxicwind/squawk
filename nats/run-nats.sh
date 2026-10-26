@@ -11,7 +11,7 @@
 # exists we fail loudly instead of inventing a second secret.
 set -euo pipefail
 
-TOKEN_FILE="${SQUAWK_FEED_TOKEN_FILE:-/home/toxic/.fleet-bus/squawk-relay/feed-token}"
+TOKEN_FILE="${SQUAWK_FEED_TOKEN_FILE:-/home/toxic/.squawk-bus/squawk-relay/feed-token}"
 if [[ -n "${SQUAWK_FEED_TOKEN:-}" ]]; then
   TOKEN="$SQUAWK_FEED_TOKEN"
 elif [[ -f "$TOKEN_FILE" ]]; then

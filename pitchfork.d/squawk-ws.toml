@@ -1,0 +1,20 @@
+# ranch/squawk — squawk-ws daemon manifest.
+# Source of truth for the squawk WebSocket push feed (:25147).
+# Merged into the squawk monorepo at core/ws.py (2026-10-24 consolidation).
+
+# squawk-ws-client (2026-09-14, cell-proof pilot): push client ON awrawr-pc,
+# connecting directly to 127.0.0.1:25147. The cell-side client
+# (~/workspace/squawk-ws-client.py) dies with the cell; this one cannot.
+# Spool: estate/projects/range/ranch/squawk-ws/client-spool.jsonl (durable, cell-independent).
+# Additive pilot — cell-side client + watchdog stay as fallback until 24h proven.
+
+[daemons.squawk-ws]
+port = 25147
+run = "exec /usr/bin/python3 /home/toxic/pens/ranch/squawk/core/ws.py"
+dir = "/home/toxic/pens/ranch/squawk"
+mise = false
+retry = true
+boot_start = true
+ready_http = "http://127.0.0.1:25147/ping"
+env = { SQUAWK_WS_PORT = "25147", SQUAWK_CHAT_ROOT = "/home/toxic/.squawk-bus/squawk-root" }
+auto = ["start"]

@@ -68,6 +68,30 @@ def labeled_history(source=None, path=None):
     return rows, quarantined
 
 
+def record_labeled_outcome(correct, source="market_settlement", path=None,
+                           **meta):
+    """Append one genuinely labeled outcome row to the history ledger.
+
+    The producer this module's readers always assumed: labeled_history()
+    and the abstention gate existed, but nothing ever wrote a row, so the
+    gate's history stayed at n=0 and every verdict escalated by
+    construction. Only real outcomes are recorded here -- the caller
+    passes an outcome that actually happened (e.g. a market settle's
+    verification result). Nothing synthetic: unknown sources are
+    rejected outright.
+    """
+    if source not in LABEL_SOURCES:
+        raise ValueError("unknown label source: %r" % (source,))
+    path = path or HISTORY_PATH
+    row = {"correct": bool(correct), "label_source": source,
+           "ts": time.time()}
+    row.update(meta)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "a") as f:
+        f.write(json.dumps(row) + "\n")
+    return row
+
+
 # ---------------- normal distribution (stdlib) ----------------
 
 def norm_cdf(x):

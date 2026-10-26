@@ -1,0 +1,10 @@
+{
+  "ts": 1792448130.4270427,
+  "question_id": "751173c4ee3588de",
+  "question": "Is 97 a prime number? Resolution criterion: 97 has no divisors other than 1 and itself.?",
+  "reason": "no live judges \u2014 nothing to aggregate",
+  "context": {
+    "verdict": 0.5
+  },
+  "status": "awaiting_human"
+}

@@ -75,7 +75,6 @@ _CHANNEL_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]*")
 # channel tail (inotify hot path)
 # ---------------------------------------------------------------------------
 
-
 class _Inotify:
     """Minimal ctypes wrapper: inotify_init1 + add_watch + read."""
 
@@ -85,18 +84,14 @@ class _Inotify:
         self._libc.inotify_init1.argtypes = [ctypes.c_int]
         self._libc.inotify_init1.restype = ctypes.c_int
         self._libc.inotify_add_watch.argtypes = [
-            ctypes.c_int,
-            ctypes.c_char_p,
-            ctypes.c_uint32,
-        ]
+            ctypes.c_int, ctypes.c_char_p, ctypes.c_uint32]
         self._libc.inotify_add_watch.restype = ctypes.c_int
         fd = self._libc.inotify_init1(0)
         if fd < 0:
             raise OSError(ctypes.get_errno(), "inotify_init1 failed")
         self.fd = fd
         wd = self._libc.inotify_add_watch(
-            fd, str(path).encode("utf-8"), ctypes.c_uint32(mask)
-        )
+            fd, str(path).encode("utf-8"), ctypes.c_uint32(mask))
         if wd < 0:
             err = ctypes.get_errno()
             os.close(fd)
@@ -174,7 +169,8 @@ def _watch_loop(state: FeedState):
     try:
         ino = _Inotify(state.chan_dir, WATCH_MASK)
     except OSError as e:
-        print(f"squawk-feed: inotify unavailable ({e}); poll fallback", file=sys.stderr)
+        print(f"squawk-feed: inotify unavailable ({e}); poll fallback",
+              file=sys.stderr)
         while not state.stop.is_set():
             state.note_advanced()
             state.stop.wait(2.0)
@@ -206,10 +202,8 @@ def _watch_loop(state: FeedState):
 # fat response builder
 # ---------------------------------------------------------------------------
 
-
-def build_fat(
-    since: int, state: FeedState, max_messages: int = MAX_MESSAGES, tail: int = 0
-) -> dict:
+def build_fat(since: int, state: FeedState,
+              max_messages: int = MAX_MESSAGES, tail: int = 0) -> dict:
     """{"seq": M, "messages": [...]} for messages with seq > since.
 
     M is the seq of the last message in the batch (== channel high-water
@@ -228,8 +222,8 @@ def build_fat(
         if m:
             last = max(last, int(m.group(1)))
         rec = fleet_relay.build_relay_record(
-            p, channel=state.channel, identity=state.identity, key_dir=state.key_dir
-        )
+            p, channel=state.channel,
+            identity=state.identity, key_dir=state.key_dir)
         # Full bodies by design (Chris, 2026-09-21): the serve path
         # does NOT truncate. The 500-char TEXT_CAP removal was lost
         # in the estate migration and is restored here (Pry, 2026-10-19).
@@ -250,7 +244,6 @@ def build_fat(
 # ---------------------------------------------------------------------------
 # HTTP: one port, bearer-authed fat endpoints + public ping
 # ---------------------------------------------------------------------------
-
 
 class _Handler(http.server.BaseHTTPRequestHandler):
     server_version = "squawk-feed/1.0"
@@ -281,18 +274,7 @@ class _Handler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         parsed = urllib.parse.urlparse(self.path)
         path = parsed.path
-        if path in ("/", "/index.html"):
-            # delend-controlled root redirect: make the entry point informative
-            # instead of a bare 404. Target is configurable; default -> live seq.
-            target = os.environ.get("DELEND_SQUAWK_REDIRECT", "/squawk-feed/seq")
-            self.send_response(302)
-            self.send_header("Location", target)
-            self.end_headers()
-            return
-        if path in (
-            "/squawk-feed/ping",
-            "/squawk-feed/seq",
-        ):  # /seq kept for the relay agent
+        if path in ("/squawk-feed/ping", "/squawk-feed/seq"):  # /seq kept for the relay agent
             with self.server.state.cond:
                 high = self.server.state.high
             self._send_json(200, {"seq": high})
@@ -325,7 +307,8 @@ class _Handler(http.server.BaseHTTPRequestHandler):
                 if not chan_dir.is_dir():
                     self._send_404()
                     return
-                one_shot = FeedState(chan_dir, chan, state.identity, state.key_dir)
+                one_shot = FeedState(chan_dir, chan, state.identity,
+                                     state.key_dir)
                 self._send_json(200, build_fat(since, one_shot, tail=tail))
                 return
             with state.cond:
@@ -350,7 +333,8 @@ class FeedServer(socketserver.ThreadingMixIn, http.server.HTTPServer):
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
         super().server_bind()
 
-    def __init__(self, addr, state: FeedState, token: str, hold: float = HOLD_SECONDS):
+    def __init__(self, addr, state: FeedState, token: str,
+                 hold: float = HOLD_SECONDS):
         self.state = state
         self.token = token
         self.hold = hold
@@ -375,27 +359,21 @@ def _ensure_keys_env(root: Path) -> None:
     set FLEET_KEYS_DIR=/home/toxic/.shingle/squawk-root/keys.
     """
     if "FLEET_KEYS_DIR" not in os.environ:
-        os.environ["FLEET_KEYS_DIR"] = str(fleet_relay.resolve_key_dir(None, root=root))
+        os.environ["FLEET_KEYS_DIR"] = str(
+            fleet_relay.resolve_key_dir(None, root=root))
 
 
-def serve(
-    *,
-    root: Path,
-    channel: str,
-    identity: str,
-    key_dir: Path,
-    bind: str,
-    port: int,
-    token: str,
-    hold: float = HOLD_SECONDS,
-) -> FeedServer:
+def serve(*, root: Path, channel: str, identity: str, key_dir: Path,
+          bind: str, port: int, token: str,
+          hold: float = HOLD_SECONDS) -> FeedServer:
     """Build (not start) the server; caller runs serve_forever()."""
     chan_dir = root / channel
     if not chan_dir.is_dir():
         raise RuntimeError(f"channel '{channel}' not found under {root}")
     _ensure_keys_env(root)
     state = FeedState(chan_dir, channel, identity, key_dir)
-    watcher = threading.Thread(target=_watch_loop, args=(state,), daemon=True)
+    watcher = threading.Thread(target=_watch_loop, args=(state,),
+                               daemon=True)
     watcher.start()
     server = FeedServer((bind, port), state, token, hold)
     server.feed_state = state
@@ -406,64 +384,38 @@ def serve(
 
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser(
-        description="squawk-feed: bearer-authed fat long-poll for Squawk"
-    )
+        description="squawk-feed: bearer-authed fat long-poll for Squawk")
     ap.add_argument("--root", required=True, help="chat root")
     ap.add_argument("--channel", default="fleet", help="channel to serve")
     ap.add_argument("--bind", default="127.0.0.1", help="bind address")
-    ap.add_argument(
-        "--port",
-        type=int,
-        default=int(os.environ.get("SQUAWK_FEED_PORT", "25135")),
-        help="port to serve (default: $SQUAWK_FEED_PORT else 25135)",
-    )
-    ap.add_argument(
-        "--identity",
-        default=None,
-        help="relay identity used to unseal "
-        "(default: $SQUAWK_RELAY_IDENTITY or 'relay')",
-    )
-    ap.add_argument(
-        "--key-dir",
-        default=None,
-        help="fleet keys dir (default: $FLEET_KEYS_DIR, else <root>/keys)",
-    )
-    ap.add_argument(
-        "--hold",
-        type=float,
-        default=HOLD_SECONDS,
-        help="long-poll hold seconds (default: 55)",
-    )
+    ap.add_argument("--port", type=int, default=25131,
+                    help="port to serve (default: 25131)")
+    ap.add_argument("--identity", default=None,
+                    help="relay identity used to unseal "
+                         "(default: $SQUAWK_RELAY_IDENTITY or 'relay')")
+    ap.add_argument("--key-dir", default=None,
+                    help="fleet keys dir "
+                         "(default: $FLEET_KEYS_DIR, else <root>/keys)")
+    ap.add_argument("--hold", type=float, default=HOLD_SECONDS,
+                    help="long-poll hold seconds (default: 55)")
     a = ap.parse_args(argv)
 
     token = os.environ.get(TOKEN_ENV)
     if not token:
-        print(
-            f"squawk-feed: refusing to start without {TOKEN_ENV} "
-            f"(pitchfork service env must provide it)",
-            file=sys.stderr,
-        )
+        print(f"squawk-feed: refusing to start without {TOKEN_ENV} "
+              f"(pitchfork service env must provide it)",
+              file=sys.stderr)
         raise SystemExit(2)
 
     identity = fleet_relay.resolve_identity(a.identity)
     key_dir = fleet_relay.resolve_key_dir(a.key_dir, root=Path(a.root))
-    server = serve(
-        root=Path(a.root),
-        channel=a.channel,
-        identity=identity,
-        key_dir=key_dir,
-        bind=a.bind,
-        port=a.port,
-        token=token,
-        hold=a.hold,
-    )
+    server = serve(root=Path(a.root), channel=a.channel, identity=identity,
+                   key_dir=key_dir, bind=a.bind, port=a.port, token=token,
+                   hold=a.hold)
     sa = server.server_address
-    print(
-        f"squawk-feed: serving #{a.channel} on {sa[0]}:{sa[1]} "
-        f"(hold={a.hold}s, bearer auth on /wait + /subscribe)",
-        flush=True,
-    )
-
+    print(f"squawk-feed: serving #{a.channel} on {sa[0]}:{sa[1]} "
+          f"(hold={a.hold}s, bearer auth on /wait + /subscribe)",
+          flush=True)
     def _on_term(signum, frame):
         # Graceful shutdown: stop accepting new connections, finish
         # in-flight requests, then exit. For hot reload, the new process

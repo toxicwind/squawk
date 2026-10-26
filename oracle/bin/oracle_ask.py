@@ -45,18 +45,42 @@ import engine
 import evidence as evmod
 import escalation
 
-HERD_URL = os.environ.get("HERD_URL", "http://127.0.0.1:25100")
+# Inference endpoint: flock :25193 (NIM-backed). 2026-10-13 Chris
+# corrective: do NOT use the local herd models on :25100 -- not ready.
+# Working chain: cuttinggate:25200 -> flock:25193 -> vans:20128.
+# HERD_URL env name kept for caller compatibility; default is flock.
+HERD_URL = os.environ.get("HERD_URL", "http://127.0.0.1:25193")
+
+# Flock requires the client key as a Bearer token. Read at startup from
+# the 0600 key file (same pattern as bin/bidder.py); never hardcoded.
+FLOCK_API_KEY = ""
+# flock->hodos rename (2026-10-18): key moved to ~/.hodos-data (legacy
+# ~/.flock-data is gone -- the anonymous fallback 401s against :25193).
+for _kp in ("/home/toxic/.hodos-data/client-key.corral",
+            "/home/toxic/.hodos/.flock/client-key.corral",
+            "/home/toxic/.flock-data/client-key.corral"):
+    try:
+        with open(_kp) as _fk:
+            FLOCK_API_KEY = _fk.read().strip()
+        break
+    except OSError:
+        continue
 WORK = os.environ.get("ORACLE_WORK", "/home/toxic/estate/ranch/squawk/oracle/work")
 
-# Judge panel: ROUTER ROLE ALIASES. Concrete targets are owned by
-# config/herd.yaml ("Oracle judge panel"); this list is routing surface
-# only, never model-family selection.
+# Judge panel: NIM-backed models served by flock :25193, verified live
+# 2026-10-13 with the flock client key (HTTP 200 on a JSON probe). The
+# old herd router aliases (oracle-judge-a/b/c) no longer exist in
+# herd.yaml, and oracle-judge-local was a local beellama model -- banned
+# by the 2026-10-13 corrective from Chris (local herd models not ready).
 DEFAULT_JUDGES = [
-    "oracle-judge-a",
-    "oracle-judge-b",
-    "oracle-judge-c",
+    "openai/gpt-oss-120b",  # 2026-10-19: bench winner, ~1s on this route
+    "z-ai/glm-5.3-flash",  # verified answering judge-shaped probes ~1s (2026-10-19)
+    "nvidia/nemotron-3-super-120b-a12b",  # diversity seat: benched perfect, but all three
+    # nemotron judges timed out at 90s on trivial prompts after the bench (2026-10-19 pm);
+    # the engine liveness gate re-admits it when it answers again.
+  # 2026-10-19 bench: perfect probes; ultra demoted (length burns)
 ]
-FALLBACK_JUDGE = "oracle-judge-local"  # local last resort, router-owned
+FALLBACK_JUDGE = "openai/gpt-oss-120b"
 
 JUDGE_PROMPT = """You are judge {idx} (anonymous) on the OpenFang Oracle panel.
 Question: {question}
@@ -160,7 +184,30 @@ def family_of_model(model_id):
 # herd transport: structured results, evidence preserved
 # ---------------------------------------------------------------------------
 
-def herd_chat(model, prompt, timeout_s=90, max_tokens=1500):
+def _reasoning_params(model, budget=1024, effort="low"):
+    """Direct reasoning caps per model family (2026-10-19). See
+    patch_reasoning history: gpt-oss effort verified live via :25193;
+    nemotron-3 budget/kwargs per NVIDIA docs; glm effort=low
+    verified live 2026-10-19 (only knob NIM honors). Unknown families: none."""
+    if model.startswith("openai/gpt-oss"):
+        return {"reasoning_effort": effort}
+    if "nemotron-3" in model:
+        return {"reasoning_budget": budget,
+                "chat_template_kwargs": {"enable_thinking": True,
+                                         "low_effort": True}}
+    if "glm" in model:
+        # GLM verified live 2026-10-19 (sable probe via :25193):
+        # reasoning_effort=low is the ONLY knob NIM honors for GLM —
+        # codegen probe went 2000 reasoning tokens / 69.9s / finish=length
+        # to 0 reasoning tokens / 2.3s / clean content. medium and minimal
+        # are silently ignored (full burn); chat_template_kwargs and
+        # thinking={type:disabled} are ignored; top-level enable_thinking
+        # and reasoning_budget are rejected with HTTP 400.
+        return {"reasoning_effort": "low"}
+    return {}
+
+
+def herd_chat(model, prompt, timeout_s=90, max_tokens=1500, _no_reasoning=False):
     """POST /v1/chat/completions. Returns a structured dict — never raises.
 
     On success: ok, text, latency_s, usage, http_status, model_served
@@ -170,15 +217,21 @@ def herd_chat(model, prompt, timeout_s=90, max_tokens=1500):
     unknown), http_status (when the upstream answered), error_body
     (bounded upstream body excerpt — the evidence old code dropped).
     """
-    body = json.dumps({
+    payload = {
         "model": model,
         "messages": [{"role": "user", "content": prompt}],
         "temperature": 0.2,
         "max_tokens": max_tokens,
-    }).encode()
+    }
+    if not _no_reasoning:
+        payload.update(_reasoning_params(model))
+    body = json.dumps(payload).encode()
+    headers = {"Content-Type": "application/json"}
+    if FLOCK_API_KEY:
+        headers["Authorization"] = "Bearer " + FLOCK_API_KEY
     req = urllib.request.Request(
         HERD_URL + "/v1/chat/completions", data=body,
-        headers={"Content-Type": "application/json"}, method="POST")
+        headers=headers, method="POST")
     t0 = time.time()
     try:
         with urllib.request.urlopen(req, timeout=timeout_s) as r:
@@ -186,7 +239,7 @@ def herd_chat(model, prompt, timeout_s=90, max_tokens=1500):
             server = r.headers.get("Server")
             data = json.load(r)
         msg = (data.get("choices") or [{}])[0].get("message") or {}
-        return {"ok": True, "text": msg.get("content"),
+        return {"ok": True, "text": msg.get("content") or msg.get("reasoning_content") or msg.get("reasoning") or "",
                 "latency_s": time.time() - t0,
                 "usage": data.get("usage") or {},
                 "http_status": status,
@@ -196,6 +249,11 @@ def herd_chat(model, prompt, timeout_s=90, max_tokens=1500):
                 "server": server,
                 "error": None, "error_kind": None, "error_body": None}
     except urllib.error.HTTPError as e:
+        if e.code == 400 and not _no_reasoning and _reasoning_params(model):
+            # Upstream rejected a reasoning field: retry once uncapped
+            # rather than failing the call (old behavior preserved).
+            return herd_chat(model, prompt, timeout_s, max_tokens,
+                             _no_reasoning=True)
         try:
             ebody = e.read().decode("utf-8", "replace")[:500]
         except Exception:

@@ -1,0 +1,16 @@
+# ranch/squawk - project-owned daemon manifest. Source of truth for 'squawk-feed'.
+#
+# Restored 2026-10-19 (Pry): the [daemons.squawk-feed] block was lost from the
+# composed estate/pitchfork.toml (same loss as squawk-ws); the service survived
+# as an unsupervised orphan process on :25135. feed.py is env-configured with
+# estate-correct defaults (chat root ~/.squawk-bus/squawk-root, relay state
+# ~/.squawk-bus/squawk-relay), so the block needs no env.
+
+[daemons.squawk-feed]
+port = 25135
+run = "exec /usr/bin/python3 /home/toxic/estate/ranch/squawk/relay/feed.py"
+dir = "/home/toxic/estate/ranch/squawk/relay"
+mise = false
+retry = true
+boot_start = true
+ready_http = "http://127.0.0.1:25135/squawk-feed/seq"

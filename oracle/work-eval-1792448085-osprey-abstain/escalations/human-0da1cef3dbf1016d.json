@@ -1,0 +1,10 @@
+{
+  "ts": 1792448129.8017054,
+  "question_id": "0da1cef3dbf1016d",
+  "question": "Did Shakespeare write the novel Don Quixote? Resolution criterion: Don Quixote was written by Miguel de Cervantes.?",
+  "reason": "no live judges \u2014 nothing to aggregate",
+  "context": {
+    "verdict": 0.5
+  },
+  "status": "awaiting_human"
+}

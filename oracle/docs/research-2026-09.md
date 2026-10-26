@@ -37,7 +37,7 @@
 
 ### 4. Co-Failure Ceiling (arXiv:2606.27288)
 - **Claim:** Accuracy of routing/voting/MoA ≤ 1 − β (all-wrong rate); "At matched quality, low-rho heterogeneous ensembles beat high-rho Self-MoA… combining models rarely beats the single best model without a strong query-level routing signal. Gains come from models failing on different questions, not from adding more models."
-- **Steal:** Track per-question **co-failure rate** as the Oracle's ensemble health metric (Clopper–Pearson bound gives a finite-sample certificate of max achievable gain). Bidder/judge *selection* should optimize for low error correlation, not individual strength. A beta certificate tells Chris when adding more judges is pointless.
+- **Steal:** Track per-question **co-failure rate** as the Oracle's ensemble health metric (Clopper–Pearson bound gives a finite-sample certificate of max achievable gain). Bidder/judge *selection* should optimize for low error correlation, not individual strength. A beta certificate tells the Architect when adding more judges is pointless.
 
 ### 5. Mixture of Complementary Agents (arXiv:2605.24048)
 - **Claim:** Proposer selection reframed as combinatorial (feature-selection-like) optimization; "the value of an LLM lies in its complementarity with others"; greedy complementarity selection on a small labeled set achieves best performance-cost trade-offs.

@@ -1,0 +1,6 @@
+[daemons.bidder-warden]
+run = "exec /home/toxic/estate/ranch/squawk/oracle/bin/bidder-warden.sh"
+dir = "/home/toxic/estate/ranch/squawk/oracle"
+mise = false
+retry = true
+auto = ["start"]

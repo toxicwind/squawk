@@ -19,6 +19,13 @@ export function safeHref(u: string): string {
   return esc(t);
 }
 
+/** URLs captured AFTER esc() carry entities (& -> &amp;, " -> &quot;).
+ * Undo that pass before safeHref escapes exactly once — otherwise query
+ * strings ship as &amp;amp; and break. */
+function unescUrl(u: string): string {
+  return u.replace(/&amp;/g, "&").replace(/&quot;/g, '"');
+}
+
 const SENT = "⁠"; // sentinel char: \u2060 WORD JOINER, survives esc(), never in real text
 
 export function mdInline(src: string): string {
@@ -30,8 +37,10 @@ export function mdInline(src: string): string {
   out = esc(out);
   out = out.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
   out = out.replace(/(^|[^*\w])\*([^*]+)\*/g, "$1<em>$2</em>");
+  out = out.replace(/!\[([^\]\n]*)\]\(([^)\s\n]+)\)/g, (_m, alt, u) =>
+    `<img src="${safeHref(unescUrl(u))}" alt="${alt}" loading="lazy">`);
   out = out.replace(/\[([^\]\n]+)\]\(([^)\s\n]+)\)/g, (_m, t, u) =>
-    `<a href="${safeHref(u)}" target="_blank" rel="noopener">${t}</a>`);
+    `<a href="${safeHref(unescUrl(u))}" target="_blank" rel="noopener">${t}</a>`);
   const re = new RegExp(SENT + "(\\d+)" + SENT, "g");
   out = out.replace(re, (_m, i) => `<code>${esc(codes[+i])}</code>`);
   return out;
@@ -42,6 +51,7 @@ export function mdBlock(src: string): string {
   let html = "";
   let para: string[] = [];
   let list: string | null = null;
+  let quote: string[] = [];
   let inCode = false;
   let inRaw: string | null = null;
   let codeBuf: string[] = [];
@@ -58,12 +68,19 @@ export function mdBlock(src: string): string {
       list = null;
     }
   };
+  const flushQ = () => {
+    if (quote.length) {
+      html += "<blockquote>" + quote.map(mdInline).join("<br>") + "</blockquote>";
+      quote = [];
+    }
+  };
   const rawClose = (tag: string) => new RegExp("<\\/\\s*" + tag + "\\s*>", "i");
 
   for (const ln of lines) {
     if (/^```/.test(ln)) {
       flushP();
       closeL();
+      flushQ();
       if (inCode) {
         html += `<pre><code>${esc(codeBuf.join("\n"))}</code></pre>`;
         codeBuf = [];
@@ -87,6 +104,7 @@ export function mdBlock(src: string): string {
       // multi-line raw block: pass through until the closing tag
       flushP();
       closeL();
+      flushQ();
       inRaw = rawOpen[1].toLowerCase();
       html += ln + "\n";
       continue;
@@ -95,6 +113,7 @@ export function mdBlock(src: string): string {
       // single-line raw html
       flushP();
       closeL();
+      flushQ();
       html += ln + "\n";
       continue;
     }
@@ -102,6 +121,7 @@ export function mdBlock(src: string): string {
     if (h) {
       flushP();
       closeL();
+      flushQ();
       html += `<h${h[1].length}>${mdInline(h[2])}</h${h[1].length}>`;
       continue;
     }
@@ -109,13 +129,14 @@ export function mdBlock(src: string): string {
     if (bq) {
       flushP();
       closeL();
-      html += `<blockquote>${mdInline(bq[1])}</blockquote>`;
+      quote.push(bq[1]);
       continue;
     }
     const ul = ln.match(/^[-*]\s+(.*)$/);
     const ol = ln.match(/^\d+[.)]\s+(.*)$/);
     if (ul || ol) {
       flushP();
+      flushQ();
       const t = ul ? "ul" : "ol";
       if (list !== t) {
         closeL();
@@ -128,12 +149,15 @@ export function mdBlock(src: string): string {
     if (/^\s*$/.test(ln)) {
       flushP();
       closeL();
+      flushQ();
       continue;
     }
+    flushQ();
     para.push(ln);
   }
   flushP();
   closeL();
+  flushQ();
   if (inCode) html += `<pre><code>${esc(codeBuf.join("\n"))}</code></pre>`;
   return html;
 }

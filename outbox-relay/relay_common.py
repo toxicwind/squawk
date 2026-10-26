@@ -2,7 +2,7 @@
 """Shared helpers for the squawk relay (sink.py + forward.py). Stdlib only.
 
 Paths resolve from env with the canonical shingle defaults; the reorg track
-may move /home/toxic/.fleet-bus, so nothing here hardcodes beyond defaults.
+may move /home/toxic/.squawk-bus, so nothing here hardcodes beyond defaults.
 """
 import ctypes
 import ctypes.util
@@ -15,8 +15,8 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-RELAY_DIR = Path(os.environ.get("SQUAWK_RELAY_DIR", "/home/toxic/.fleet-bus/squawk-relay"))
-CHAT_ROOT = Path(os.environ.get("SQUAWK_CHAT_ROOT", "/home/toxic/.fleet-bus/squawk-root"))
+RELAY_DIR = Path(os.environ.get("SQUAWK_RELAY_DIR", "/home/toxic/.squawk-bus/squawk-relay"))
+CHAT_ROOT = Path(os.environ.get("SQUAWK_CHAT_ROOT", "/home/toxic/.squawk-bus/squawk-root"))
 KEYS_DIR = Path(os.environ.get("FLEET_KEYS_DIR", str(CHAT_ROOT / "keys")))
 SQUAWK_CODE = Path(os.environ.get("SQUAWK_CODE_DIR", "/home/toxic/squawk"))
 CHAT_PY = SQUAWK_CODE / "chat.py"

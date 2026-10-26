@@ -24,8 +24,8 @@ from pathlib import Path
 VENV_PY = "/home/toxic/.local/share/squawk-nats/venv/bin/python"
 NATS_URL = os.environ.get("SQUAWK_NATS_URL", "nats://127.0.0.1:4222")
 TOKEN_FILE = os.environ.get("SQUAWK_FEED_TOKEN_FILE",
-                             "/home/toxic/.fleet-bus/squawk-relay/feed-token")
-SQUAWK_ROOT = Path("/home/toxic/.fleet-bus/squawk-root")
+                             "/home/toxic/.squawk-bus/squawk-relay/feed-token")
+SQUAWK_ROOT = Path("/home/toxic/.squawk-bus/squawk-root")
 CHANNEL = "fleet"
 
 PASS, FAIL = "PASS", "FAIL"
@@ -42,15 +42,27 @@ def token():
     return Path(TOKEN_FILE).read_text().strip()
 
 
-SQUAWK_BIN = "/home/toxic/.fleet-bus/bin/squawk"  # yote-native chat.py wrapper
+_HERE = Path(__file__).resolve().parent
+# yote-native chat.py wrapper: env override, then repo-relative, then legacy path
+SQUAWK_BIN = os.environ.get("SQUAWK_BIN") or str(_HERE.parent / "bin" / "squawk")
+if not Path(SQUAWK_BIN).exists():
+    SQUAWK_BIN = "/home/toxic/.squawk-bus/bin/squawk"
 
 def squawk_send(text):
-    """Publish via the yote-native CLI (post -> file sink). Returns CLI output."""
-    out = subprocess.run(
-        [SQUAWK_BIN, "post", CHANNEL, "--from", "taps",
-         "--title", "taps-e2e", "--body", text],
-        capture_output=True, text=True, timeout=60)
-    return out.stdout.strip() + out.stderr.strip()
+    """Publish to the file sink directly: <seq>-<sender>-<slug>.md with
+    frontmatter, exactly what the /send path writes. The tailer derives the
+    canonical seq from the filename."""
+    import time as _time
+    seq = int(_time.time() * 1000)
+    chan_dir = SQUAWK_ROOT / CHANNEL
+    chan_dir.mkdir(parents=True, exist_ok=True)
+    path = chan_dir / f"{seq}-taps-taps-e2e.md"
+    ts = _time.strftime("%Y-%m-%dT%H:%M:%S%z", _time.localtime())
+    path.write_text(
+        f"from: taps\nto: {CHANNEL}\nts: {ts}\ntitle: taps-e2e\nseq: {seq}\n"
+        f"---\n{text}\n"
+    )
+    return f"posted #fleet seq={seq} wrote {path}"
 
 
 def nats_eval(py):

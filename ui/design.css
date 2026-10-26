@@ -99,8 +99,8 @@ body {
   flex: 1;
   min-height: 0;
   width: 100%;
-  max-width: 960px;
-  margin: 0 auto;
+  max-width: none;
+  margin: 0;
 }
 
 /* ---------- top bar ---------- */
@@ -167,6 +167,19 @@ body {
 .dot.live { background: var(--good); box-shadow: 0 0 8px rgba(111, 213, 152, 0.8); animation: pulse 2.4s ease-in-out infinite; }
 .dot.recon { background: var(--accent); animation: pulse 1s ease-in-out infinite; }
 .dot.dead { background: var(--bad); }
+.src-toggle {
+  margin-left: 2px;
+  font: inherit;
+  font-size: 11px;
+  color: var(--faint);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: var(--r-full);
+  padding: 2px 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.src-toggle:hover { color: var(--accent-hi); border-color: var(--accent-line); }
 .conn-lat { color: var(--faint); font-variant-numeric: tabular-nums; }
 
 @keyframes pulse {

@@ -23,6 +23,28 @@ import hashlib
 import bayes
 
 
+def _rel(e):
+    """Coerce evidence relevance to a float. Accepts numbers, numeric
+    strings, and the labels high/medium/low; anything else -> 0.0.
+    (Fixes TypeError when agents submit relevance as a string label.)"""
+    v = e.get("relevance", 0.0)
+    if isinstance(v, (int, float)):
+        return float(v)
+    if isinstance(v, str):
+        s = v.strip().lower()
+        if s in ("high", "hi"):
+            return 1.0
+        if s in ("medium", "med", "mid"):
+            return 0.5
+        if s in ("low", "lo"):
+            return 0.25
+        try:
+            return float(s)
+        except ValueError:
+            return 0.0
+    return 0.0
+
+
 def partition_evidence(items, n_judges, public_frac=0.4):
     """Split evidence into a shared public core + disjoint private subsets.
 
@@ -33,7 +55,7 @@ def partition_evidence(items, n_judges, public_frac=0.4):
     """
     if n_judges < 1:
         raise ValueError("n_judges >= 1")
-    ranked = sorted(items, key=lambda e: (-e.get("relevance", 0.0),
+    ranked = sorted(items, key=lambda e: (-_rel(e),
                                           e.get("id", "")))
     n_pub = max(1 if ranked else 0, int(len(ranked) * public_frac))
     public = ranked[:n_pub]
