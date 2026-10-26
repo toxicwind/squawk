@@ -138,20 +138,27 @@ def _local_apply(change_set, evidence):
             old, new = edit.get("old"), edit.get("new")
             if not old:
                 rec.update(ok=False, error="empty anchor")
-                failures.append(rec); evidence.append(rec); continue
+                failures.append(rec)
+                evidence.append(rec)
+                continue
             text = Path(path).read_text(encoding="utf-8")
             n = text.count(old)
             rec["anchor_hits"] = n
             if n != 1:
                 rec.update(ok=False,
                            error="anchor_not_unique" if n > 1 else "anchor_missing")
-                failures.append(rec); evidence.append(rec); continue
+                failures.append(rec)
+                evidence.append(rec)
+                continue
             Path(path).write_text(text.replace(old, new, 1), encoding="utf-8")
             verify = Path(path).read_text(encoding="utf-8")
             if new not in verify:
                 rec.update(ok=False, error="verify_failed")
-                failures.append(rec); evidence.append(rec); continue
-            rec["ok"] = True; applied += 1
+                failures.append(rec)
+                evidence.append(rec)
+                continue
+            rec["ok"] = True
+            applied += 1
         except (OSError, McpError) as e:  # noqa: BLE001
             rec.update(ok=False, error=str(e)[:160])
             failures.append(rec)
@@ -188,7 +195,9 @@ def apply_change_set(change_set, evidence):
             old, new = edit.get("old"), edit.get("new")
             if not old:
                 rec.update(ok=False, error="empty anchor")
-                failures.append(rec); evidence.append(rec); continue
+                failures.append(rec)
+                evidence.append(rec)
+                continue
             text = gh.call_read(READ_TOOL, {"path": path})
             rec["mcp_calls"] = ["read_text_file"]
             n = text.count(old)
@@ -196,7 +205,9 @@ def apply_change_set(change_set, evidence):
             if n != 1:
                 rec.update(ok=False,
                            error="anchor_not_unique" if n > 1 else "anchor_missing")
-                failures.append(rec); evidence.append(rec); continue
+                failures.append(rec)
+                evidence.append(rec)
+                continue
             gh.call_destructive(EDIT_TOOL, {"path": path, "edits": [
                 {"oldText": old, "newText": new}]})
             rec["mcp_calls"].append("edit_file")
@@ -204,8 +215,11 @@ def apply_change_set(change_set, evidence):
             rec["mcp_calls"].append("read_text_file:verify")
             if new not in verify:
                 rec.update(ok=False, error="verify_failed")
-                failures.append(rec); evidence.append(rec); continue
-            rec["ok"] = True; applied += 1
+                failures.append(rec)
+                evidence.append(rec)
+                continue
+            rec["ok"] = True
+            applied += 1
         except McpError as e:  # noqa: BLE001
             rec.update(ok=False, error="mcp_error: %s" % str(e)[:160])
             failures.append(rec)

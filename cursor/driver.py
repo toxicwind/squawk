@@ -5,7 +5,9 @@ Usage: driver.py <step>  (step: seed | stale | append2 | lww | idem | clamp)
 Prints the raw bridge JSON result. AWRAWR_TRANSPORT=https is forced.
 Each invocation is one stateless bridge round trip.
 """
-import json, os, subprocess, sys
+import os
+import subprocess
+import sys
 
 EXEC = os.path.expanduser("~/workspace/skills/awrawr-mcp/bin/exec.py")
 BASE = "/home/toxic/session-bus-refresh"
@@ -43,13 +45,13 @@ def refresh(cursor, timeout=20):
 
 
 def step_seed():
-    lines = " ".join('"%s"' % l.replace('"', '\\"') for l in SEED)
+    lines = " ".join('"%s"' % line.replace('"', '\\"') for line in SEED)
     return sh('mkdir -p %s && printf "%%s\\n" %s > %s && sha256sum %s && wc -l %s'
               % (BASE, lines, SRC, SRC, SRC))
 
 
 def step_append2():
-    lines = " ".join('"%s"' % l.replace('"', '\\"') for l in APPEND2)
+    lines = " ".join('"%s"' % line.replace('"', '\\"') for line in APPEND2)
     return sh('printf "%%s\\n" %s >> %s && sha256sum %s && wc -l %s'
               % (lines, SRC, SRC, SRC))
 

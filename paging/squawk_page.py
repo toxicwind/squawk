@@ -23,13 +23,11 @@ count changes (cheap stat check per call).
 """
 import argparse
 import json
-import math
 import os
 import pickle
 import re
 import sys
 import time
-from collections import Counter, defaultdict
 from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
