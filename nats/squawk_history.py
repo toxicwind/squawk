@@ -32,7 +32,7 @@ import sys
 import threading
 import time
 from collections import Counter, defaultdict, deque
-from datetime import datetime, timezone
+from datetime import datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse

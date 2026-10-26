@@ -60,15 +60,15 @@ def refresh(path, cursor):
     n = max(0, min(n, total))
 
     new_lines = lines[n:]
-    messages = [l for l in new_lines if l.strip() and not is_decision(l)]
+    messages = [line for line in new_lines if line.strip() and not is_decision(line)]
     messages = messages[-MAX_MESSAGES:]
 
     # Last-writer-wins: newest DECISION: line in the whole source.
     decision = None
     decision_index = None
-    for i, l in enumerate(lines):
-        if is_decision(l):
-            decision = l
+    for i, line in enumerate(lines):
+        if is_decision(line):
+            decision = line
             decision_index = i + 1  # 1-based line number
 
     return {

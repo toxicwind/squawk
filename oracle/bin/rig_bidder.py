@@ -84,7 +84,7 @@ def main():
                                tagline=lane["tagline"])
     try:
         b = bidder_mod.Bidder(bargs)
-    except SystemExit as e:
+    except SystemExit:
         # _acquire_lock exit(2): a pitchfork daemon still holds this lane.
         print("TURN_ABORT: lock held (pitchfork daemon still alive?)", flush=True)
         return 2

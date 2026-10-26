@@ -36,7 +36,7 @@ import os
 import signal
 import sys
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 DEFAULT_DEADLINE = 2.0
 OUT_CAP = 100_000
