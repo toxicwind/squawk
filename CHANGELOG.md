@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.10.1 (2026-10-26)
+
+### Bug Fixes
+
+- Ruff clean lint-and-smoke (30 errors)
+  ([`1281a15`](https://github.com/toxicwind/squawk/commit/1281a155e5bf9c41414447fb2ec46a403bd6e397))
+
+
 ## v0.10.0 (2026-10-26)
 
 
