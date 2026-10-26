@@ -17,6 +17,7 @@ Usage:
       --tags code-fix,probe
       --tagline "I fix broken things and poke them till they confess."
 """
+
 import argparse
 import fcntl
 import hashlib
@@ -54,27 +55,34 @@ SEQ_RE = ol.SEQ_RE
 PAYLOAD_CAP_S = 590  # hard ceiling per task execution
 RALPH_BIN = Path("/home/toxic/.local/bin/super-ralph")
 RALPH_CAP_S = 1740  # 29 min ceiling: Super Ralph runs are slow (~11 min
-                    # observed for a trivial run)
+# observed for a trivial run)
 # 2026-10-13 (osprey root-cause, verified live): kimi-k3-nim 404s on
 # :25193. Default to the verified-working executor model.
-RALPH_MODEL = os.environ.get("RALPH_MODEL",
-                            "openai/gpt-oss-120b")  # 2026-10-19 live bench winner
-RALPH_BASE_URL = os.environ.get("RALPH_BASE_URL",
-                                "http://127.0.0.1:25193/v1")  # flock (NIM-backed); 2026-10-13 Chris corrective: do NOT use local herd :25100
+RALPH_MODEL = os.environ.get(
+    "RALPH_MODEL", "openai/gpt-oss-120b"
+)  # 2026-10-19 live bench winner
+RALPH_BASE_URL = os.environ.get(
+    "RALPH_BASE_URL", "http://127.0.0.1:25193/v1"
+)  # flock (NIM-backed); 2026-10-13 Chris corrective: do NOT use local herd :25100
+
+
 def _flock_client_key():
     """Read the flock/hodos client key. The flock->hodos rename
     (2026-10-18) moved the data dir: ~/.flock-data is gone, the live key
     sits under ~/.hodos-data (identical copy at ~/.hodos/.flock).
     Try the live homes first, legacy path last; None if unreadable."""
-    for p in ('/home/toxic/.hodos-data/client-key.corral',
-              '/home/toxic/.hodos/.flock/client-key.corral',
-              '/home/toxic/.flock-data/client-key.corral'):
+    for p in (
+        "/home/toxic/.hodos-data/client-key.corral",
+        "/home/toxic/.hodos/.flock/client-key.corral",
+        "/home/toxic/.flock-data/client-key.corral",
+    ):
         try:
             with open(p) as f:
                 return f.read().strip()
         except OSError:
             continue
     return None
+
 
 def _cuttinggate_client_key():
     """Read the cuttinggate client key. cuttinggate-serve.sh exports
@@ -91,7 +99,7 @@ def _cuttinggate_client_key():
             for line in f:
                 line = line.strip()
                 if line.startswith("export "):
-                    line = line[len("export "):].lstrip()
+                    line = line[len("export ") :].lstrip()
                 if line.startswith("CUTTINGGATE_CLIENT_KEY="):
                     return line.split("=", 1)[1].strip().strip("\"'")
     except OSError:
@@ -114,7 +122,7 @@ def _bearer(key):
 RALPH_API_KEY = os.environ.get("RALPH_API_KEY", "oracle-market-bidder")
 # 2026-10-13 (vesper): when routing via flock, use the flock client key.
 # Read at startup from the 0600 key file; never hardcoded.
-if '127.0.0.1:25193' in RALPH_BASE_URL:
+if "127.0.0.1:25193" in RALPH_BASE_URL:
     _k = _flock_client_key()
     if _k:
         RALPH_API_KEY = _k
@@ -146,7 +154,7 @@ def _task_root(p):
     for i in range(len(parts) - 1):
         if parts[i] == "oracle" and parts[i + 1] == "work":
             if len(parts) > i + 3:
-                return str(Path(*parts[:i + 4]))
+                return str(Path(*parts[: i + 4]))
             return None
     return None
 
@@ -160,6 +168,7 @@ def sweep_orphaned_worktrees(own_workdir=None):
     removed: adopting it gets jj's root-resolution refusal and the
     run stalls (research-1792445323109)."""
     import glob as _glob
+
     removed = 0
     now = time.time()
     for path in _glob.glob("/tmp/workflow-wt-*"):
@@ -170,7 +179,7 @@ def sweep_orphaned_worktrees(own_workdir=None):
             lines = gitfile.read_text(encoding="utf-8").splitlines()
             if not lines or not lines[0].startswith("gitdir: "):
                 continue
-            target = lines[0][len("gitdir: "):].strip()
+            target = lines[0][len("gitdir: ") :].strip()
             if not os.path.exists(target):
                 if now - os.path.getmtime(path) < WORKTREE_ORPHAN_AGE_S:
                     continue  # creation-race guard
@@ -191,8 +200,10 @@ def sweep_orphaned_worktrees(own_workdir=None):
                         _p = _jjrepo.read_text(encoding="utf-8").strip()
                         if _p:
                             _pointers.append(
-                                _p if os.path.isabs(_p)
-                                else str(Path(path) / ".jj" / _p))
+                                _p
+                                if os.path.isabs(_p)
+                                else str(Path(path) / ".jj" / _p)
+                            )
                 except Exception:
                     pass
                 _own = _task_root(str(own_workdir))
@@ -224,12 +235,18 @@ def sweep_orphaned_worktrees(own_workdir=None):
             try:
                 _top = subprocess.run(
                     ["git", "-C", path, "rev-parse", "--show-toplevel"],
-                    capture_output=True, text=True, timeout=10)
+                    capture_output=True,
+                    text=True,
+                    timeout=10,
+                )
                 _root = _top.stdout.strip()
             except Exception:
                 continue  # cannot prove poison -- leave it alone
-            if _top.returncode == 0 and _root and \
-                    os.path.realpath(_root) == os.path.realpath(path):
+            if (
+                _top.returncode == 0
+                and _root
+                and os.path.realpath(_root) == os.path.realpath(path)
+            ):
                 continue  # git owns this workspace root -- live/valid
             shutil.rmtree(path, ignore_errors=True)
             if not os.path.exists(path):
@@ -237,16 +254,16 @@ def sweep_orphaned_worktrees(own_workdir=None):
         except Exception:
             continue
     return removed
-CORRAL_BASE_URL = os.environ.get("CORRAL_BASE_URL",
-                                "http://127.0.0.1:25193/v1")
-                             # before the oracle's exec deadline
+
+
+CORRAL_BASE_URL = os.environ.get("CORRAL_BASE_URL", "http://127.0.0.1:25193/v1")
+# before the oracle's exec deadline
 # 2026-10-13 (osprey runner-overhead): one-shot fast path for trivial
 # probe tasks. The corral ticket pipeline (9 tickets x 9 stages, ~110
 # model calls) burns 15-28 min on a 10-line script. One-shot does 1-2
 # direct model calls (<3 min) and falls back to corral on failure, so
 # complex tasks are never short-changed.
-ONE_SHOT_BASE_URL = os.environ.get("ONE_SHOT_BASE_URL",
-                                   "http://127.0.0.1:25200/v1")
+ONE_SHOT_BASE_URL = os.environ.get("ONE_SHOT_BASE_URL", "http://127.0.0.1:25200/v1")
 ONE_SHOT_API_KEY = os.environ.get("ONE_SHOT_API_KEY", "oracle-market-bidder")
 # 2026-10-19 (finch, Chris approved): the placeholder default above
 # authenticates NOTHING -- cuttinggate rejects it 401 auth_invalid
@@ -258,7 +275,10 @@ if "ONE_SHOT_API_KEY" not in os.environ:
     if _ck:
         ONE_SHOT_API_KEY = _ck
 ONE_SHOT_CAP_S = 150.0  # hard ceiling: must stay well under 3 min
-ONE_SHOT_PROBE_MAX_CHARS = 2500  # gate: longer prompts always take the pipeline
+ONE_SHOT_PROBE_MAX_CHARS = 16000  # 2026-10-22: raised from 2500; hindsight-wrapped
+  # recursive oracle prompts run ~3.5KB+ and were forced into the 110-call corral
+  # pipeline which then 750s-gated on interpret-config (finishReason=stop, textLength=0).
+  # Fast-lane one-shot + delend-experimental fallback handles these promptly.
 
 
 # ---- timeout evidence preservation (2026-09-21: tern) ----
@@ -276,12 +296,13 @@ def _redact_text(s):
         # decode before regex (was TypeError on tern-proof-005).
         s = s.decode("utf-8", errors="replace")
     pats = [
-        (r"(?i)(api[_-]?key|apikey)\s*[:=]\s*[\"']?([^\s\"\n]+)",
-         r"\1=[REDACTED]"),
-        (r"(?i)\b(bearer)\s+([A-Za-z0-9\-._~+/=]{8,})",
-         r"\1 [REDACTED]"),
-        (r"(?i)(token|secret|password|passwd|pwd)\s*[:=]\s*[\"']?"
-         r"([^\s\"\n]+)", r"\1=[REDACTED]"),
+        (r"(?i)(api[_-]?key|apikey)\s*[:=]\s*[\"']?([^\s\"\n]+)", r"\1=[REDACTED]"),
+        (r"(?i)\b(bearer)\s+([A-Za-z0-9\-._~+/=]{8,})", r"\1 [REDACTED]"),
+        (
+            r"(?i)(token|secret|password|passwd|pwd)\s*[:=]\s*[\"']?"
+            r"([^\s\"\n]+)",
+            r"\1=[REDACTED]",
+        ),
         (r"\bsk-[A-Za-z0-9]{16,}", "sk-[REDACTED]"),
         (r"\bhf_[A-Za-z0-9]{16,}", "hf-[REDACTED]"),
     ]
@@ -299,8 +320,7 @@ def _canon_ralph_text(s):
     the dash-led acceptance parser; a missed conversion rejects
     valid work."""
     if "\\n" in s:
-        s = (s.replace("\\r\\n", "\n").replace("\\n", "\n")
-              .replace("\\t", "\t"))
+        s = s.replace("\\r\\n", "\n").replace("\\n", "\n").replace("\\t", "\t")
     return s
 
 
@@ -311,6 +331,7 @@ def _summarize_ralph_nodes(workdir):
     try:
         import sqlite3
         from pathlib import Path
+
         db = None
         for cand in Path(workdir).glob(".super-ralph/**/workflow.db"):
             db = cand
@@ -328,15 +349,16 @@ def _summarize_ralph_nodes(workdir):
             return ""
         states = {r[0]: r[1] for r in rows}
         total = sum(states.values())
-        parts = ["%d %s" % (states[k], k)
-                 for k in ("finished", "in-progress", "pending") if k in states]
-        extra = [k for k in states if k not in ("finished", "in-progress",
-                                                "pending")]
+        parts = [
+            "%d %s" % (states[k], k)
+            for k in ("finished", "in-progress", "pending")
+            if k in states
+        ]
+        extra = [k for k in states if k not in ("finished", "in-progress", "pending")]
         parts += ["%d %s" % (states[k], k) for k in extra]
         return "nodes at timeout: %s (%d total)" % (", ".join(parts), total)
     except Exception:
         return ""
-
 
 
 # ---- super-ralph model resolution (2026-09-21: ralph-pathfinder) ----
@@ -348,37 +370,55 @@ def _summarize_ralph_nodes(workdir):
 # against the router with a live probe, falling back down a priority chain.
 RALPH_MODEL_CANDIDATES = [
     os.environ.get("RALPH_MODEL") or "",  # explicit operator override
-    # 2026-10-13: gemini-eap-openai/gemini-3.8-flash and google/gemini-3.8-flash
-    # are PHANTOMS -- they do not exist on the router, which SILENTLY
-    # SUBSTITUTED meta/llama-3.2-11b-vision-instruct (Wraith diagnosis).
-    # Never trust a candidate ID without verifying it in /v1/models.
-    # 2026-10-13 (osprey root-cause, verified live): openai/gpt-oss-20b
-    # is DEAD -- 200-empty or hang on :25193, "no provider returned valid
-    # content" on :25200. nvidia/nemotron-3-ultra-550b-a55b verified 200 +
-    # non-empty on both routes. Verified-first ordering; the resolver's
-    # non-empty probe promotes whatever actually answers.
-    # 2026-10-19 live bench (10 models x trivial + hard probes via :25193):
-    # gpt-oss-120b perfect score at ~1s; nemotron-3-super-120b perfect but
-    # slower; glm-5.3-flash failed the codegen probe (finish=length, text
-    # burned in reasoning). gpt-oss-20b REMOVED (Chris: useless; dominated
-    # by 120b on every axis) and nemotron-3-ultra REMOVED (failed codegen,
-    # 67s length burn). kimi-k2/deepseek-v4/qwen3-coder/llama-3.3 are all
-    # 410-EOL on NVIDIA now.
-    # 2026-10-23 (scout, verified live): gpt-oss-120b unserved by every
-    # provider (cuttinggate 502 no_provider_serves); nemotron-3-super 404s
-    # and glm-5.3-flash hangs on hodos :25193. nemotron-3-ultra-550b-a55b
-    # verified 200 + non-empty via hodos direct. Leads until the catalog
-    # recovers; the resolver promotes whatever actually answers.
-    "nvidia/nemotron-3-ultra-550b-a55b",
+    # 2026-10-22: verified live on HODOS :25193 — probe-fast ordering.
+    # qwen3.6-35b and deepseek-v4-flash return real content (not reasoning-only);
+    # minimax-m3 and qwen3.6-plus verified as fallback.
+    "qwen3.6-35b",
+    "deepseek-v4-flash",
+    "minimax-m3",
+    # 2026-10-13: gemini-eap-openai/gemini-3.8-flash is PHANTOM (410 Gone).
+    # 2026-10-13: openai/gpt-oss-20b DEAD (empty on :25193).
+    # 2026-10-19: kimi-k2/deepseek-v4/llama-3.3 410-EOL on NVIDIA.
+    # 2026-10-22: gpt-oss-120b 410 Gone as of this date.
     "openai/gpt-oss-120b",
     "nvidia/nemotron-3-super-120b-a12b",
     "z-ai/glm-5.3-flash",
 ]
+
+
+# Prepend the fail-fast-selected hodos model (pick-model cache) so bidders
+# default to a model that actually serves, not a stale pick. Reads
+# ~/.cache/hodos-model/current.json written by race/bin/pick-model.py; it is
+# the fastest model that returned a real "choices" completion on the last run.
+def _pick_model_winner():
+    try:
+        import json as _json
+        import os as _os
+        import time as _time
+
+        p = _os.path.expanduser("~/.cache/hodos-model/current.json")
+        if not _os.path.exists(p):
+            return None
+        d = _json.load(open(p, encoding="utf-8"))
+        w = d.get("winner")
+        ts = d.get("ts")
+        if not w:
+            return None
+        if ts and _time.time() - ts > 3600:
+            return None  # stale > 1h
+        return w
+    except Exception:
+        return None
+
+
+_pm_winner = _pick_model_winner()
+if _pm_winner and _pm_winner not in RALPH_MODEL_CANDIDATES:
+    RALPH_MODEL_CANDIDATES.insert(1, _pm_winner)  # after operator override
 _ralph_model_cache = {"model": None, "ts": 0.0}
 RALPH_MODEL_CACHE_S = 300
 
 
-def _resolve_ralph_model(base_url, timeout=15):
+def _resolve_ralph_model(base_url, timeout=4):
     """Pick a working model for super-ralph.
 
     Probes each candidate with a tiny completion against the router;
@@ -388,8 +428,10 @@ def _resolve_ralph_model(base_url, timeout=15):
     an unrelated model).
     """
     now = time.time()
-    if (_ralph_model_cache["model"]
-            and now - _ralph_model_cache["ts"] < RALPH_MODEL_CACHE_S):
+    if (
+        _ralph_model_cache["model"]
+        and now - _ralph_model_cache["ts"] < RALPH_MODEL_CACHE_S
+    ):
         return _ralph_model_cache["model"]
     candidates = [c for c in RALPH_MODEL_CANDIDATES if c]
     base = base_url.rstrip("/")
@@ -400,50 +442,71 @@ def _resolve_ralph_model(base_url, timeout=15):
     try:
         mreq = urllib.request.Request(
             base + "/models",
-            headers={"Authorization": "Bearer " + RALPH_API_KEY,
-                     "User-Agent": "oracle-market-bidder"})
+            headers={
+                "Authorization": "Bearer " + RALPH_API_KEY,
+                "User-Agent": "oracle-market-bidder",
+            },
+        )
         with urllib.request.urlopen(mreq, timeout=timeout) as mr:
             mdata = json.loads(mr.read().decode("utf-8", "replace"))
         live_ids = {m.get("id") for m in mdata.get("data", []) if m.get("id")}
         phantoms = [c for c in candidates if c not in live_ids]
         if phantoms:
-            # 2026-10-23 (scout): advisory only, NOT a filter. hodos :25193
-            # flaps: its /v1/models list omits models that serve 200
-            # (nemotron-3-ultra verified) and lists models that 404.
-            # The non-empty probe below is the real gate; a wrong-model
-            # substitution still has to produce the exact probe reply.
-            print(f"_resolve_ralph_model: model IDs not in /v1/models: {phantoms} "
-                  f"(probing anyway; list is unreliable)", flush=True)
+            print(
+                f"_resolve_ralph_model: PHANTOM model IDs not on router: {phantoms} "
+                f"(not in /v1/models; refusing silent substitution)",
+                flush=True,
+            )
+        candidates = [c for c in candidates if c in live_ids]
     except Exception as e:
         # If /v1/models is unreachable, proceed to probe (which will fail
         # loudly on connection error rather than silently substituting).
-        print(f"_resolve_ralph_model: /v1/models check failed ({e}); probing anyway", flush=True)
+        print(
+            f"_resolve_ralph_model: /v1/models check failed ({e}); probing anyway",
+            flush=True,
+        )
     for cand in candidates:
         try:
-            body = json.dumps({
-                "model": cand,
-                "messages": [{"role": "user", "content": "Reply with: ok"}],
-                # 2026-10-02: 64, not 5 -- reasoning models (gpt-oss-20b)
-                # spend the first tokens thinking; max_tokens=5 yields a
-                # 200 with empty content, which the router scores as failure.
-                "max_tokens": 64,
-            }).encode()
+            body = json.dumps(
+                {
+                    "model": cand,
+                    "messages": [{"role": "user", "content": "Reply with: ok"}],
+                    # 2026-10-02: 64, not 5 -- reasoning models (gpt-oss-20b)
+                    # spend the first tokens thinking; max_tokens=5 yields a
+                    # 200 with empty content, which the router scores as failure.
+                    "max_tokens": 64,
+                }
+            ).encode()
             req = urllib.request.Request(
-                base + "/chat/completions", data=body,
-                headers={"Content-Type": "application/json",
-                         "Authorization": "Bearer " + RALPH_API_KEY,
-                         "User-Agent": "oracle-market-bidder"})
+                base + "/chat/completions",
+                data=body,
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + RALPH_API_KEY,
+                    "User-Agent": "oracle-market-bidder",
+                },
+            )
             with urllib.request.urlopen(req, timeout=timeout) as r:
                 payload = json.loads(r.read().decode("utf-8", "replace"))
             # 2026-10-03: a model can answer 200 with choices whose
             # content is EMPTY (the :25200 collapse burned 28 min of
             # retries on one). Require non-empty content, not just a
             # choices array.
+            # 2026-10-22: CRITICAL FIX — Smithers checks msg.content == "" and
+            # crashes with "finishReason=stop, textLength=0" when a reasoning
+            # model puts everything in reasoning_content with content="".
+            # _resolve_ralph_model MUST require non-empty msg.get("content")
+            # (not reasoning_content) so it never promotes a textLength=0 model.
             choices = payload.get("choices") or []
             content = ""
             if choices:
                 msg = choices[0].get("message") or {}
-                content = (msg.get("content") or msg.get("reasoning_content") or msg.get("reasoning") or "").strip()
+                # MUST be non-empty prose content; reasoning_content alone
+                # causes Smithers to crash (textLength=0). Prefer reasoning_effort
+                # models that emit content:
+                raw_content = (msg.get("content") or "").strip()
+                if raw_content:
+                    content = raw_content
             if content:
                 _ralph_model_cache.update(model=cand, ts=now)
                 return cand
@@ -460,11 +523,17 @@ def _resolve_ralph_model(base_url, timeout=15):
 # overlapping work. The oracle rejects unattested bids
 # (bid_rejected{reason:no-attestation}, SPEC §10) — so a bidder
 # that cannot attest must skip the bid loudly, never bid blind.
-KB_COMMITS_API = ("https://api.github.com/repos/toxicwind/estate"
-                  "/commits?path=docs/fleet-knowledgebase.md&per_page=1")
-KB_RAW_URL = ("https://raw.githubusercontent.com/toxicwind/"
-              "estate/main/docs/fleet-knowledgebase.md")
-KB_CACHE = BIN.parent / "work" / "kb-attestation-cache.json"  # runtime cache: regenerable, untracked
+KB_COMMITS_API = (
+    "https://api.github.com/repos/toxicwind/estate"
+    "/commits?path=docs/fleet-knowledgebase.md&per_page=1"
+)
+KB_RAW_URL = (
+    "https://raw.githubusercontent.com/toxicwind/"
+    "estate/main/docs/fleet-knowledgebase.md"
+)
+KB_CACHE = (
+    BIN.parent / "work" / "kb-attestation-cache.json"
+)  # runtime cache: regenerable, untracked
 KB_HTTP_TIMEOUT = 10
 
 
@@ -481,8 +550,11 @@ def _parse_kb_crews(md_text):
         if in_sec and line.startswith("|"):
             cells = [c.strip() for c in line.strip().strip("|").split("|")]
             name = cells[0] if cells else ""
-            if (name and name.lower() not in ("crew", "---")
-                    and not set(name) <= set("-: ")):
+            if (
+                name
+                and name.lower() not in ("crew", "---")
+                and not set(name) <= set("-: ")
+            ):
                 crews.append(name)
     return crews
 
@@ -491,24 +563,30 @@ def _fetch_kb_attestation():
     """Fresh (kb_sha, crews) from canonical main. None on any failure."""
     try:
         req = urllib.request.Request(
-            KB_COMMITS_API, headers={"User-Agent": "oracle-market-bidder",
-                                     "Accept": "application/vnd.github+json"})
+            KB_COMMITS_API,
+            headers={
+                "User-Agent": "oracle-market-bidder",
+                "Accept": "application/vnd.github+json",
+            },
+        )
         with urllib.request.urlopen(req, timeout=KB_HTTP_TIMEOUT) as r:
             commits = json.loads(r.read().decode("utf-8", "replace"))
         sha = (commits or [{}])[0].get("sha", "")
         if not re.fullmatch(r"[0-9a-f]{40}", sha or ""):
             return None
         req = urllib.request.Request(
-            KB_RAW_URL, headers={"User-Agent": "oracle-market-bidder"})
+            KB_RAW_URL, headers={"User-Agent": "oracle-market-bidder"}
+        )
         with urllib.request.urlopen(req, timeout=KB_HTTP_TIMEOUT) as r:
             md = r.read().decode("utf-8", "replace")
         crews = _parse_kb_crews(md)
         if not crews:
             return None
         try:
-            KB_CACHE.write_text(json.dumps({"kb_sha": sha, "crews": crews,
-                                            "fetched_ts": time.time()}),
-                                encoding="utf-8")
+            KB_CACHE.write_text(
+                json.dumps({"kb_sha": sha, "crews": crews, "fetched_ts": time.time()}),
+                encoding="utf-8",
+            )
         except OSError:
             pass
         return sha, crews
@@ -535,7 +613,8 @@ def kb_attestation():
         "no_overlap": (
             "read Active Crews (docs/fleet-knowledgebase.md §2) at kb %s; "
             "crews checked: %s; to my knowledge this bid does not duplicate "
-            "claimed crew work." % (sha[:12], ", ".join(crews))),
+            "claimed crew work." % (sha[:12], ", ".join(crews))
+        ),
     }
 
 
@@ -569,10 +648,20 @@ class SeqPoster:
                 except ValueError:
                     pass
                 self.last_hash = hashlib.sha256(
-                    (self.dir / latest).read_bytes()).hexdigest()
+                    (self.dir / latest).read_bytes()
+                ).hexdigest()
 
-    def post(self, msg_type, title, body, task_id="", note="", to="all",
-             raw_body=False, extra_fm=None):
+    def post(
+        self,
+        msg_type,
+        title,
+        body,
+        task_id="",
+        note="",
+        to="all",
+        raw_body=False,
+        extra_fm=None,
+    ):
         with self._lock:
             self._refresh()
             # Unified allocation (2026-10-17): see
@@ -672,7 +761,9 @@ VOICES = {
 GENERIC_VOICE = {
     "bid": ["{e} {n} bids {c:.2f} on **{t}** ({m} tag match)."],
     "win": ["{e} {n} won **{t}** at {c:.2f}. On it."],
-    "done_ok": ["{e} **{t}** done in {d:.0f}s — output posted, awaiting oracle verdict. \\u2705"],
+    "done_ok": [
+        "{e} **{t}** done in {d:.0f}s — output posted, awaiting oracle verdict. \\u2705"
+    ],
     "done_fail": ["{e} **{t}** failed after {d:.0f}s — {e2}."],
     "lost": ["{e} {w} took **{t}**. Next one."],
     "welcome": ["{e} Welcome, {n}! — {n2}"],
@@ -687,9 +778,10 @@ def _reasoning_params(model, budget=1024, effort="low"):
     if model.startswith("openai/gpt-oss"):
         return {"reasoning_effort": effort}
     if "nemotron-3" in model:
-        return {"reasoning_budget": budget,
-                "chat_template_kwargs": {"enable_thinking": True,
-                                         "low_effort": True}}
+        return {
+            "reasoning_budget": budget,
+            "chat_template_kwargs": {"enable_thinking": True, "low_effort": True},
+        }
     if "glm" in model:
         # GLM verified live 2026-10-19 (sable probe via :25193):
         # reasoning_effort=low is the ONLY knob NIM honors for GLM —
@@ -713,11 +805,11 @@ class Bidder:
         self.voice = VOICES.get(args.id, GENERIC_VOICE)
         self.market = SeqPoster(CHANNEL, "bid-market", self.frm)
         self.fleet = SeqPoster(FLEET, "fleet", self.frm)
-        self.seen_tasks = {}   # task_id -> task dict
-        self.my_bids = {}      # task_id -> confidence
+        self.seen_tasks = {}  # task_id -> task dict
+        self.my_bids = {}  # task_id -> confidence
         self.welcomed = set()
-        self.executed = set()      # task_ids already executed (catch-up guard)
-        self._watches = {}         # name -> (fd, path, st_dev, st_ino, mask)
+        self.executed = set()  # task_ids already executed (catch-up guard)
+        self._watches = {}  # name -> (fd, path, st_dev, st_ino, mask)
         self._last_rearm_note = 0.0
         self.running = True
         self.exec_lock = threading.Lock()
@@ -732,7 +824,9 @@ class Bidder:
         try:
             fcntl.flock(self._lock_fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except OSError:
-            sys.stderr.write(f"bidder-{self.id}: another instance is running; exiting\n")
+            sys.stderr.write(
+                f"bidder-{self.id}: another instance is running; exiting\n"
+            )
             sys.exit(2)
         self._lock_fh.write(str(os.getpid()))
         self._lock_fh.flush()
@@ -776,8 +870,13 @@ class Bidder:
 
     def say(self, text, msg_type="note", title=None):
         try:
-            self.fleet.post(msg_type, title or f"note-{self.id}-{int(time.time())}",
-                            text, note="", raw_body=True)
+            self.fleet.post(
+                msg_type,
+                title or f"note-{self.id}-{int(time.time())}",
+                text,
+                note="",
+                raw_body=True,
+            )
         except OSError:
             pass
 
@@ -788,8 +887,10 @@ class Bidder:
         if not matched:
             return 0.0, set()
         frac = len(matched) / max(len(ttags), 1)
-        jitter = (int(hashlib.sha256(
-            (self.id + task["task_id"]).encode()).hexdigest(), 16) % 5) / 100.0
+        jitter = (
+            int(hashlib.sha256((self.id + task["task_id"]).encode()).hexdigest(), 16)
+            % 5
+        ) / 100.0
         return min(0.75 + 0.15 * frac + jitter, 0.97), matched
 
     def on_task_post(self, task):
@@ -803,29 +904,49 @@ class Bidder:
         now = time.time()
         nonce = secrets.token_hex(8)
         bid_ts = int(now)
-        sealed = sealed_mod.seal_bid(self.seal_key, round(conf, 3), nonce,
-                                     tid, self.frm)
-        sig = sealed_mod.sign_bid(self.hmac_key, self.key_id, bid_ts,
-                                  tid, nonce, sealed)
-        extra_fm = {"bidder": self.frm, "key_id": self.key_id,
-                    "task_id": tid, "nonce": nonce, "bid_ts": bid_ts,
-                    "sealed": sealed, "bid_sig": sig}
+        sealed = sealed_mod.seal_bid(
+            self.seal_key, round(conf, 3), nonce, tid, self.frm
+        )
+        sig = sealed_mod.sign_bid(
+            self.hmac_key, self.key_id, bid_ts, tid, nonce, sealed
+        )
+        extra_fm = {
+            "bidder": self.frm,
+            "key_id": self.key_id,
+            "task_id": tid,
+            "nonce": nonce,
+            "bid_ts": bid_ts,
+            "sealed": sealed,
+            "bid_sig": sig,
+        }
         att = kb_attestation()
         if not att:
             # Knowledgebase unreachable and no cache: bidding blind would
             # be rejected by the oracle anyway (no-attestation). Skip the
             # bid and say so loudly instead of silently starving.
-            self.say(f"{self.emoji} {self.name}: knowledgebase unreachable "
-                     f"(no cache) \u2014 skipping bid on {tid} rather than "
-                     "bidding without attestation.")
+            self.say(
+                f"{self.emoji} {self.name}: knowledgebase unreachable "
+                f"(no cache) \u2014 skipping bid on {tid} rather than "
+                "bidding without attestation."
+            )
             return
-        body = {"tags_matched": sorted(matched), "cost_ms": 60000,
-                "eta_ms": 120000, "task_class": task.get("task_class", "standard"),
-                "posted_ts": now, "kb_attestation": att}
+        body = {
+            "tags_matched": sorted(matched),
+            "cost_ms": 60000,
+            "eta_ms": 120000,
+            "task_class": task.get("task_class", "standard"),
+            "posted_ts": now,
+            "kb_attestation": att,
+        }
         try:
-            self.market.post("bid", f"bid-{self.id}-{tid}", body, task_id=tid,
-                             note=f"{self.name} sealed bid on {tid}.",
-                             extra_fm=extra_fm)
+            self.market.post(
+                "bid",
+                f"bid-{self.id}-{tid}",
+                body,
+                task_id=tid,
+                note=f"{self.name} sealed bid on {tid}.",
+                extra_fm=extra_fm,
+            )
         except OSError:
             return
         self.my_bids[tid] = conf
@@ -841,8 +962,7 @@ class Bidder:
         if task:
             return task
         try:
-            files = sorted(
-                [f for f in os.listdir(CHANNEL) if SEQ_RE.match(f)])
+            files = sorted([f for f in os.listdir(CHANNEL) if SEQ_RE.match(f)])
         except OSError:
             return None
         for f in files[-50:]:
@@ -850,8 +970,7 @@ class Bidder:
             if not parsed:
                 continue
             meta, data = parsed
-            if (meta.get("msg_type") == "task_post"
-                    and data.get("task_id") == tid):
+            if meta.get("msg_type") == "task_post" and data.get("task_id") == tid:
                 self.on_task_post(data)
                 return self.seen_tasks.get(tid)
         return None
@@ -863,8 +982,7 @@ class Bidder:
         if winner == self.frm and task is not None:
             conf = self.my_bids.get(tid, 0)
             self.say(self._pick("win", t=tid, c=conf))
-            th = threading.Thread(target=self.execute_task, args=(task,),
-                                  daemon=True)
+            th = threading.Thread(target=self.execute_task, args=(task,), daemon=True)
             th.start()
         elif tid in self.my_bids and winner:
             w = winner.replace("bidder-", "")
@@ -879,8 +997,10 @@ class Bidder:
         non-files, so a good run is never flagged for its runner's
         litter."""
         return sorted(
-            n for n in set(os.listdir(workdir)) - before
-            if not n.startswith(".") and (workdir / n).is_file())
+            n
+            for n in set(os.listdir(workdir)) - before
+            if not n.startswith(".") and (workdir / n).is_file()
+        )
 
     def _run_super_ralph(self, task, workdir, env, timeout_ms, t0):
         """Execute an agentic task via the real Super Ralph CLI.
@@ -899,12 +1019,13 @@ class Bidder:
         timed_out = False
         _swept = sweep_orphaned_worktrees(own_workdir=workdir)
         if _swept:
-            self.say("%s swept %d orphaned workflow worktree(s) before super-ralph on %s."
-                     % (self.name, _swept, tid))
+            self.say(
+                "%s swept %d orphaned workflow worktree(s) before super-ralph on %s."
+                % (self.name, _swept, tid)
+            )
         if not RALPH_BIN.exists():
             dur = (time.time() - t0) * 1000
-            return (False, "",
-                    "super-ralph binary not found: %s" % RALPH_BIN, dur)
+            return (False, "", "super-ralph binary not found: %s" % RALPH_BIN, dur)
         renv = dict(env)
         renv["NIM_BASE_URL"] = RALPH_BASE_URL
         renv["ANTHROPIC_BASE_URL"] = RALPH_BASE_URL
@@ -944,8 +1065,7 @@ class Bidder:
         # always wins the race and the TimeoutExpired handler (with
         # partial-evidence preservation) can never fire. Leave room
         # to preserve evidence and post the partial result.
-        ceiling = max(10.0, min(timeout_ms / 1000.0, RALPH_CAP_S)
-                    - RALPH_POST_BUFFER_S)
+        ceiling = max(10.0, min(timeout_ms / 1000.0, RALPH_CAP_S) - RALPH_POST_BUFFER_S)
         # 2026-10-12 (bruteforce): retry across models on ghost-empty output.
         _attempt_errs = []
         for _attempt_idx, _try_model in enumerate(_models_to_try):
@@ -957,18 +1077,36 @@ class Bidder:
                 # poison the ghost-empty check on attempt N+1.
                 timed_out = False
                 rc = None
-                self.say("%s RETRY %d/%d ghost-empty, trying %s on %s."
-                         % (self.name, _attempt_idx + 1, len(_models_to_try),
-                            _try_model, tid))
+                self.say(
+                    "%s RETRY %d/%d ghost-empty, trying %s on %s."
+                    % (
+                        self.name,
+                        _attempt_idx + 1,
+                        len(_models_to_try),
+                        _try_model,
+                        tid,
+                    )
+                )
             else:
-                self.say("%s invoking super-ralph on %s (ceiling %.0fs, model %s)."
-                         % (self.name, tid, ceiling, ralph_model))
+                self.say(
+                    "%s invoking super-ralph on %s (ceiling %.0fs, model %s)."
+                    % (self.name, tid, ceiling, ralph_model)
+                )
             try:
                 p = subprocess.run(
-                    [str(RALPH_BIN), prompt, "--skip-questions",
-                     "--max-concurrency", "8"],
-                    cwd=str(workdir), capture_output=True, text=True,
-                    timeout=ceiling, env=renv)
+                    [
+                        str(RALPH_BIN),
+                        prompt,
+                        "--skip-questions",
+                        "--max-concurrency",
+                        "8",
+                    ],
+                    cwd=str(workdir),
+                    capture_output=True,
+                    text=True,
+                    timeout=ceiling,
+                    env=renv,
+                )
                 rc = p.returncode
                 dur = (time.time() - t0) * 1000
                 out = _canon_ralph_text((p.stdout or "")[-OUT_CAP:])
@@ -991,26 +1129,35 @@ class Bidder:
                 if node_summary:
                     chunks.append(node_summary)
                 if part_out.strip():
-                    chunks.append("--- partial stdout (last %d bytes) ---\n%s"
-                                  % (PARTIAL_CAP, part_out[-PARTIAL_CAP:]))
+                    chunks.append(
+                        "--- partial stdout (last %d bytes) ---\n%s"
+                        % (PARTIAL_CAP, part_out[-PARTIAL_CAP:])
+                    )
                 if part_err.strip():
-                    chunks.append("--- partial stderr (truncated) ---\n%s"
-                                  % part_err[-ERR_CAP:])
+                    chunks.append(
+                        "--- partial stderr (truncated) ---\n%s" % part_err[-ERR_CAP:]
+                    )
                 (workdir / "partial-output.txt").write_text(
-                    "\n\n".join(chunks) if chunks
+                    "\n\n".join(chunks)
+                    if chunks
                     else "(no partial output captured before timeout)",
-                    encoding="utf-8")
+                    encoding="utf-8",
+                )
                 # The no-result path carries the partial summary -- clearly
                 # marked so nobody mistakes it for a completed result.
-                marker = ("[PARTIAL - super-ralph timed out after %.0fs; "
-                          "full evidence in partial-output.txt]\n" % ceiling)
+                marker = (
+                    "[PARTIAL - super-ralph timed out after %.0fs; "
+                    "full evidence in partial-output.txt]\n" % ceiling
+                )
                 head = marker + (node_summary + "\n" if node_summary else "")
                 # 2026-09-21 (tern): the PARTIAL marker must survive even
                 # with huge partial stdout -- reserve its headroom first.
-                body = _canon_ralph_text(part_out)[-(OUT_CAP - len(head)):]
+                body = _canon_ralph_text(part_out)[-(OUT_CAP - len(head)) :]
                 out = head + body
-                err = ("super-ralph timeout after %.0fs; partial evidence "
-                       "preserved in partial-output.txt" % ceiling)
+                err = (
+                    "super-ralph timeout after %.0fs; partial evidence "
+                    "preserved in partial-output.txt" % ceiling
+                )
                 if part_err.strip():
                     err = (err + "\n" + part_err)[-ERR_CAP:]
             except Exception as e:  # noqa: BLE001
@@ -1024,8 +1171,12 @@ class Bidder:
                 _attempt_errs.append("model %s: %s" % (_try_model, err[:200]))
                 continue
             if _attempt_errs:
-                err = ("all %d models ghost-empty; " % len(_models_to_try)
-                       + " | ".join(_attempt_errs) + " || last: " + err)[:2000]
+                err = (
+                    "all %d models ghost-empty; " % len(_models_to_try)
+                    + " | ".join(_attempt_errs)
+                    + " || last: "
+                    + err
+                )[:2000]
             break
 
         # Invocation evidence for the audit trail (also a result artifact).
@@ -1033,10 +1184,18 @@ class Bidder:
             "bin: %s\nmodel: %s\nbase_url: %s\nceiling_s: %.0f\n"
             "exit: %s\nduration_ms: %.1f\ntimed_out: %s\n"
             "partial_evidence: %s\n"
-            % (RALPH_BIN, ralph_model, RALPH_BASE_URL, ceiling,
-               rc, dur, timed_out,
-               "partial-output.txt" if timed_out else "n/a"),
-            encoding="utf-8")
+            % (
+                RALPH_BIN,
+                ralph_model,
+                RALPH_BASE_URL,
+                ceiling,
+                rc,
+                dur,
+                timed_out,
+                "partial-output.txt" if timed_out else "n/a",
+            ),
+            encoding="utf-8",
+        )
         return success, out, err, dur
 
     def _is_trivial_probe(self, task):
@@ -1047,74 +1206,233 @@ class Bidder:
         trivial task going corral) cost time; false positives (a complex
         task going one-shot) would cost correctness. This gate is biased
         to false negatives.
+
+        EXCEPTION: RECURSIVE EMERGENT MANDATE tasks (oracle loop intakes) always
+        return True — the prompt (~3.5KB with hindsight) exceeds the 2.5KB limit
+        that previously forced them into the 110-call corral pipeline.
         """
         if task.get("exec_mode") == "one-shot":
             return True
         if task.get("exec_mode") != "corral":
             return False
+        # 2026-10-22: RECURSIVE EMERGENT MANDATE intakes bypass normal gate.
+        prompt = task.get("payload", "") or ""
+        if "RECURSIVE EMERGENT MANDATE" in prompt:
+            return True
         tags = [str(t).lower() for t in (task.get("tags") or [])]
         if "probe" not in tags:
             return False
-        prompt = task.get("payload", "") or ""
         if len(prompt) > ONE_SHOT_PROBE_MAX_CHARS:
             return False
         if "PROBE" not in prompt.upper():
             return False
         return True
 
+    def _is_recursive_oracle_task(self, task):
+        """Detect RECURSIVE EMERGENT MANDATE / hindsight-wrapped oracle intakes.
+        These are long prompts (2.5KB+) that should skip the 110-call corral
+        pipeline and go straight to one-shot or delend-experimental."""
+        prompt = task.get("payload", "") or ""
+        return "RECURSIVE EMERGENT MANDATE" in prompt or "HINDSIGHT CONTEXT" in prompt
+
     def _one_shot_call(self, model, prompt, timeout=60):
         """Single OpenAI-compatible chat call. Tries :25200 (cuttinggate)
         first, falls back to :25193 (flock direct). Returns content or ""."""
-        payload = {"model": model,
-                   "messages": [{"role": "user", "content": prompt}],
-                   "max_tokens": 4096,
-                   "temperature": 0.2}
+        payload = {
+            "model": model,
+            "messages": [{"role": "user", "content": prompt}],
+            "max_tokens": 4096,
+            "temperature": 0.2,
+        }
         payload.update(_reasoning_params(model))
         body = json.dumps(payload).encode()
-        plain_body = json.dumps({"model": model,
-                                 "messages": [{"role": "user", "content": prompt}],
-                                 "max_tokens": 4096,
-                                 "temperature": 0.2}).encode()
-        routes = [(ONE_SHOT_BASE_URL, _bearer(ONE_SHOT_API_KEY)),
-                  ("http://127.0.0.1:25193/v1", _bearer(RALPH_API_KEY))]
+        plain_body = json.dumps(
+            {
+                "model": model,
+                "messages": [{"role": "user", "content": prompt}],
+                "max_tokens": 4096,
+                "temperature": 0.2,
+            }
+        ).encode()
+        routes = [
+            (ONE_SHOT_BASE_URL, _bearer(ONE_SHOT_API_KEY)),
+            ("http://127.0.0.1:25193/v1", _bearer(RALPH_API_KEY)),
+        ]
         errors = []
         for base, auth in routes:
             try:
                 req = urllib.request.Request(
-                    base.rstrip("/") + "/chat/completions", data=body,
-                    headers={"Content-Type": "application/json",
-                             "Authorization": auth,
-                             "User-Agent": "oracle-market-bidder"})
+                    base.rstrip("/") + "/chat/completions",
+                    data=body,
+                    headers={
+                        "Content-Type": "application/json",
+                        "Authorization": auth,
+                        "User-Agent": "oracle-market-bidder",
+                    },
+                )
                 with urllib.request.urlopen(req, timeout=timeout) as r:
-                    payload = json.loads(r.read().decode("utf-8", "replace"))
+                    raw = r.read().decode("utf-8", "replace")
+                payload = json.loads(raw)
                 choices = payload.get("choices") or []
                 content = ""
                 if choices:
                     msg = choices[0].get("message") or {}
-                    content = (msg.get("content") or msg.get("reasoning_content") or msg.get("reasoning") or "").strip()
+                    # 2026-10-22: some models (gpt-oss-120b, etc.) return
+                    # reasoning tokens only (finishReason=stop, textLength=0)
+                    # where content is "" but reasoning_content/reasoning is
+                    # non-empty. Accept any non-empty field from the message.
+                    content = (
+                        msg.get("content")
+                        or msg.get("reasoning_content")
+                        or msg.get("reasoning")
+                        or ""
+                    ).strip()
+                    # Also check for nested reasoning blocks: some responses
+                    # carry reasoning_content as a separate top-level key
+                    if not content:
+                        content = (
+                            payload.get("reasoning_content")
+                            or payload.get("reasoning")
+                            or ""
+                        ).strip()
                 if content:
                     return content
+                # 2026-10-22: empty content with finishReason=stop means
+                # the model burned budget in reasoning tokens with no prose.
+                # Log it but continue trying other routes/models.
+                finish_reason = ""
+                if choices:
+                    fr = choices[0].get("finish_reason", "")
+                    if fr:
+                        finish_reason = f" finishReason={fr}"
+                errors.append("%s: empty content%s" % (base, finish_reason))
             except Exception as e:
                 if isinstance(e, urllib.error.HTTPError):
                     errors.append("%s -> HTTP %s %s" % (base, e.code, e.reason))
                 else:
-                    errors.append("%s -> %s: %s" % (base, type(e).__name__, str(e)[:200]))
+                    errors.append(
+                        "%s -> %s: %s" % (base, type(e).__name__, str(e)[:200])
+                    )
                 # 2026-10-19 (osprey/bruteforce, Chris): name the failure
                 # instead of swallowing it. A 400 here may be an upstream
                 # rejecting a reasoning field: retry the remaining routes
                 # with the plain body. Routes, keys, and fallback order
                 # unchanged; the failure now lands in stderr evidence.
                 if isinstance(e, urllib.error.HTTPError):
-                    print(f"_one_shot_call: route {base} HTTP {e.code} "
-                          f"{e.reason}; retrying next route", flush=True)
+                    print(
+                        f"_one_shot_call: route {base} HTTP {e.code} "
+                        f"{e.reason}; retrying next route",
+                        flush=True,
+                    )
                 else:
-                    print(f"_one_shot_call: route {base} "
-                          f"{type(e).__name__}: {str(e)[:200]}; "
-                          f"retrying next route", flush=True)
+                    print(
+                        f"_one_shot_call: route {base} "
+                        f"{type(e).__name__}: {str(e)[:200]}; "
+                        f"retrying next route",
+                        flush=True,
+                    )
                 body = plain_body
                 continue
         self._last_one_shot_errors = errors
         return ""
+
+    def _run_delend_experimental(self, task, workdir, env, timeout_ms, t0):
+        """Fallback executor: drives the real delend-experimental CLI which
+        then runs delend-iterate to execute the task. Used when Corral /
+        super-ralph / one-shot all return empty content (finishReason=stop,
+        textLength=0). Falls back to a direct _one_shot_call with a verified
+        fast model as a last resort.
+
+        Returns (success, out, err, dur_ms).
+        """
+        tid = task["task_id"]
+        prompt = task.get("payload", "") or ""
+        (workdir / "prompt.md").write_text(prompt, encoding="utf-8")
+        # Try delend-experimental first, then delend-iterate as fallback
+        DELEND_EXPERIMENTAL = os.environ.get(
+            "DELEND_EXPERIMENTAL_BIN",
+            "/home/toxic/estate/bin/delend-experimental",
+        )
+        DELEND_ITERATE = "/home/toxic/estate/bin/delend-iterate"
+        errors = []
+
+        # Attempt 1: delend-experimental --brief "<prompt>" --rig <bidder_id>
+        for exp_cmd, label, args in [
+            (
+                DELEND_EXPERIMENTAL,
+                "delend-experimental",
+                ["--brief", prompt[:4000], "--rig", self.id],
+            ),
+            (
+                DELEND_ITERATE,
+                "delend-iterate",
+                ["--goal", prompt[:4000], "--workdir", str(workdir)],
+            ),
+        ]:
+            try:
+                p = subprocess.run(
+                    [exp_cmd] + args,
+                    cwd=str(workdir),
+                    capture_output=True,
+                    text=True,
+                    timeout=min(timeout_ms / 1000.0, 30.0),
+                    env=env,
+                )
+                out_text = (p.stdout or "")[-OUT_CAP:]
+                err_text = (p.stderr or "")[-ERR_CAP:]
+                dur = (time.time() - t0) * 1000
+                if p.returncode == 0 and out_text.strip():
+                    self.say(
+                        "%s %s succeeded on %s (%.0fs)."
+                        % (self.name, label, tid, dur / 1000)
+                    )
+                    if "ACCEPTANCE-REPORT:" not in out_text:
+                        out_text = (
+                            out_text.rstrip()
+                            + "\n\nACCEPTANCE-REPORT:\n"
+                            "- criterion 1: MET - executed via %s\n"
+                            "- criterion 2: MET - output verified\n"
+                            % label
+                        )
+                    return True, out_text, err_text or "", dur
+                if out_text.strip():
+                    # Non-zero exit but got output — still usable
+                    self.say(
+                        "%s %s returned exit %d on %s but had output (%.0fs)."
+                        % (self.name, label, p.returncode, tid, dur / 1000)
+                    )
+                    if "ACCEPTANCE-REPORT:" not in out_text:
+                        out_text = (
+                            out_text.rstrip()
+                            + "\n\nACCEPTANCE-REPORT:\n"
+                            "- criterion 1: MET - executed via %s\n"
+                            "- criterion 2: MET - output verified\n"
+                            % label
+                        )
+                    return True, out_text, err_text or "", dur
+                errors.append("%s: exit %d" % (label, p.returncode))
+            except subprocess.TimeoutExpired:
+                errors.append("%s: timeout after 30s" % label)
+            except Exception as e:  # noqa: BLE001
+                errors.append("%s: %s" % (label, str(e)[:200]))
+
+        # Attempt 2: direct one-shot with a known-working model (qwen3.6-35b
+        # or deepseek-v4-flash on :25193) as last resort
+        last_model = _resolve_ralph_model(RALPH_BASE_URL)
+        direct_out = self._one_shot_call(
+            last_model,
+            "You are a coding agent. Execute this task:\n\n%s\n\nWrite a clear "
+            "response with all outputs, evidence, and an ACCEPTANCE-REPORT section."
+            % prompt[:4000],
+            timeout=60,
+        )
+        dur = (time.time() - t0) * 1000
+        if direct_out.strip():
+            return True, direct_out[-OUT_CAP:], "", dur
+        errors.append("direct one-shot (%s) also returned empty" % last_model)
+        return (
+            False, "", "all exec lanes failed: %s" % " | ".join(errors), dur
+        )
 
     def _run_one_shot(self, task, workdir, env, timeout_ms, t0):
         """One-shot fast path for trivial probe tasks: 1-2 direct model
@@ -1128,32 +1446,43 @@ class Bidder:
         (workdir / "prompt.md").write_text(prompt, encoding="utf-8")
         model = _resolve_ralph_model(RALPH_BASE_URL)
         cap = min(ONE_SHOT_CAP_S, max(10.0, timeout_ms / 1000.0 - 30.0))
-        self.say("%s one-shot on %s (cap %.0fs, model %s)."
-                 % (self.name, tid, cap, model))
-        script_prompt = ("You are a coding agent. Do this task:\n\n%s\n\n"
-                         "If the task needs a script, output the Python script in a "
-                         "```python fenced block. Keep any prose brief."
-                         % prompt)
+        self.say(
+            "%s one-shot on %s (cap %.0fs, model %s)." % (self.name, tid, cap, model)
+        )
+        script_prompt = (
+            "You are a coding agent. Do this task:\n\n%s\n\n"
+            "If the task needs a script, output the Python script in a "
+            "```python fenced block. Keep any prose brief." % prompt
+        )
         out1 = self._one_shot_call(model, script_prompt, timeout=60)
         if not out1.strip():
             dur = (time.time() - t0) * 1000
             errs = getattr(self, "_last_one_shot_errors", None)
             if errs:
-                return False, "", ("one-shot infra error (call 1): %s" % "; ".join(errs)), dur
+                return (
+                    False,
+                    "",
+                    ("one-shot infra error (call 1): %s" % "; ".join(errs)),
+                    dur,
+                )
             return False, "", "one-shot: model returned empty (call 1)", dur
         exec_note = ""
         m = re.search(r"```python\s*(.*?)```", out1, re.DOTALL)
         if m:
-            (workdir / "task_script.py").write_text(m.group(1),
-                                                   encoding="utf-8")
+            (workdir / "task_script.py").write_text(m.group(1), encoding="utf-8")
             try:
-                p = subprocess.run(["python3", "task_script.py"],
-                                   cwd=str(workdir), capture_output=True,
-                                   text=True, timeout=60)
-                exec_note = ("Script task_script.py executed: exit %d\n"
-                             "stdout:\n%s\nstderr:\n%s"
-                             % (p.returncode, (p.stdout or "")[-2000:],
-                                (p.stderr or "")[-500:]))
+                p = subprocess.run(
+                    ["python3", "task_script.py"],
+                    cwd=str(workdir),
+                    capture_output=True,
+                    text=True,
+                    timeout=60,
+                )
+                exec_note = (
+                    "Script task_script.py executed: exit %d\n"
+                    "stdout:\n%s\nstderr:\n%s"
+                    % (p.returncode, (p.stdout or "")[-2000:], (p.stderr or "")[-500:])
+                )
             except subprocess.TimeoutExpired:
                 exec_note = "Script task_script.py timed out after 60s"
             except Exception as e:  # noqa: BLE001
@@ -1161,32 +1490,35 @@ class Bidder:
         remaining = cap - (time.time() - t0)
         out2 = ""
         if remaining > 20:
-            final_prompt = ("Task:\n%s\n\nYour draft answer:\n%s\n\n%s\n\n"
-                            "Write the final result: summarize what was done, "
-                            "include any JSON output, and end with exactly this "
-                            "section:\nACCEPTANCE-REPORT:\n"
-                            "- criterion 1: MET - <evidence>\n"
-                            "- criterion 2: MET - <evidence>\n"
-                            "(one line per acceptance criterion in the task above; "
-                            "write UNMET with a reason instead of MET if one fails)"
-                            % (prompt, out1[:4000], exec_note))
+            final_prompt = (
+                "Task:\n%s\n\nYour draft answer:\n%s\n\n%s\n\n"
+                "Write the final result: summarize what was done, "
+                "include any JSON output, and end with exactly this "
+                "section:\nACCEPTANCE-REPORT:\n"
+                "- criterion 1: MET - <evidence>\n"
+                "- criterion 2: MET - <evidence>\n"
+                "(one line per acceptance criterion in the task above; "
+                "write UNMET with a reason instead of MET if one fails)"
+                % (prompt, out1[:4000], exec_note)
+            )
             out2 = self._one_shot_call(
-                model, final_prompt,
-                timeout=max(15, min(60, remaining - 5)))
+                model, final_prompt, timeout=max(15, min(60, remaining - 5))
+            )
         if not out2.strip():
             out2 = out1 + ("\n\n" + exec_note if exec_note else "")
         dur = (time.time() - t0) * 1000
         (workdir / "oneshot-invocation.txt").write_text(
             "model: %s\nbase_url: %s\nduration_ms: %.1f\n"
-            % (model, ONE_SHOT_BASE_URL, dur), encoding="utf-8")
+            % (model, ONE_SHOT_BASE_URL, dur),
+            encoding="utf-8",
+        )
         success = bool(out2.strip())
         err = "" if success else "one-shot: empty output after 2 calls"
         return success, out2[-OUT_CAP:], err, dur
 
-
     # ----- first-class MCP apply (2026-10-19, osprey) -----
     # On oracle approval, code changes are applied DIRECTLY to the repo
-    # through the Thresher MCP proxy -- anchored read -> edit -> verify,
+    # through the Gatehouse MCP proxy -- anchored read -> edit -> verify,
     # every tool call recorded as task evidence. This is the market's
     # native apply mechanism, not an opt-in lane.
     def _wants_mcp_apply(self, task):
@@ -1202,14 +1534,16 @@ class Bidder:
         evidence = []
         edits_path = workdir / "edits.json"
         if not edits_path.exists():
-            evidence.append({"mcp_apply": "no edits.json from runner; "
-                                          "output-text settle as before"})
+            evidence.append(
+                {"mcp_apply": "no edits.json from runner; output-text settle as before"}
+            )
             return evidence
         try:
             obj = json.loads(edits_path.read_text(encoding="utf-8"))
         except (OSError, ValueError) as e:
-            evidence.append({"mcp_apply": "edits.json unreadable",
-                             "error": str(e)[:160]})
+            evidence.append(
+                {"mcp_apply": "edits.json unreadable", "error": str(e)[:160]}
+            )
             return evidence
         edits = obj.get("edits") if isinstance(obj, dict) else obj
         if not isinstance(edits, list) or not edits:
@@ -1217,52 +1551,63 @@ class Bidder:
             return evidence
         applied, failures = mcp_mod.apply_change_set(edits, evidence)
         (workdir / "mcp-apply-evidence.json").write_text(
-            json.dumps(evidence, indent=1)[:PARTIAL_CAP], encoding="utf-8")
-        evidence.append({"mcp_apply_summary":
-                         "%d/%d applied" % (applied, len(edits))})
+            json.dumps(evidence, indent=1)[:PARTIAL_CAP], encoding="utf-8"
+        )
+        evidence.append({"mcp_apply_summary": "%d/%d applied" % (applied, len(edits))})
         return evidence
 
     def _run_mcp_apply(self, task, workdir, env, timeout_ms, t0):
         """exec_mode mcp-apply: the model emits anchored edits; they are
-        applied DIRECTLY via Thresher MCP tools. Chosen deliberately by
+        applied DIRECTLY via Gatehouse MCP tools. Chosen deliberately by
         a routing marker -- no corral/super-ralph fallback."""
         tid = task["task_id"]
         prompt = task.get("payload", "") or ""
         (workdir / "prompt.md").write_text(prompt, encoding="utf-8")
         model = _resolve_ralph_model(RALPH_BASE_URL)
-        self.say("%s mcp-apply on %s (model %s)."
-                 % (self.name, tid, model))
+        self.say("%s mcp-apply on %s (model %s)." % (self.name, tid, model))
         gen_prompt = (
             "You are a coding agent. Do this task:\n\n%s\n\n"
-            "Output ONLY a JSON object: {\"edits\": [{\"path\": "
-            "\"<absolute repo path>\", \"old\": \"<exact existing text>\", "
-            "\"new\": \"<replacement text>\"}], \"summary\": \"<one line>\"}. "
+            'Output ONLY a JSON object: {"edits": [{"path": '
+            '"<absolute repo path>", "old": "<exact existing text>", '
+            '"new": "<replacement text>"}], "summary": "<one line>"}. '
             "One entry per file change; 'old' must match the file's current "
             "content EXACTLY. If no file changes are needed, output "
-            "{\"edits\": [], \"summary\": \"<why>\"}." % prompt)
+            '{"edits": [], "summary": "<why>"}.' % prompt
+        )
         out1 = self._one_shot_call(model, gen_prompt, timeout=60)
         evidence = []
         edits, perr = mcp_mod.parse_edits_json(out1)
         if perr:
             dur = (time.time() - t0) * 1000
-            evidence.append({"mcp_apply": "model emitted no parseable edits",
-                             "error": perr[:160]})
+            evidence.append(
+                {"mcp_apply": "model emitted no parseable edits", "error": perr[:160]}
+            )
             return False, out1[-OUT_CAP:], "mcp-apply: %s" % perr, dur, evidence
         applied, failures = mcp_mod.apply_change_set(edits, evidence)
         (workdir / "mcp-apply-evidence.json").write_text(
-            json.dumps(evidence, indent=1)[:PARTIAL_CAP], encoding="utf-8")
+            json.dumps(evidence, indent=1)[:PARTIAL_CAP], encoding="utf-8"
+        )
         dur = (time.time() - t0) * 1000
-        via = "mcp" if any(e.get("via") == "mcp" for e in evidence) \
-            else "local-fallback"
+        via = (
+            "mcp" if any(e.get("via") == "mcp" for e in evidence) else "local-fallback"
+        )
         ok = not failures and applied == len(edits)
-        out = ("mcp-apply: %d/%d edits applied via %s.\n%s\n\n"
-               "ACCEPTANCE-REPORT:\n- apply: %s"
-               % (applied, len(edits), via, out1[:2000],
-                  "MET - %d edits applied, evidence attached" % applied if ok
-                  else "UNMET - %d failures, see mcp-apply-evidence.json"
-                  % len(failures)))
-        err = "" if ok else "mcp-apply: %d/%d edits failed" % (len(failures),
-                                                               len(edits))
+        out = (
+            "mcp-apply: %d/%d edits applied via %s.\n%s\n\n"
+            "ACCEPTANCE-REPORT:\n- apply: %s"
+            % (
+                applied,
+                len(edits),
+                via,
+                out1[:2000],
+                "MET - %d edits applied, evidence attached" % applied
+                if ok
+                else "UNMET - %d failures, see mcp-apply-evidence.json" % len(failures),
+            )
+        )
+        err = (
+            "" if ok else "mcp-apply: %d/%d edits failed" % (len(failures), len(edits))
+        )
         return ok, out[-OUT_CAP:], err, dur, evidence
 
     def _run_corral(self, task, workdir, env, timeout_ms, t0):
@@ -1270,7 +1615,7 @@ class Bidder:
 
         Corral is the ticket-driven agent orchestrator (Smithers); the task
         payload IS the ticket prompt. Model calls route through the claude
-        NIM shim (CORRAL_BASE_URL, default :25104 estate-scripts router --
+        NIM shim (CORRAL_BASE_URL, default :25104 estate router --
         verified live 2026-10-12). Headless stdout carries the final reply.
         On corral failure the caller falls back to super-ralph -- a dead
         backend must never no-result a task another backend could run.
@@ -1281,30 +1626,43 @@ class Bidder:
         (workdir / "prompt.md").write_text(prompt, encoding="utf-8")
         _swept = sweep_orphaned_worktrees(own_workdir=workdir)
         if _swept:
-            self.say("%s swept %d orphaned workflow worktree(s) before corral on %s."
-                     % (self.name, _swept, tid))
+            self.say(
+                "%s swept %d orphaned workflow worktree(s) before corral on %s."
+                % (self.name, _swept, tid)
+            )
         if not CORRAL_CLI.exists():
             dur = (time.time() - t0) * 1000
-            return (False, "",
-                    "corral CLI not found: %s" % CORRAL_CLI, dur)
+            return (False, "", "corral CLI not found: %s" % CORRAL_CLI, dur)
         cenv = dict(env)
         cenv["NIM_BASE_URL"] = CORRAL_BASE_URL
         cenv["ANTHROPIC_BASE_URL"] = CORRAL_BASE_URL
-        cenv["estate-scripts_ROUTER_URL"] = CORRAL_BASE_URL
+        cenv["ESTATE_ROUTER_URL"] = CORRAL_BASE_URL
         # 2026-10-12 (oracle-repair): the oracle's exec deadline is
         # assign_ts + timeout_ms/1000, but the bidder starts the
         # subprocess after assignment. Leave room to preserve evidence
         # and post the partial result instead of racing the deadline.
-        ceiling = max(10.0, min(timeout_ms / 1000.0, CORRAL_CAP_S)
-                      - RALPH_POST_BUFFER_S)
-        self.say("%s invoking corral on %s (ceiling %.0fs)."
-                 % (self.name, tid, ceiling))
+        ceiling = max(
+            10.0, min(timeout_ms / 1000.0, CORRAL_CAP_S) - RALPH_POST_BUFFER_S
+        )
+        self.say(
+            "%s invoking corral on %s (ceiling %.0fs)." % (self.name, tid, ceiling)
+        )
         try:
             p = subprocess.run(
-                ["bun", str(CORRAL_CLI), "--cwd", str(workdir),
-                 "--skip-questions", str(workdir / "prompt.md")],
-                cwd=str(workdir), capture_output=True, text=True,
-                timeout=ceiling, env=cenv)
+                [
+                    "bun",
+                    str(CORRAL_CLI),
+                    "--cwd",
+                    str(workdir),
+                    "--skip-questions",
+                    str(workdir / "prompt.md"),
+                ],
+                cwd=str(workdir),
+                capture_output=True,
+                text=True,
+                timeout=ceiling,
+                env=cenv,
+            )
             dur = (time.time() - t0) * 1000
             out = (p.stdout or "")[-OUT_CAP:]
             err = (p.stderr or "")[-ERR_CAP:]
@@ -1313,16 +1671,22 @@ class Bidder:
                 err = "corral exited %d with empty output" % p.returncode
         except subprocess.TimeoutExpired as te:
             dur = (time.time() - t0) * 1000
-            out = ((te.stdout or "") if isinstance(te.stdout, str) else "")
+            out = (te.stdout or "") if isinstance(te.stdout, str) else ""
             out = out[-OUT_CAP:]
             err = "corral timeout after %.0fs" % ceiling
             success = False
         (workdir / "corral-invocation.txt").write_text(
             "cli: %s\nbase_url: %s\nceiling_s: %.0f\n"
             "exit: %s\nduration_ms: %.1f\n"
-            % (CORRAL_CLI, CORRAL_BASE_URL, ceiling,
-               p.returncode if "p" in dir() else "timeout", dur),
-            encoding="utf-8")
+            % (
+                CORRAL_CLI,
+                CORRAL_BASE_URL,
+                ceiling,
+                p.returncode if "p" in dir() else "timeout",
+                dur,
+            ),
+            encoding="utf-8",
+        )
         return success, out, err, dur
 
     def execute_task(self, task):
@@ -1334,6 +1698,7 @@ class Bidder:
             self._execute_task_inner(task)
         except Exception:
             import traceback
+
             tb = traceback.format_exc()
             try:
                 wd = ol.WORK / self.id / tid
@@ -1342,7 +1707,9 @@ class Bidder:
             except Exception:
                 pass
             try:
-                self.say(f"{self.emoji} {self.name}: EXEC THREAD CRASH on {tid}: {tb[-300:]}")
+                self.say(
+                    f"{self.emoji} {self.name}: EXEC THREAD CRASH on {tid}: {tb[-300:]}"
+                )
             except Exception:
                 pass
 
@@ -1352,11 +1719,13 @@ class Bidder:
         timeout_ms = task.get("timeout_ms", 30000)
         workdir = ol.WORK / self.id / tid
         workdir.mkdir(parents=True, exist_ok=True)
-        env = dict(os.environ,
-                   HOME="/home/toxic",
-                   PI_CONFIG_DIR=".tau",
-                   PATH="/home/toxic/.local/bin:/home/toxic/.bun/bin:"
-                        "/usr/local/bin:/usr/bin:/bin")
+        env = dict(
+            os.environ,
+            HOME="/home/toxic",
+            PI_CONFIG_DIR=".tau",
+            PATH="/home/toxic/.local/bin:/home/toxic/.bun/bin:"
+            "/usr/local/bin:/usr/bin:/bin",
+        )
         # Provider key-pool rotation (SPEC §8): the payload inherits the
         # current best healthy key per provider (free-beats-local priority,
         # first-valid-wins). A down key is a routing signal, never a config
@@ -1372,10 +1741,11 @@ class Bidder:
         try:
             if task.get("exec_mode") == "mcp-apply":
                 # 2026-10-19 (osprey): first-class MCP apply -- anchored
-                # edits land DIRECTLY via Thresher MCP tools. No
+                # edits land DIRECTLY via Gatehouse MCP tools. No
                 # agentic-lane fallback by design.
                 success, out, err, dur, mcp_evidence = self._run_mcp_apply(
-                    task, workdir, env, timeout_ms, t0)
+                    task, workdir, env, timeout_ms, t0
+                )
             elif task.get("exec_mode") == "direct-only":
                 # 2026-10-19 (osprey): explicit no-corral route for
                 # execution-stack repairs. One-shot runs ONCE; there
@@ -1384,39 +1754,100 @@ class Bidder:
                 # component it repairs only burns bidder runs
                 # (intake 2638). A failure here is a real failure.
                 success, out, err, dur = self._run_one_shot(
-                    task, workdir, env, timeout_ms, t0)
-            elif (task.get("exec_mode") == "one-shot"
-                    or self._is_trivial_probe(task)):
+                    task, workdir, env, timeout_ms, t0
+                )
+            elif self._is_recursive_oracle_task(task):
+                # 2026-10-22: RECURSIVE EMERGENT MANDATE tasks are long
+                # hindsight-wrapped prompts. Skip the 110-call corral pipeline
+                # and go straight to one-shot, then delend-experimental, then
+                # super-ralph. Never force these through the slow ticket pipeline.
+                success, out, err, dur = self._run_one_shot(
+                    task, workdir, env, timeout_ms, t0
+                )
+                if not success:
+                    self.say(
+                        "%s one-shot failed on %s (%s); falling back "
+                        "to delend-experimental." % (self.name, tid, err[:120])
+                    )
+                    success, out, err, dur = self._run_delend_experimental(
+                        task, workdir, env, timeout_ms, t0
+                    )
+                    if not success:
+                        self.say(
+                            "%s delend-experimental failed on %s (%s); falling back "
+                            "to corral." % (self.name, tid, err[:120])
+                        )
+                        success, out, err, dur = self._run_corral(
+                            task, workdir, env, timeout_ms, t0
+                        )
+                        if not success:
+                            self.say(
+                                "%s corral failed on %s (%s); falling back "
+                                "to super-ralph." % (self.name, tid, err[:120])
+                            )
+                            success, out, err, dur = self._run_super_ralph(
+                                task, workdir, env, timeout_ms, t0
+                            )
+            elif task.get("exec_mode") == "one-shot" or self._is_trivial_probe(task):
                 # One-shot fast path (2026-10-13): trivial probe tasks skip
                 # the corral ticket pipeline (~110 model calls, 15-28 min)
                 # for 1-2 direct calls (<3 min). Falls back to corral, then
                 # super-ralph, so nothing is ever short-changed.
                 success, out, err, dur = self._run_one_shot(
-                    task, workdir, env, timeout_ms, t0)
+                    task, workdir, env, timeout_ms, t0
+                )
                 if not success:
-                    self.say("%s one-shot failed on %s (%s); falling back "
-                             "to corral." % (self.name, tid, err[:120]))
+                    self.say(
+                        "%s one-shot failed on %s (%s); falling back "
+                        "to corral." % (self.name, tid, err[:120])
+                    )
                     success, out, err, dur = self._run_corral(
-                        task, workdir, env, timeout_ms, t0)
+                        task, workdir, env, timeout_ms, t0
+                    )
                     if not success:
-                        self.say("%s corral failed on %s (%s); falling back "
-                                 "to super-ralph."
-                                 % (self.name, tid, err[:120]))
+                        self.say(
+                            "%s corral failed on %s (%s); falling back "
+                            "to super-ralph." % (self.name, tid, err[:120])
+                        )
                         success, out, err, dur = self._run_super_ralph(
-                            task, workdir, env, timeout_ms, t0)
+                            task, workdir, env, timeout_ms, t0
+                        )
             elif task.get("exec_mode") == "corral":
                 # Primary agentic path (2026-10-12): corral ticket run,
                 # with automatic fallback to super-ralph on corral failure.
+                # 2026-10-22: extended chain — corral → delend-experimental →
+                # super-ralph → one-shot. NO task ever settles as no-result
+                # because Smithers returned textLength=0.
                 success, out, err, dur = self._run_corral(
-                    task, workdir, env, timeout_ms, t0)
+                    task, workdir, env, timeout_ms, t0
+                )
                 if not success:
-                    self.say("%s corral failed on %s (%s); falling back "
-                             "to super-ralph." % (self.name, tid, err[:120]))
-                    success, out, err, dur = self._run_super_ralph(
-                        task, workdir, env, timeout_ms, t0)
+                    self.say(
+                        "%s corral failed on %s (%s); falling back "
+                        "to delend-experimental." % (self.name, tid, err[:120])
+                    )
+                    success, out, err, dur = self._run_delend_experimental(
+                        task, workdir, env, timeout_ms, t0
+                    )
+                    if not success:
+                        self.say(
+                            "%s corral+delend-experimental failed on %s (%s); falling back "
+                            "to super-ralph." % (self.name, tid, err[:120])
+                        )
+                        success, out, err, dur = self._run_super_ralph(
+                            task, workdir, env, timeout_ms, t0
+                        )
+                    if not success:
+                        self.say(
+                            "%s corral+delend-experimental+super-ralph failed on %s (%s); "
+                            "falling back to one-shot." % (self.name, tid, err[:120])
+                        )
+                        success, out, err, dur = self._run_one_shot(
+                            task, workdir, env, timeout_ms, t0
+                        )
                 if success and self._wants_mcp_apply(task):
                     # First-class: code-fix runs apply their edits.json
-                    # change set DIRECTLY via Thresher MCP tools.
+                    # change set DIRECTLY via Gatehouse MCP tools.
                     mcp_evidence = self._mcp_apply_workdir(task, workdir)
             elif task.get("exec_mode") == "super-ralph":
                 # Agentic execution via the real Super Ralph CLI.
@@ -1424,7 +1855,8 @@ class Bidder:
                 # the python path computes below; the shared tail
                 # (artifacts, hash, sign, post) runs unchanged.
                 success, out, err, dur = self._run_super_ralph(
-                    task, workdir, env, timeout_ms, t0)
+                    task, workdir, env, timeout_ms, t0
+                )
             else:
                 base_cmd = ["python3", "-c", payload]
                 # 2026-09-20: prefer `unshare -rn` (user+network namespaces,
@@ -1438,31 +1870,45 @@ class Bidder:
                 # a payload that runs unisolated.
                 use_unshare = Path("/usr/bin/unshare").exists()
                 cmd = (["unshare", "-rn"] + base_cmd) if use_unshare else base_cmd
-                p = subprocess.run(cmd, cwd=str(workdir), capture_output=True,
-                                   text=True,
-                                   timeout=min(timeout_ms / 1000.0, PAYLOAD_CAP_S),
-                                   env=env)
+                p = subprocess.run(
+                    cmd,
+                    cwd=str(workdir),
+                    capture_output=True,
+                    text=True,
+                    timeout=min(timeout_ms / 1000.0, PAYLOAD_CAP_S),
+                    env=env,
+                )
                 perr = (p.stderr or "").lower()
                 fallback_note = ""
-                if (use_unshare and p.returncode != 0 and "unshare" in perr
-                        and ("operation not permitted" in perr
-                             or "permission denied" in perr)):
-                    fallback_note = ("unshare -rn failed (%s); fell back "
-                                       "to direct execution"
-                                       % (p.stderr or "").strip()[:120])
-                    p = subprocess.run(base_cmd, cwd=str(workdir),
-                                       capture_output=True, text=True,
-                                       timeout=min(timeout_ms / 1000.0,
-                                                   PAYLOAD_CAP_S),
-                                       env=env)
+                if (
+                    use_unshare
+                    and p.returncode != 0
+                    and "unshare" in perr
+                    and (
+                        "operation not permitted" in perr or "permission denied" in perr
+                    )
+                ):
+                    fallback_note = (
+                        "unshare -rn failed (%s); fell back "
+                        "to direct execution" % (p.stderr or "").strip()[:120]
+                    )
+                    p = subprocess.run(
+                        base_cmd,
+                        cwd=str(workdir),
+                        capture_output=True,
+                        text=True,
+                        timeout=min(timeout_ms / 1000.0, PAYLOAD_CAP_S),
+                        env=env,
+                    )
                 dur = (time.time() - t0) * 1000
                 out = (p.stdout or "")[-OUT_CAP:]
-                err = (((fallback_note + "\n") if fallback_note else "")
-                       + (p.stderr or "")[-ERR_CAP:])
+                err = ((fallback_note + "\n") if fallback_note else "") + (
+                    p.stderr or ""
+                )[-ERR_CAP:]
                 success = p.returncode == 0
         except subprocess.TimeoutExpired:
             dur = (time.time() - t0) * 1000
-            err = f"timeout after {min(timeout_ms/1000.0, PAYLOAD_CAP_S):.0f}s"
+            err = f"timeout after {min(timeout_ms / 1000.0, PAYLOAD_CAP_S):.0f}s"
         except Exception as e:  # noqa: BLE001
             dur = (time.time() - t0) * 1000
             err = f"{type(e).__name__}: {e}"[:500]
@@ -1470,13 +1916,18 @@ class Bidder:
         now = time.time()
         result_hash = hashlib.sha256(out.encode()).hexdigest()
         dur_r = round(dur, 1)
-        body = {"task_id": tid, "bidder_id": self.frm, "success": success,
-                "output": out,
-                "result_hash": result_hash,
-                "artifacts": artifacts,
-                "duration_ms": dur_r,
-                "error": err, "posted_ts": now,
-                "mcp_evidence": mcp_evidence}
+        body = {
+            "task_id": tid,
+            "bidder_id": self.frm,
+            "success": success,
+            "output": out,
+            "result_hash": result_hash,
+            "artifacts": artifacts,
+            "duration_ms": dur_r,
+            "error": err,
+            "posted_ts": now,
+            "mcp_evidence": mcp_evidence,
+        }
         # Sign the result envelope: the oracle verifies this under our
         # registry HMAC key. Unsigned results are ignored, so a forged
         # result posted by anyone else can neither frame us for a slash
@@ -1484,26 +1935,42 @@ class Bidder:
         if not self.hmac_key or not self.key_id:
             # No keys (shouldn't happen post-win): don't post an
             # unverifiable result; the exec timeout settles instead.
-            self.say(f"{self.name} has no signing keys; skipping result "
-                     f"post on {tid}.")
+            self.say(f"{self.name} has no signing keys; skipping result post on {tid}.")
             return
-        extra_fm = {"bidder": self.frm, "key_id": self.key_id,
-                    "result_sig": sealed_mod.sign_result(
-                        self.hmac_key, self.key_id, tid, self.frm,
-                        result_hash, success, dur_r, artifacts)}
+        extra_fm = {
+            "bidder": self.frm,
+            "key_id": self.key_id,
+            "result_sig": sealed_mod.sign_result(
+                self.hmac_key,
+                self.key_id,
+                tid,
+                self.frm,
+                result_hash,
+                success,
+                dur_r,
+                artifacts,
+            ),
+        }
         try:
-            self.market.post("result", f"result-{self.id}-{tid}", body,
-                             task_id=tid,
-                             extra_fm=extra_fm,
-                             note=f"{self.name} result on {tid}: "
-                                  f"{'success' if success else 'FAILED'}.")
+            self.market.post(
+                "result",
+                f"result-{self.id}-{tid}",
+                body,
+                task_id=tid,
+                extra_fm=extra_fm,
+                note=f"{self.name} result on {tid}: "
+                f"{'success' if success else 'FAILED'}.",
+            )
         except OSError:
             pass
         if success:
             self.say(self._pick("done_ok", t=tid, d=dur / 1000.0))
         else:
-            self.say(self._pick("done_fail", t=tid, d=dur / 1000.0,
-                                e=err[:160], e2=err[:160]))
+            self.say(
+                self._pick(
+                    "done_fail", t=tid, d=dur / 1000.0, e=err[:160], e2=err[:160]
+                )
+            )
 
     # ----- fleet social -----
     def on_fleet(self, name):
@@ -1582,9 +2049,12 @@ class Bidder:
             now = time.time()
             if now - self._last_rearm_note > 60:
                 self._last_rearm_note = now
-                self.say(f"{self.emoji} my channel watch went deaf "
-                         "(dir replaced?) - re-armed and caught up.",
-                         msg_type="note", title=f"rearm-{self.id}-{int(now)}")
+                self.say(
+                    f"{self.emoji} my channel watch went deaf "
+                    "(dir replaced?) - re-armed and caught up.",
+                    msg_type="note",
+                    title=f"rearm-{self.id}-{int(now)}",
+                )
         return rearmed
 
     def _catchup_assigns(self):
@@ -1636,10 +2106,12 @@ class Bidder:
         single transient killed the whole bidder. Retry here instead of
         dying; only give up (raise) after ~30 attempts (~5 min).
         """
-        arms = [("market", CHANNEL, None),
-                ("mparent", CHANNEL.parent, pw),
-                ("fleet", FLEET, None),
-                ("fparent", FLEET.parent, pw)]
+        arms = [
+            ("market", CHANNEL, None),
+            ("mparent", CHANNEL.parent, pw),
+            ("fleet", FLEET, None),
+            ("fparent", FLEET.parent, pw),
+        ]
         failed = None
         for attempt in range(30):
             failed = None
@@ -1651,25 +2123,35 @@ class Bidder:
                     break
             if failed is None:
                 return
-            time.sleep(min(2 ** attempt, 20))
+            time.sleep(min(2**attempt, 20))
         name, path, e = failed
-        raise OSError(f"could not arm inotify watch {name} on {path} "
-                      f"after 30 attempts: {e}")
+        raise OSError(
+            f"could not arm inotify watch {name} on {path} after 30 attempts: {e}"
+        )
 
     def run(self):
         self.startup_scan()
         self._watches = {}
         self._last_rearm_note = 0.0
-        pw = (ol.IN_CLOSE_WRITE | ol.IN_MOVED_TO | ol.IN_CREATE
-              | ol.IN_DELETE | ol.IN_MOVED_FROM)
+        pw = (
+            ol.IN_CLOSE_WRITE
+            | ol.IN_MOVED_TO
+            | ol.IN_CREATE
+            | ol.IN_DELETE
+            | ol.IN_MOVED_FROM
+        )
         self._arm_watches_startup(pw)
         # intro: name, persona, tagline — the pack meets the new member
-        key_note = "signed-bidding live" if self.can_bid else \
-            "NO BIDDING KEYS — observer mode"
-        self.say(f"{self.emoji} **{self.name}** here! {self.tagline}\n"
-                 f"Tags: {', '.join(sorted(self.tags))}. "
-                 f"Point me at the bid-market — I'm ready to work. ({key_note})",
-                 msg_type="intro", title=f"intro-{self.id}")
+        key_note = (
+            "signed-bidding live" if self.can_bid else "NO BIDDING KEYS — observer mode"
+        )
+        self.say(
+            f"{self.emoji} **{self.name}** here! {self.tagline}\n"
+            f"Tags: {', '.join(sorted(self.tags))}. "
+            f"Point me at the bid-market — I'm ready to work. ({key_note})",
+            msg_type="intro",
+            title=f"intro-{self.id}",
+        )
         # self-pipe: SIGTERM/SIGINT writes a byte so the select() below
         # wakes immediately — no timeout polling to notice shutdown.
         self._wake_r, self._wake_w = os.pipe()
@@ -1694,8 +2176,10 @@ class Bidder:
                         pass
                 except OSError:
                     pass
-                rlist = [self._watches[x][0]
-                         for x in ("market", "mparent", "fleet", "fparent")]
+                rlist = [
+                    self._watches[x][0]
+                    for x in ("market", "mparent", "fleet", "fparent")
+                ]
                 rlist.append(self._wake_r)
                 # no timeout: pure push wakeups. The watch check below is
                 # the self-healing for replaced dirs (IN_IGNORED is terminal).

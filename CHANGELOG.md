@@ -2,6 +2,31 @@
 
 <!-- version list -->
 
+## v0.9.2 (2026-10-23)
+
+### Bug Fixes
+
+- Update feed test for deliberate no-truncation behavior
+  ([`c08d265`](https://github.com/toxicwind/squawk/commit/c08d2651ac3dfa4799eaedc79d537b05c345fe3f))
+
+
+## v0.9.1 (2026-10-23)
+
+### Bug Fixes
+
+- **ci**: Resolve ruff F841 unused vars in oracle/bin/bidder.py
+  ([`49f9a02`](https://github.com/toxicwind/squawk/commit/49f9a02270df5bf4300885b35c488aa88f793b01))
+
+
+## v0.9.0 (2026-10-23)
+
+### Features
+
+- **oracle**: Bidder.py empty-response fix + SCCA consolidation, bid-finch routes, pitchfork.d
+  cleanup
+  ([`d59d426`](https://github.com/toxicwind/squawk/commit/d59d426b75525f5aadf16d0d09b4eb46c013e3e5))
+
+
 ## v0.8.1 (2026-10-03)
 
 ### Bug Fixes

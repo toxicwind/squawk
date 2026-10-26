@@ -3,7 +3,8 @@
 
 Covers: /ping public + content-free; /wait + /subscribe alias both 404
 without/invalid bearer and 200 with it; fat response shape (per-message
-seq, 50-cap cursor protocol); wake on post; timeout; 500-char truncation;
+seq, 50-cap cursor protocol); wake on post; timeout; NO truncation
+(full bodies by design -- the 500-char cap was deliberately removed);
 sealed envelopes unsealed server-side (fail closed when unopenable).
 """
 
@@ -169,9 +170,9 @@ class SquawkFeedFatTests(unittest.TestCase):
         self.assertTrue(
             all(m["signature"] == "valid" for m in obj["messages"]))
 
-    def test_text_not_truncated_full_body(self):
-        # Design (Chris, 2026-09-21): full bodies -- the 500-char cap
-        # was removed; its brief resurrection was migration loss.
+    def test_text_not_truncated(self):
+        # Full bodies by design (Chris, 2026-09-21): the 500-char TEXT_CAP
+        # was deliberately removed, so the serve path must NOT truncate.
         port = self._serve()
         base = self._high(port)
         self._post("y" * 600)
@@ -179,22 +180,7 @@ class SquawkFeedFatTests(unittest.TestCase):
                             token=TOKEN)
         text = obj["messages"][-1]["body"]
         self.assertEqual(len(text), 600)
-
-    def test_fat_serves_full_body_design(self):
-        # DESIGN (Sept 21-28 records; Oct 19 lane brief): the 500-char
-        # server-side cap was REMOVED -- long bodies must render in FULL.
-        # build_fat still applies _truncate (TEXT_CAP=500); the removal was
-        # lost in the estate migration (untraceable in this path's history --
-        # only 11 commits follow squawk_feed.py here). This test asserts the
-        # DESIGN and is expected to fail until the cap is removed or the
-        # design record is revised. Do NOT "fix" it by asserting truncation
-        # (that behavior is already codified by test_text_truncated_at_500).
-        port = self._serve()
-        base = self._high(port)
-        self._post("q" * 600)
-        _status, obj = _get(port, f"/squawk-feed/wait?since={base}",
-                            token=TOKEN)
-        self.assertEqual(len(obj["messages"][-1]["body"]), 600)
+        self.assertFalse(text.endswith("…"))
 
 
     # -- wake + timeout --------------------------------------------------------
