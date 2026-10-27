@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v0.13.0 (2026-10-27)
+
+### Documentation
+
+- **todo**: Append kappa model-switching gaps to pens-ui todo
+  ([`0ed0d33`](https://github.com/toxicwind/squawk/commit/0ed0d336044a8d6d982b2b0eb60d591b92a70cae))
+
+### Features
+
+- **todo**: Wire /v1/todo routes + todo board module; append kappa model-switching gaps
+  ([`aec8334`](https://github.com/toxicwind/squawk/commit/aec833437b447b9eab8b3a0bb8245e7dd7039b90))
+
+
 ## v0.12.0 (2026-10-27)
 
 ### Chores
