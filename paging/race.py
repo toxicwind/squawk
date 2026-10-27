@@ -27,7 +27,6 @@ import os
 import pickle
 import re
 import statistics
-import sys
 import time
 from collections import Counter, defaultdict, deque
 from datetime import datetime
@@ -180,7 +179,6 @@ def segment_episodes(recs, tfidf, gap_min=30, win=5):
         for j in members[-win:]:
             for t, w in vecs[j].items():
                 cv[t] += w
-        k = len(members[-win:]) or 1
         cn = math.sqrt(sum(x * x for x in cv.values())) or 1.0
         dot = sum(cv[t] * w for t, w in vecs[i].items() if t in cv)
         return dot / (cn * (norms[i] or 1.0))
@@ -314,7 +312,7 @@ def pack_c2(recs, texts, budget, query, arts):
 
 def pack_c3(recs, texts, budget, query, arts):
     n = len(recs)
-    mk, eps = arts['markov'], arts['eps']
+    eps = arts['eps']
     sur = arts['surprise']
     thr = sorted(sur)[int(0.30 * n)]
     anchors = set()
