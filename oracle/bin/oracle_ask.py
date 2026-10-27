@@ -73,14 +73,11 @@ WORK = os.environ.get("ORACLE_WORK", "/home/toxic/estate/ranch/squawk/oracle/wor
 # herd.yaml, and oracle-judge-local was a local beellama model -- banned
 # by the 2026-10-13 corrective from Chris (local herd models not ready).
 DEFAULT_JUDGES = [
-    "openai/gpt-oss-120b",  # 2026-10-19: bench winner, ~1s on this route
-    "z-ai/glm-5.3-flash",  # verified answering judge-shaped probes ~1s (2026-10-19)
-    "nvidia/nemotron-3-super-120b-a12b",  # diversity seat: benched perfect, but all three
-    # nemotron judges timed out at 90s on trivial prompts after the bench (2026-10-19 pm);
-    # the engine liveness gate re-admits it when it answers again.
-  # 2026-10-19 bench: perfect probes; ultra demoted (length burns)
+    "estate/auto",  # -> qwen3.6-35b on freeinference (verified 200)
+    "estate/code",  # -> deepseek-v4-flash on freeinference (verified 200)
+    "estate/reasoning",  # -> qwen3.6-35b reasoning lane
 ]
-FALLBACK_JUDGE = "openai/gpt-oss-120b"
+FALLBACK_JUDGE = "estate/auto"
 
 JUDGE_PROMPT = """You are judge {idx} (anonymous) on the OpenFang Oracle panel.
 Question: {question}
@@ -129,11 +126,17 @@ def _check_alias_models(models):
 # ---------------------------------------------------------------------------
 # routing topology (failure attribution only — never model selection)
 # ---------------------------------------------------------------------------
-
-HERD_YAML = os.environ.get("HERD_YAML",
-                           "/home/toxic/estate/config/herd.yaml")
+#
+# 2026-10-27: config/herd.yaml is GONE — the routing SSOT is now the
+# router's TypeScript config (rhodochrosite's routers/strategies/
+# router_config.ts, exporting CODING: Record<alias, [provider, model]>).
+# bin/routing-topology.py adapts it to the {alias: [target, ...]} shape
+# this function needs. HERD_YAML stays honored as an override for a
+# yaml-era router.
+ROUTER_TOPOLOGY = os.environ.get(
+    "ROUTER_TOPOLOGY", os.path.join(BIN, "routing-topology.py"))
+HERD_YAML = os.environ.get("HERD_YAML", "")
 _provider_targets_cache = None
-
 
 def alias_router_targets():
     """{alias: [target, standby, ...]} from herd.yaml cmd lines.
@@ -146,6 +149,22 @@ def alias_router_targets():
     if _provider_targets_cache is not None:
         return _provider_targets_cache
     out = {}
+    # 2026-10-27: read the LIVE router topology via the adapter.
+    if os.path.exists(ROUTER_TOPOLOGY):
+        try:
+            import subprocess
+            r = subprocess.run([sys.executable, ROUTER_TOPOLOGY],
+                               capture_output=True, text=True, timeout=20)
+            if r.returncode == 0 and r.stdout.strip():
+                parsed = json.loads(r.stdout)
+                if isinstance(parsed, dict) and parsed:
+                    _provider_targets_cache = parsed
+                    return parsed
+        except Exception:
+            pass
+    if not HERD_YAML:
+        _provider_targets_cache = out
+        return out
     try:
         with open(HERD_YAML) as f:
             text = f.read()
