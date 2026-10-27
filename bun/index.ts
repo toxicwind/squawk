@@ -158,6 +158,7 @@ async function main() {
     version: VERSION,
     bootAt: BOOT_AT,
     token,
+    todo: { todoDir: "/home/toxic/pens/ranch/squawk/todo" },
     hub,
   };
 

@@ -5,6 +5,7 @@
 import type { Store } from "../store/index.ts";
 import type { Dispatch } from "../dispatch/index.ts";
 import { mcpCallTool, MCP_TOOLS } from "../mcp/index.ts";
+import { handleAdd, handleDone, handleList } from "../todo/index.ts";
 
 export interface RouteCtx {
   store: Store;
@@ -12,6 +13,7 @@ export interface RouteCtx {
   version: string;
   bootAt: number;
   token: string;
+  todo: import("../todo/index.ts").TodoDeps;
   hub: { broadcast(topic: string, payload: any): void };
 }
 
@@ -197,6 +199,17 @@ export async function handleFetch(
       );
 
     // --- fleet dispatch (estate-chat) ---
+    // --- fleet todo board (todo/*.md SSOT + TODO.md index) ---
+    if (path === "/v1/todo" && req.method === "GET")
+      return json(handleList(ctx.todo));
+    if (path === "/v1/todo" && req.method === "POST")
+      return json(handleAdd(ctx.todo, body));
+    {
+      const tm = path.match(/^\/v1\/todo\/([^/]+)\/done$/);
+      if (tm && req.method === "POST")
+        return json(handleDone(ctx.todo, decodeURIComponent(tm[1])));
+    }
+
     if (path === "/v1/dispatch/tasks" && req.method === "POST")
       return json({ ok: true, task: dispatch.postTask(body) });
     if (path === "/v1/dispatch/tasks" && req.method === "GET")
