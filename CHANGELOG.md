@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.14.0 (2026-10-27)
+
+### Features
+
+- **squawk**: Add todo update endpoint + mark freeinference auto fallback IN PROGRESS
+  ([`ac3d0a0`](https://github.com/toxicwind/squawk/commit/ac3d0a080f0876b5eee122eb8ef3756629b7092e))
+
+
 ## v0.13.0 (2026-10-27)
 
 ### Documentation
