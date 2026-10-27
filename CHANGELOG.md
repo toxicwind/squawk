@@ -2,6 +2,23 @@
 
 <!-- version list -->
 
+## v0.10.2 (2026-10-27)
+
+### Bug Fixes
+
+- **squawk**: Resolve merge conflict markers in plugin.json (v0.10.1) + CHANGELOG (both version
+  histories preserved)
+  ([`e65029c`](https://github.com/toxicwind/squawk/commit/e65029c60cd4f2814c84d578d28de4587ed26b45))
+
+- **squawk**: Resolve pyproject.toml conflict marker (v0.10.1)
+  ([`6cf0801`](https://github.com/toxicwind/squawk/commit/6cf08019949cfb71eae7f46107e0f3113aee2438))
+
+### Chores
+
+- **squawk**: Restore local WIP after upstream v0.10.1 merge
+  ([`57acfb4`](https://github.com/toxicwind/squawk/commit/57acfb4228c116504a63194dec32b3417b2325e3))
+
+
 ## v0.10.1 (2026-10-26)
 
 ### Bug Fixes
