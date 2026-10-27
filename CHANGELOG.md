@@ -2,7 +2,6 @@
 
 <!-- version list -->
 
-<<<<<<< Updated upstream
 ## v0.10.1 (2026-10-26)
 
 ### Bug Fixes
@@ -39,8 +38,6 @@
   ([`d59d426`](https://github.com/toxicwind/squawk/commit/d59d426b75525f5aadf16d0d09b4eb46c013e3e5))
 
 
-=======
->>>>>>> Stashed changes
 ## v0.8.1 (2026-10-03)
 
 ### Bug Fixes
