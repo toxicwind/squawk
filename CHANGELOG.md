@@ -2,6 +2,20 @@
 
 <!-- version list -->
 
+## v0.12.0 (2026-10-27)
+
+### Chores
+
+- **todo**: Tau session worklog — a2a DM tools shipped, handoff list for kappa
+  ([`3a30d38`](https://github.com/toxicwind/squawk/commit/3a30d384c8d288b5f53d97aa6c198ffdd6278697))
+
+### Features
+
+- **todo**: First-class fleet todo board — /v1/todo API, TODO.md auto-index, pens-ui urgent todo
+  handoff
+  ([`03933ab`](https://github.com/toxicwind/squawk/commit/03933ab4c8bd6cb0040a7a1027cb94fbd3d98250))
+
+
 ## v0.11.0 (2026-10-27)
 
 ### Features
