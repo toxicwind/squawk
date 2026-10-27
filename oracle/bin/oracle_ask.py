@@ -73,11 +73,16 @@ WORK = os.environ.get("ORACLE_WORK", "/home/toxic/estate/ranch/squawk/oracle/wor
 # herd.yaml, and oracle-judge-local was a local beellama model -- banned
 # by the 2026-10-13 corrective from Chris (local herd models not ready).
 DEFAULT_JUDGES = [
-    "estate/auto",  # -> qwen3.6-35b on freeinference (verified 200)
-    "estate/code",  # -> deepseek-v4-flash on freeinference (verified 200)
-    "estate/reasoning",  # -> qwen3.6-35b reasoning lane
+    # Priority: FREE > FAST > instruction-following (2026-10-27 architect
+    # order). The free lanes answer on the free tier (zero credit burn);
+    # auto/code route through providers whose keys may be credit-exhausted,
+    # which is a 402 + a failover hop. Verified live: estate/free 200 in
+    # 0.38s; estate/reasoning 402 (openrouter credits) when last probed.
+    "estate/free",  # -> openrouter/nemotron free + freeinference/diffusiongemma
+    "estate/auto",  # -> qwen3.6-35b on freeinference
+    "estate/code",  # -> deepseek-v4-flash on freeinference
 ]
-FALLBACK_JUDGE = "estate/auto"
+FALLBACK_JUDGE = "estate/free"
 
 JUDGE_PROMPT = """You are judge {idx} (anonymous) on the OpenFang Oracle panel.
 Question: {question}
@@ -513,11 +518,31 @@ def _resilient_judge(model, prompt, timeout_s, judge_fn=None,
             jp.provider = att.provider_requested
         return jp
 
+    # 2026-10-27 latency fix: the retries used min(timeout_s, 45)/2 per
+    # attempt, so a slot whose lane was credit-dead held the PANEL for
+    # 22.5s x attempts (a 3-attempt slot stretched a 3.3s judge call into
+    # 78s of wall time). An auth/credit failure (401/402/403) is answered
+    # by the upstream in <1s -- it needs a FAST failover, not a long
+    # timeout. Transport failures keep the halved window.
+    RETRY_S = 8.0
+    FALLBACK_S = 12.0
     jp = _call(model, timeout_s, 1)
     served_by = model
     if not jp.live:
-        if getattr(jp, "failure_category", engine.FAILURE_UNKNOWN) \
-                in engine.PROVIDER_CLASS_FAILURES:
+        cat = getattr(jp, "failure_category", engine.FAILURE_UNKNOWN)
+        if cat in (engine.FAILURE_HTTP_402, engine.FAILURE_HTTP_4XX):
+            # credits/key: fail over NOW at the short window
+            alt = next((a for a in panel
+                        if a != model and a != FALLBACK_JUDGE
+                        and provider_of_alias(a, targets) not in (prov, "unknown")),
+                       None)
+            if alt is not None:
+                jp = _call(alt, RETRY_S, 2)
+                if jp.live:
+                    served_by = alt
+            else:
+                jp = _call(model, RETRY_S, 2)
+        elif cat in engine.PROVIDER_CLASS_FAILURES:
             alt = next((a for a in panel
                         if a != model and a != FALLBACK_JUDGE
                         and provider_of_alias(a, targets) not in (prov, "unknown")),
@@ -531,7 +556,7 @@ def _resilient_judge(model, prompt, timeout_s, judge_fn=None,
         else:
             jp = _call(model, min(timeout_s, 45.0) / 2.0, 2)
     if not jp.live and model != FALLBACK_JUDGE:
-        fb = _call(FALLBACK_JUDGE, 60.0, len(attempts) + 1)
+        fb = _call(FALLBACK_JUDGE, FALLBACK_S, len(attempts) + 1)
         if fb.live:
             jp = fb
             served_by = FALLBACK_JUDGE

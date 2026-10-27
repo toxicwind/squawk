@@ -52,7 +52,7 @@ CHANNEL = ol.CHANNEL
 FLEET = ol.FLEET
 SEQ_RE = ol.SEQ_RE
 PAYLOAD_CAP_S = 590  # hard ceiling per task execution
-RALPH_BIN = Path("/home/toxic/.local/bin/super-ralph")
+RALPH_BIN = Path("/home/toxic/.local/bin/corral")
 RALPH_CAP_S = 1740  # 29 min ceiling: Super Ralph runs are slow (~11 min
                     # observed for a trivial run)
 # 2026-10-13 (osprey root-cause, verified live): kimi-k3-nim 404s on
@@ -904,7 +904,7 @@ class Bidder:
         if not RALPH_BIN.exists():
             dur = (time.time() - t0) * 1000
             return (False, "",
-                    "super-ralph binary not found: %s" % RALPH_BIN, dur)
+                    "corral binary not found: %s" % RALPH_BIN, dur)
         renv = dict(env)
         renv["NIM_BASE_URL"] = RALPH_BASE_URL
         renv["ANTHROPIC_BASE_URL"] = RALPH_BASE_URL
