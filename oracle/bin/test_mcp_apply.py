@@ -2,8 +2,8 @@
 """Unit tests for bin/mcp_apply.py (2026-10-19, osprey).
 
 Covers: sandbox guard, edits-JSON parsing, and the local-fallback apply
-path (Thresher pointed at a dead port forces the visible fallback).
-The live Thresher read/edit round-trip is verified separately against
+path (Gatehouse pointed at a dead port forces the visible fallback).
+The live Gatehouse read/edit round-trip is verified separately against
 :25127; these tests must pass with no network at all.
 """
 import os
@@ -45,9 +45,9 @@ assert edits == [] and err == ""  # malformed entries dropped, not fatal
 edits, err = parse_edits_json('{"summary": "no edits key"}')
 assert edits == [] and err
 
-# ---- local fallback (dead Thresher -> visible fallback, same rules) ----
-mcp_apply.THRESHER_MCP_URL = "http://127.0.0.1:1/mcp"  # nothing listens
-mcp_apply.THRESHER_RPC_CUTOFF_S = 2
+# ---- local fallback (dead Gatehouse -> visible fallback, same rules) ----
+mcp_apply.GATEHOUSE_MCP_URL = "http://127.0.0.1:1/mcp"  # nothing listens
+mcp_apply.GATEHOUSE_RPC_CUTOFF_S = 2
 d = tempfile.mkdtemp()
 mcp_apply.ALLOWED_ROOTS = (d,)
 f = os.path.join(d, "f.txt")

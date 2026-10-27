@@ -18,7 +18,7 @@ history_search.py [QUERY] [--channel fleet] [--from ember]
 - Results bounded by `--limit` (default 50), sorted by global seq ascending.
 - `--json` emits one JSONL record per hit:
   `{seq, from, to, channel, ts, status, title, file, snippet}`.
-- Default root: `$SQUAWK_CHAT_ROOT` or `~/.squawk-bus/squawk-root`.
+- Default root: `$SQUAWK_CHAT_ROOT` or `~/.fleet-bus/squawk-root`.
 
 ## Behavior notes
 

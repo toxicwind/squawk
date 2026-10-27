@@ -22,7 +22,7 @@
 // so UI edits land without a daemon restart.
 //
 // Channel-aware (2026-10-03): /wait and /send are served directly from the
-// channel store (/home/toxic/.squawk-bus/squawk-root/<channel>/*.md) so tabs
+// channel store (/home/toxic/.fleet-bus/squawk-root/<channel>/*.md) so tabs
 // actually isolate per channel. The legacy feed proxy at :25135 remains for
 // CLI/other consumers; the UI no longer depends on its /wait channel filtering.
 import { readFileSync, statSync, mkdirSync, writeFileSync, readdirSync } from "node:fs";
@@ -32,7 +32,7 @@ const FEED = "http://127.0.0.1:25135";
 const SQUAWK_DIR = "/home/toxic/estate/ranch/squawk";
 const UI_ENTRY = join(SQUAWK_DIR, "ui", "dist", "bundle.js");
 const FEED_TOKEN_PATH = "/home/toxic/hatch/agents/ember/squawk-relay/feed-token";
-const SQUAWK_ROOT = "/home/toxic/.squawk-bus/squawk-root";
+const SQUAWK_ROOT = "/home/toxic/.fleet-bus/squawk-root";
 
 // websocket upgrade targets: client path -> backend ws url.
 const WS_TARGETS: Record<string, string> = {

@@ -232,9 +232,9 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument(
         "--root",
-        default=os.environ.get("SQUAWK_ROOT")
-        or str(Path.home() / ".squawk-bus" / "squawk-root"),
-        help="squawk chat root (default: ~/.squawk-bus/squawk-root)",
+        default=os.environ.get("AGENT_CHAT_ROOT")
+        or str(Path.home() / ".fleet-bus" / "squawk-root"),
+        help="squawk chat root (default: ~/.fleet-bus/squawk-root)",
     )
     ap.add_argument(
         "--db",

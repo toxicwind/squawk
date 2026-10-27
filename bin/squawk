@@ -55,7 +55,7 @@ except ImportError:
     yaml = None
 
 BRIDGE = "/home/hatch/workspace/bin/yote-conn"
-SQUAWK_ROOT = "/home/toxic/.squawk-bus/squawk-root"
+SQUAWK_ROOT = "/home/toxic/.fleet-bus/squawk-root"
 SENDER = "ember"
 
 
@@ -149,7 +149,7 @@ def read_channel(channel, n=10, full=False):
     # stale reads (scar 2026-09-30: read showed 9/27 msgs while 9/29
     # posts existed). Two bridge round-trips keep the sort exact.
     listing = bridge(
-        "find %s/%s -maxdepth 1 -name '*.md' -type f -printf '%%f\\n' 2>/dev/null "
+        "ls %s/%s/*.md 2>/dev/null | sed 's/.*\\///' "
         "| sort -t- -k1,1n | tail -%d" % (SQUAWK_ROOT, channel, n)
     ).strip().split()
 
@@ -200,7 +200,7 @@ def feed_wait(channel, since, timeout=65):
     the event-driven primitive; callers must NOT poll on a timer.
     Returns (seq, messages) with seq = channel high-water mark."""
     cmd = (
-        "tok=$(cat /home/toxic/.squawk-bus/squawk-relay/feed-token 2>/dev/null); "
+        "tok=$(cat /home/toxic/.fleet-bus/squawk-relay/feed-token 2>/dev/null); "
         "curl -sf --max-time %d -H \"Authorization: Bearer $tok\" "
         "\"http://127.0.0.1:25135/squawk-feed/wait?channel=%s&since=%d\""
         % (timeout, channel, since)

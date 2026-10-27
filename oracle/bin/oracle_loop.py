@@ -107,7 +107,7 @@ def _shim_screen(text):
 CHANNEL = Path(os.environ.get("ORACLE_CHANNEL",
     "/home/toxic/hatch/agents/ember/squawk-root/bid-market"))
 FLEET = Path(os.environ.get("ORACLE_FLEET",
-    "/home/toxic/.squawk-bus/squawk-root/fleet"))
+    "/home/toxic/.fleet-bus/squawk-root/fleet"))
 WORK = Path(os.environ.get("ORACLE_WORK", str(AGENT_DIR / "work")))
 LEDGER = Path(os.environ.get("ORACLE_LEDGER",
                              str(AGENT_DIR / "ledger" / "ledger.jsonl")))

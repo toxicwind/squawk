@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Paging + context-deprecation code race on the real squawk fleet corpus.
 
-Runs ON YOTE (awrawr-pc). Corpus: /home/toxic/.squawk-bus/squawk-root/fleet/*.md
+Runs ON YOTE (awrawr-pc). Corpus: /home/toxic/.fleet-bus/squawk-root/fleet/*.md
 (16,103 files). No LLM anywhere; index cache lives in /tmp.
 
 Candidates (all emit a "context pack" under a char budget; tokens ~= chars/4):
@@ -31,7 +31,7 @@ import time
 from collections import Counter, defaultdict, deque
 from datetime import datetime
 
-CORPUS_DIR = '/home/toxic/.squawk-bus/squawk-root/fleet'
+CORPUS_DIR = '/home/toxic/.fleet-bus/squawk-root/fleet'
 CACHE_DIR = '/tmp/paging_race'
 BUDGETS = {'4k': 16000, '16k': 64000}  # token budget -> char budget
 

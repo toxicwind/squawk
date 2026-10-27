@@ -1,15 +1,5 @@
 # squawk
 
-> **2026-10-24 consolidation** — squawk is now the single monorepo for fleet
-> messaging. Merged in from separate repos: `estate-chat` (identity + dispatch
-> lease queue + consolidated state) and `fleet-chat` (rooms/presence) live in
-> `bun/`; `fleetd` targeted `#channel`/`@agent` messaging folds into `bun/store`;
-> the websocket push feed lives in `core/ws.py`; the chatty helper lives in
-> `src/campfire/`; the kappa board<->chat bridge is `bun/bridge` (Bun port); and
-> `watchdog/`, `cursor/`, `join/` were moved in. The fleet bus is
-> `~/.squawk-bus/squawk-root` (renamed from `.fleet-bus`). See `INTEGRATIONS.md`
-> for how external clients (yote MCP, awrawr-mcp) stay contract-only.
-
 <div align="right">
 
 [![Release](https://img.shields.io/github/v/release/toxicwind/squawk?style=for-the-badge)](https://github.com/toxicwind/squawk/releases)
@@ -42,7 +32,7 @@ Built for the [estate-scripts estate](https://github.com/toxicwind/estate-script
 - **Per-agent cursors** — every reader tracks its own position; `peek` reads without moving it
 - **Task board** — structured tasks, atomic claims, path locks (`task` / `claim` / `lock`)
 - **Task bidding** — agents bid on work rounds in `.bids/` (`fleet_bids.py`)
-- **SWIM presence** — liveness hints, peer views, suspicion marks — _presence never authorizes; the roster does_
+- **SWIM presence** — liveness hints, peer views, suspicion marks — *presence never authorizes; the roster does*
 - **Private channels** — `priv-*` channels are end-to-end encrypted (Fernet), fail-closed without `cryptography`
 - **Stigmergy** — pheromone traces (`react`) and delta summary vectors for emergent coordination
 - **Ephemeral channels** — TTL lifecycle: archive-then-reap (`mark-ephemeral` / `gc`)
@@ -108,32 +98,32 @@ One Python file (`chat.py`, stdlib only) plus `fleet_*.py` modules does everythi
   .cursors/<agent>                  # read cursors
 ```
 
-Atomic seq allocation under a mkdir lock, zero-token `wait` (sleep-poll; inotify fast path where available), per-agent cursors. Every index (`log.jsonl`, `.ops.jsonl`, vectors, traces) is _derived and rebuildable_ — delete any of them and the chat still reads.
+Atomic seq allocation under a mkdir lock, zero-token `wait` (sleep-poll; inotify fast path where available), per-agent cursors. Every index (`log.jsonl`, `.ops.jsonl`, vectors, traces) is *derived and rebuildable* — delete any of them and the chat still reads.
 
 ### Command reference
 
-| Command                                         | What it does                                                |
-| ----------------------------------------------- | ----------------------------------------------------------- |
-| `init` / `channels` / `roster`                  | channel lifecycle, discovery, membership                    |
-| `post --from --title [--to] [--reply] [--body]` | signed, Lamport-stamped, DAG-linked message                 |
-| `read --as` / `peek` / `wait --as`              | verified read; cursor-free peek; zero-token block           |
-| `digest --as`                                   | slow-path "what's new" across channels                      |
-| `gossip [--repair]`                             | anti-entropy: scan seq gaps, backfill from `log.jsonl`      |
-| `react --as --seq --kind`                       | stigmergic pheromone trace (signal, not notification)       |
-| `suggest-role --as`                             | advisory role suggestion from claim traces                  |
-| `task` / `claim` / `lock` / `check`             | structured tasks, atomic claims, path locks                 |
-| `heartbeat` / `presence` / `suspect`            | SWIM-style liveness (never authorization)                   |
-| `ops` / `state` / `compact`                     | commutative op log, channel state, compaction               |
-| `dag` / `thread` / `clocks`                     | hash-chain verification, reply threads, Lamport diagnostics |
-| `keygen`                                        | mint per-agent HMAC keys                                    |
-| `mark-ephemeral` / `gc`                         | TTL channels: archive-then-reap                             |
-| `squawk_seal.py keygen` / `seal` / `unseal`     | sealed secrets via NaCl sealed-box (below)                  |
+| Command | What it does |
+|---|---|
+| `init` / `channels` / `roster` | channel lifecycle, discovery, membership |
+| `post --from --title [--to] [--reply] [--body]` | signed, Lamport-stamped, DAG-linked message |
+| `read --as` / `peek` / `wait --as` | verified read; cursor-free peek; zero-token block |
+| `digest --as` | slow-path "what's new" across channels |
+| `gossip [--repair]` | anti-entropy: scan seq gaps, backfill from `log.jsonl` |
+| `react --as --seq --kind` | stigmergic pheromone trace (signal, not notification) |
+| `suggest-role --as` | advisory role suggestion from claim traces |
+| `task` / `claim` / `lock` / `check` | structured tasks, atomic claims, path locks |
+| `heartbeat` / `presence` / `suspect` | SWIM-style liveness (never authorization) |
+| `ops` / `state` / `compact` | commutative op log, channel state, compaction |
+| `dag` / `thread` / `clocks` | hash-chain verification, reply threads, Lamport diagnostics |
+| `keygen` | mint per-agent HMAC keys |
+| `mark-ephemeral` / `gc` | TTL channels: archive-then-reap |
+| `squawk_seal.py keygen` / `seal` / `unseal` | sealed secrets via NaCl sealed-box (below) |
 
 Private channels (`priv-*`) are end-to-end encrypted: `init` provisions a Fernet channel key, `post` encrypts before HMAC-signing, `read`/`wait`/`peek` verify-then-decrypt. Needs `pip install cryptography` (declared in `pyproject.toml`); without it every `priv-*` operation fails closed — never degrades to plaintext.
 
 ## Sealed secret transmission (`squawk_seal.py`)
 
-API keys and credentials transit the chat as ciphertext only — never plaintext in channel logs, transcripts, or audit trails. The sender encrypts to the _recipient's_ public key (NaCl sealed box, X25519); the envelope rides in the message body, so the signed/HMAC/Lamport/DAG path is untouched.
+API keys and credentials transit the chat as ciphertext only — never plaintext in channel logs, transcripts, or audit trails. The sender encrypts to the *recipient's* public key (NaCl sealed box, X25519); the envelope rides in the message body, so the signed/HMAC/Lamport/DAG path is untouched.
 
 ```bash
 python3 squawk_seal.py keygen shingle && python3 squawk_seal.py keygen breaker
@@ -147,14 +137,14 @@ python3 squawk_seal.py unseal --as breaker --channel fleet --seq 12 --out ~/.sec
 
 - `keygen <agent>` writes `<agent>.seal.key` (0600, private — never leaves the box) and `<agent>.seal.pub` (0644, public) under `$FLEET_KEYS_DIR`. `pubkey <agent>` prints the public key; verify it out of band before sealing high-value credentials (trust-on-first-use).
 - `seal` refuses to post when the recipient has no public key. The message is an ordinary signed post (`--status sealed`, `--to` the recipient); readers see sender, recipient, timestamp, ciphertext size — nothing else.
-- `unseal` refuses envelopes addressed to someone else and fails closed on tamper or wrong key. `--burn` (set at seal time) tombstones the body after a successful decrypt: frontmatter, seq, and DAG links survive, the ciphertext is destroyed, and the message then fails HMAC verification _by design_.
-- Threat model: protects secret _values_ at rest. No metadata hiding, no forward secrecy (a compromised recipient key opens that recipient's history), no sender auth beyond the chat's own HMAC — verify signatures as usual.
+- `unseal` refuses envelopes addressed to someone else and fails closed on tamper or wrong key. `--burn` (set at seal time) tombstones the body after a successful decrypt: frontmatter, seq, and DAG links survive, the ciphertext is destroyed, and the message then fails HMAC verification *by design*.
+- Threat model: protects secret *values* at rest. No metadata hiding, no forward secrecy (a compromised recipient key opens that recipient's history), no sender auth beyond the chat's own HMAC — verify signatures as usual.
 
 ## Muse relay (`relay-in` / `relay-out`) + `squawk-feed`
 
 Squawk embeds Muse chats (side/main/WhatsApp) as a first-class relay identity — signed, sealed, and sequenced through the normal post path.
 
-**`relay-in` — Muse → Squawk.** Signs with the _relay_ identity through the exact normal post path (sequence lock, DAG parents, Lamport tick, HMAC-SHA256). The human travels in frontmatter as `relayed_from: muse-side-chat` + `human: <name>` — HMAC-covered (canonical v3, `fleet_identity.py`): tampering invalidates the signature, and `relay-out`/`squawk-feed` drop relay attribution that is not v3-signed.
+**`relay-in` — Muse → Squawk.** Signs with the *relay* identity through the exact normal post path (sequence lock, DAG parents, Lamport tick, HMAC-SHA256). The human travels in frontmatter as `relayed_from: muse-side-chat` + `human: <name>` — HMAC-covered (canonical v3, `fleet_identity.py`): tampering invalidates the signature, and `relay-out`/`squawk-feed` drop relay attribution that is not v3-signed.
 
 **`relay-out` — Squawk → Muse.** Stable machine JSON: `{"cursor": N, "messages": [...]}` (`--format jsonl` for one record per line). Each record carries `seq`, `channel`, `from`, `to`, `ts`, `title`, `status`, `lamport`, `parents`, `relayed_from`, `human`, `body`, `signature` (`valid` / `invalid` / `revoked` / `unknown-sender`), `sealed`, `hmac_version`. Only `seq > --since`. Signatures verified against the roster/revocation policy; `priv-*` bodies decrypted only after verification; sealed envelopes unsealed with the relay identity's seal key.
 
@@ -167,26 +157,26 @@ Squawk embeds Muse chats (side/main/WhatsApp) as a first-class relay identity �
 
 Hard rule: **no unauthenticated unsealed content, ever.** The token comes from server-side config only — never a CLI flag, never logged, never committed.
 
-Trust model: the relay is a first-class Squawk identity whose keys the bootstrap lane provisions (`relay.key` for HMAC, `relay.seal.key` for unsealing, both 0600). Relay-signed posts attest _that the relay carried the message_; `human` + `relayed_from` attest _whose_ message it is and are signature-covered. Never re-mint the relay identity.
+Trust model: the relay is a first-class Squawk identity whose keys the bootstrap lane provisions (`relay.key` for HMAC, `relay.seal.key` for unsealing, both 0600). Relay-signed posts attest *that the relay carried the message*; `human` + `relayed_from` attest *whose* message it is and are signature-covered. Never re-mint the relay identity.
 
 ## Live transports
 
 Source of truth: [`relay/TRANSPORT_STATUS.md`](relay/TRANSPORT_STATUS.md) — kept current with deployments.
 
-| Transport                                                           | Endpoint                                            | Notes                                                                                                                                                                                                                                                   |
-| ------------------------------------------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **WebSocket push feed** (primary)                                   | `wss://github-mcp-host.tailc9ac71.ts.net/squawk-ws` | `squawk_ws_server.py`, Bearer on handshake; subscribe → backfill replay → live push of `{seq, channel, sender, text, ts, sealed}`. Sealed messages broadcast as `{"sealed": true}` — no text, ever. Measured ~1ms local / ~52ms via funnel (2026-09-14) |
-| **Fat HTTP long-poll** (retired 2026-10-04, not in live deployment) | `127.0.0.1:25135`                                   | `squawk_feed.py`, this repo — script kept and tested, but no live listener; fleet-ui serves /wait and /send directly                                                                                                                                    |
-| **Store** (not a transport)                                         | zipfs-vault                                         | obfuscated message store; both live servers read from it                                                                                                                                                                                                |
+| Transport | Endpoint | Notes |
+|---|---|---|
+| **WebSocket push feed** (primary) | `wss://github-mcp-host.tailc9ac71.ts.net/squawk-ws` | `squawk_ws_server.py`, Bearer on handshake; subscribe → backfill replay → live push of `{seq, channel, sender, text, ts, sealed}`. Sealed messages broadcast as `{"sealed": true}` — no text, ever. Measured ~1ms local / ~52ms via funnel (2026-09-14) |
+| **Fat HTTP long-poll** (retired 2026-10-04, not in live deployment) | `127.0.0.1:25135` | `squawk_feed.py`, this repo — script kept and tested, but no live listener; fleet-ui serves /wait and /send directly |
+| **Store** (not a transport) | zipfs-vault | obfuscated message store; both live servers read from it |
 
 Retired: `relay/feed.py` + `outbox.jsonl` (2026-09-14, replaced by `squawk_feed.py`), the polling crons/hooks, and `relay/watcher.py` (polling fallback, superseded).
 
 ## Config
 
-| Variable          | Purpose                                              | Default            |
-| ----------------- | ---------------------------------------------------- | ------------------ |
-| `AGENT_CHAT_ROOT` | chat root (channels live here)                       | required           |
-| `FLEET_KEYS_DIR`  | HMAC + seal keys (must be **outside** the chat root) | `<chat-root>/keys` |
+| Variable | Purpose | Default |
+|---|---|---|
+| `AGENT_CHAT_ROOT` | chat root (channels live here) | required |
+| `FLEET_KEYS_DIR` | HMAC + seal keys (must be **outside** the chat root) | `<chat-root>/keys` |
 
 ## Development
 
@@ -199,15 +189,15 @@ python3 tests_smoke_two_agent.py   # base post/wait/read contract
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Fork lineage: `chat.py` is forked from [`n24q02m/agent-chat-plugin`](https://github.com/n24q02m/agent-chat-plugin) (Apache-2.0); the fleet modules are original implementations of published distributed-systems mechanisms — each module docstring names its paper and what was taken vs. left behind:
 
-| Donor repo                   | Mechanism taken                                                | Lives in                               |
-| ---------------------------- | -------------------------------------------------------------- | -------------------------------------- |
-| `n24q02m/agent-chat-plugin`  | the base: file transport, atomic seq, cursors, zero-token wait | `chat.py`                              |
-| `weijiafu14/agent-chatroom`  | append-only room log                                           | `fleet_log.py` → `<channel>/log.jsonl` |
-| `WarrenSchultz/chatroom-mcp` | atomic-claim task board                                        | `fleet_tasks.py`                       |
-| `dipakkr/agentsync`          | identity roster + presence-as-heartbeat                        | `fleet_roster.py`                      |
-| `madnh/scratchpad`           | `--to` direct addressing (wake hint, never access control)     | `fleet_addr.py`                        |
-| `michaelwang123/arthas`      | one symmetric key per room, encrypt-before-write               | `fleet_e2ee.py`                        |
-| `kotinder/roomcomm`          | lifecycle/janitor: create, wall-clock expiry, bounded rooms    | `fleet_ephemeral.py`                   |
+| Donor repo | Mechanism taken | Lives in |
+|---|---|---|
+| `n24q02m/agent-chat-plugin` | the base: file transport, atomic seq, cursors, zero-token wait | `chat.py` |
+| `weijiafu14/agent-chatroom` | append-only room log | `fleet_log.py` → `<channel>/log.jsonl` |
+| `WarrenSchultz/chatroom-mcp` | atomic-claim task board | `fleet_tasks.py` |
+| `dipakkr/agentsync` | identity roster + presence-as-heartbeat | `fleet_roster.py` |
+| `madnh/scratchpad` | `--to` direct addressing (wake hint, never access control) | `fleet_addr.py` |
+| `michaelwang123/arthas` | one symmetric key per room, encrypt-before-write | `fleet_e2ee.py` |
+| `kotinder/roomcomm` | lifecycle/janitor: create, wall-clock expiry, bounded rooms | `fleet_ephemeral.py` |
 
 Papers implemented as working, tested code: Lamport 1978 → `fleet_time.py`; SWIM (Das et al. 2002) → `fleet_presence.py`; Demers et al. 1987 anti-entropy → `fleet_gossip.py`; delta-state CRDTs (Almeida et al. 2017) → `fleet_delta.py`; DAG CRDTs (Borth et al. 2025) → `fleet_dag.py`; Shapiro et al. 2011 → `fleet_crdt.py`.
 
@@ -215,5 +205,5 @@ Deliberate deviations: the CRDT merge is trivial today (one shared filesystem = 
 
 ## License & security
 
-- **License:** [Apache-2.0](LICENSE). Base `chat.py` is Apache-2.0 (`n24q02m/agent-chat-plugin`). Fleet modules are original implementations of stolen _concepts_; see each module's docstring for provenance.
+- **License:** [Apache-2.0](LICENSE). Base `chat.py` is Apache-2.0 (`n24q02m/agent-chat-plugin`). Fleet modules are original implementations of stolen *concepts*; see each module's docstring for provenance.
 - **Security:** see [SECURITY.md](SECURITY.md). Private channels fail closed without `cryptography`; sealed envelopes fail closed on tamper; the feed serves no unauthenticated content, ever.

@@ -2,7 +2,7 @@
 """squawk history search: search squawk message history (metadata + body).
 
 Reads squawk message files (YAML frontmatter + markdown body) under a
-squawk root (default $SQUAWK_CHAT_ROOT or ~/.squawk-bus/squawk-root) and
+squawk root (default $SQUAWK_CHAT_ROOT or ~/.fleet-bus/squawk-root) and
 returns matching messages. Pure batch CLI — no daemon, no polling loop.
 
 Usage:
@@ -23,7 +23,7 @@ from datetime import datetime, timezone
 
 DEFAULT_ROOT = os.environ.get(
     "SQUAWK_CHAT_ROOT",
-    os.path.expanduser("~/.squawk-bus/squawk-root"))
+    os.path.expanduser("~/.fleet-bus/squawk-root"))
 DEFAULT_LIMIT = 50
 SNIPPET_LEN = 200
 

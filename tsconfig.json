@@ -1,15 +1,1 @@
-{
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "jsxImportSource": "preact",
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "skipLibCheck": true,
-    "strict": true,
-    "target": "esnext",
-    "lib": ["esnext"],
-    "types": ["bun"],
-    "allowImportingTsExtensions": true,
-    "allowJs": true
-  }
-}
+{"compilerOptions":{"jsx":"react-jsx","jsxImportSource":"preact","module":"esnext","skipLibCheck":true,"strict":true,"target":"esnext"}}

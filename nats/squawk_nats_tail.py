@@ -46,10 +46,10 @@ from squawk_feed import _Inotify, _MSG_RE  # noqa: E402  (after sys.path.insert 
 import nats  # noqa: E402  (after sys.path.insert for sibling-dir import)
 
 NATS_URL = os.environ.get("SQUAWK_NATS_URL", "nats://127.0.0.1:4222")
-SQUAWK_ROOT = Path(os.environ.get("SQUAWK_ROOT", "/home/toxic/.squawk-bus/squawk-root"))
+SQUAWK_ROOT = Path(os.environ.get("SQUAWK_ROOT", "/home/toxic/.fleet-bus/squawk-root"))
 CHANNELS = [c.strip() for c in os.environ.get("SQUAWK_NATS_CHANNELS", "fleet,leads").split(",") if c.strip()]
 AGENT = os.environ.get("SQUAWK_NATS_AGENT", "taps")
-TOKEN_FILE_DEFAULT = str(Path.home() / ".squawk-bus" / "squawk-relay" / "feed-token")
+TOKEN_FILE_DEFAULT = str(Path.home() / ".fleet-bus" / "squawk-relay" / "feed-token")
 STATE_DIR = Path(os.environ.get("SQUAWK_NATS_STATE_DIR",
                                 "/home/toxic/.local/state/squawk-nats-tail"))
 CURSOR_FILE = STATE_DIR / "cursor.json"

@@ -47,10 +47,10 @@ sys.path.insert(0, str(BIN))
 AGENT_DIR = BIN.parent
 
 SQUAWK_ROOT = Path(os.environ.get("ORACLE_SQUAWK_ROOT",
-                                  "/home/toxic/.squawk-bus/squawk-root"))
+                                  "/home/toxic/.fleet-bus/squawk-root"))
 CHANNELS = [c for c in os.environ.get("ORACLE_CHAT_CHANNELS", "fleet,leads").split(",") if c]
 BID_MARKET = Path(os.environ.get("ORACLE_CHANNEL",
-                                 "/home/toxic/.squawk-bus/squawk-root/bid-market"))
+                                 "/home/toxic/.fleet-bus/squawk-root/bid-market"))
 ORACLE_CORE = os.environ.get("ORACLE_CORE_URL", "http://127.0.0.1:25151")
 LEDGER = Path(os.environ.get("ORACLE_LEDGER",
                              str(AGENT_DIR / "ledger" / "ledger.jsonl")))

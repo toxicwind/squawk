@@ -33,7 +33,7 @@ from datetime import datetime
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import race as R  # proven candidate machinery (tfidf, markov, episodes)
 
-ROOT = os.environ.get('SQUAWK_ROOT', '/home/toxic/.squawk-bus/squawk-root')
+ROOT = os.environ.get('SQUAWK_ROOT', '/home/toxic/.fleet-bus/squawk-root')
 CACHE_DIR = os.environ.get('SQUAWK_PAGE_CACHE', '/tmp/squawk_page')
 
 

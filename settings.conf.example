@@ -1,5 +1,5 @@
 # squawk-feed settings.conf - TRACKED EXAMPLE (estate-scripts-projects).
-# Runtime copy: ~/.squawk-bus/squawk-relay/settings.conf (mode 0600, NOT tracked).
+# Runtime copy: ~/.fleet-bus/squawk-relay/settings.conf (mode 0600, NOT tracked).
 # Copy this file there to start, then add keys as needed.
 #
 # Format: KEY=VALUE lines. Blank lines and lines starting with # are ignored.
@@ -11,7 +11,7 @@
 # --- Token (usually NOT needed) -------------------------------------------
 # The server configures its bearer token by itself, in this order:
 #   1. $SQUAWK_FEED_TOKEN env var
-#   2. token file (~/.squawk-bus/squawk-relay/feed-token,
+#   2. token file (~/.fleet-bus/squawk-relay/feed-token,
 #      or --token-file / $SQUAWK_FEED_TOKEN_FILE)
 #   3. secure auto-generate (secrets.token_urlsafe(32)), persisted 0600
 # Only set SQUAWK_FEED_TOKEN here for a fixed token; env var still wins.

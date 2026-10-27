@@ -5,7 +5,7 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 export const FLEET_DIRS = [
-  process.env.SQUAWK_ROOT ?? "/home/toxic/.squawk-bus/squawk-root",
+  process.env.SQUAWK_ROOT ?? "/home/toxic/.fleet-bus/squawk-root",
   "/home/toxic/shingle/squawk-root",
 ];
 

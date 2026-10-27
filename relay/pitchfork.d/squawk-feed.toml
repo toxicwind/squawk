@@ -3,8 +3,8 @@
 # Restored 2026-10-19 (Pry): the [daemons.squawk-feed] block was lost from the
 # composed estate/pitchfork.toml (same loss as squawk-ws); the service survived
 # as an unsupervised orphan process on :25135. feed.py is env-configured with
-# estate-correct defaults (chat root ~/.squawk-bus/squawk-root, relay state
-# ~/.squawk-bus/squawk-relay), so the block needs no env.
+# estate-correct defaults (chat root ~/.fleet-bus/squawk-root, relay state
+# ~/.fleet-bus/squawk-relay), so the block needs no env.
 
 [daemons.squawk-feed]
 port = 25135

@@ -43,7 +43,7 @@ def _has_no_corral_marker(text):
 
 # Explicit MCP-apply override (2026-10-19): any of these substrings forces
 # the DIRECT route with mcp_apply=True -- the winner applies anchored
-# edits DIRECTLY via Thresher MCP tools. This is an override; code-fix
+# edits DIRECTLY via Gatehouse MCP tools. This is an override; code-fix
 # tasks get MCP apply by default in bidder.py (_wants_mcp_apply).
 MCP_APPLY_MARKERS = ("route:mcp", "[mcp-apply]", "!mcp")
 
@@ -115,7 +115,7 @@ def triage(request, ledger_path):
         route, reason = (
             "DIRECT",
             "explicit mcp-apply marker: winner applies anchored edits "
-            "DIRECTLY via Thresher MCP tools",
+            "DIRECTLY via Gatehouse MCP tools",
         )
     elif text.startswith("!urgent"):
         route, reason = "DIRECT", "urgent flag"

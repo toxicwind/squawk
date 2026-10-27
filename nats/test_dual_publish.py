@@ -24,8 +24,8 @@ from pathlib import Path
 VENV_PY = "/home/toxic/.local/share/squawk-nats/venv/bin/python"
 NATS_URL = os.environ.get("SQUAWK_NATS_URL", "nats://127.0.0.1:4222")
 TOKEN_FILE = os.environ.get("SQUAWK_FEED_TOKEN_FILE",
-                             "/home/toxic/.squawk-bus/squawk-relay/feed-token")
-SQUAWK_ROOT = Path("/home/toxic/.squawk-bus/squawk-root")
+                             "/home/toxic/.fleet-bus/squawk-relay/feed-token")
+SQUAWK_ROOT = Path("/home/toxic/.fleet-bus/squawk-root")
 CHANNEL = "fleet"
 
 PASS, FAIL = "PASS", "FAIL"
@@ -46,7 +46,7 @@ _HERE = Path(__file__).resolve().parent
 # yote-native chat.py wrapper: env override, then repo-relative, then legacy path
 SQUAWK_BIN = os.environ.get("SQUAWK_BIN") or str(_HERE.parent / "bin" / "squawk")
 if not Path(SQUAWK_BIN).exists():
-    SQUAWK_BIN = "/home/toxic/.squawk-bus/bin/squawk"
+    SQUAWK_BIN = "/home/toxic/.fleet-bus/bin/squawk"
 
 def squawk_send(text):
     """Publish to the file sink directly: <seq>-<sender>-<slug>.md with

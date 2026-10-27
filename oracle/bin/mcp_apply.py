@@ -2,15 +2,15 @@
 """First-class MCP apply for the oracle market (2026-10-19, osprey).
 
 On oracle approval, code changes are applied DIRECTLY to the repo through
-the yote Thresher MCP proxy (:25127) -- anchored read -> edit -> verify.
+the yote Gatehouse MCP proxy (:25127) -- anchored read -> edit -> verify.
 Every MCP tool call is recorded as task evidence. This is the market's
 native apply mechanism, not an opt-in lane.
 
 Why this exists (Chris 2026-10-19): the market generated change text but
 had zero MCP client wiring -- `ffs grep mcp` across oracle/bin returned
-nothing. Winners now apply through Thresher by default.
+nothing. Winners now apply through Gatehouse by default.
 
-Failure degrades VISIBLY, never silently: if Thresher is unreachable or
+Failure degrades VISIBLY, never silently: if Gatehouse is unreachable or
 a tool call errors, the same anchored edits are applied with local file
 IO and the evidence records mcp_unavailable + local fallback. A task is
 never failed by the apply transport alone when the edits themselves are
@@ -22,8 +22,8 @@ import urllib.request
 from pathlib import Path
 
 # ---- open configuration (not buried constants) ----
-THRESHER_MCP_URL = "http://127.0.0.1:25127/mcp"
-THRESHER_RPC_CUTOFF_S = 60
+GATEHOUSE_MCP_URL = "http://127.0.0.1:25127/mcp"
+GATEHOUSE_RPC_CUTOFF_S = 60
 # Edits are sandboxed under these roots. Absolute paths only; anything
 # escaping via .. is rejected before any tool call.
 ALLOWED_ROOTS = ("/home/toxic/estate",)
@@ -33,26 +33,26 @@ MAX_EDITS_PER_TASK = 25
 
 
 class McpError(Exception):
-    """Thresher unreachable, tool errored, or response unparseable."""
+    """Gatehouse unreachable, tool errored, or response unparseable."""
 
 
 def _unwrap(res):
-    """Pull the text payload out of a Thresher tools/call response."""
+    """Pull the text payload out of a Gatehouse tools/call response."""
     try:
         return res["result"]["content"][0]["text"]
     except (KeyError, IndexError, TypeError):
-        raise McpError("unexpected thresher response: %s"
+        raise McpError("unexpected gatehouse response: %s"
                        % json.dumps(res)[:300])
 
 
-class ThresherMCP:
-    """Minimal Thresher JSON-RPC client (yote-local, no credentials --
+class GatehouseMCP:
+    """Minimal Gatehouse JSON-RPC client (yote-local, no credentials --
     the proxy trusts localhost; the market runs on yote)."""
 
     def __init__(self, base_url=None):
         # Resolve at call time, not def time, so tests/ops can repoint
-        # THRESHER_MCP_URL without reimporting.
-        self.base_url = base_url or THRESHER_MCP_URL
+        # GATEHOUSE_MCP_URL without reimporting.
+        self.base_url = base_url or GATEHOUSE_MCP_URL
         self.sid = None
         self._cid = 0
 
@@ -68,19 +68,19 @@ class ThresherMCP:
             self.base_url, data=json.dumps(body).encode(), headers=headers)
         try:
             with urllib.request.urlopen(
-                    req, timeout=THRESHER_RPC_CUTOFF_S) as r:
+                    req, timeout=GATEHOUSE_RPC_CUTOFF_S) as r:
                 if not self.sid:
                     self.sid = r.headers.get("Mcp-Session-Id")
                 raw = r.read().decode("utf-8", "replace")
         except Exception as e:  # noqa: BLE001 -- transport failure is data
-            raise McpError("thresher rpc failed: %s" % e)
+            raise McpError("gatehouse rpc failed: %s" % e)
         for line in raw.splitlines():
             line = line.strip()
             if line.startswith("data:"):
                 line = line[5:].strip()
             if line.startswith("{"):
                 return json.loads(line)
-        raise McpError("thresher rpc: no JSON in response")
+        raise McpError("gatehouse rpc: no JSON in response")
 
     def session(self):
         if self.sid:
@@ -90,7 +90,7 @@ class ThresherMCP:
                    "clientInfo": {"name": "oracle-market-mcp-apply",
                                   "version": "1.0"}})
         if not self.sid:
-            raise McpError("thresher returned no session id")
+            raise McpError("gatehouse returned no session id")
         return self.sid
 
     def _intent(self, op):
@@ -167,13 +167,13 @@ def _local_apply(change_set, evidence):
 
 
 def apply_change_set(change_set, evidence):
-    """Apply anchored edits via Thresher MCP tools.
+    """Apply anchored edits via Gatehouse MCP tools.
 
     change_set: [{"path": abs repo path, "old": exact anchor text,
                   "new": replacement text}, ...].
     evidence: list this function appends one record per edit and per MCP
               call to (tool-call evidence for the task record).
-    Returns (n_applied, failures). On any Thresher failure the whole set
+    Returns (n_applied, failures). On any Gatehouse failure the whole set
     falls back to local apply -- recorded visibly in evidence, never
     silent.
     """
@@ -181,7 +181,7 @@ def apply_change_set(change_set, evidence):
         evidence.append({"mcp_apply": "empty change set, nothing to apply"})
         return 0, []
     try:
-        gh = ThresherMCP()
+        gh = GatehouseMCP()
         gh.session()
     except McpError as e:  # noqa: BLE001
         evidence.append({"mcp": "unavailable", "error": str(e)[:200],
