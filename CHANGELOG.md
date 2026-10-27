@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.11.0 (2026-10-27)
+
+### Features
+
+- **mcp**: Expose send_targeted/read_targeted DM tools
+  ([`b7870dd`](https://github.com/toxicwind/squawk/commit/b7870ddcff7a931199aa6cbd941b4fcecd6d3b5c))
+
+
 ## v0.10.3 (2026-10-27)
 
 
