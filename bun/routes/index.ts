@@ -5,7 +5,12 @@
 import type { Store } from "../store/index.ts";
 import type { Dispatch } from "../dispatch/index.ts";
 import { mcpCallTool, MCP_TOOLS } from "../mcp/index.ts";
-import { handleAdd, handleDone, handleList } from "../todo/index.ts";
+import {
+  handleAdd,
+  handleDone,
+  handleList,
+  handleUpdate,
+} from "../todo/index.ts";
 
 export interface RouteCtx {
   store: Store;
@@ -202,8 +207,13 @@ export async function handleFetch(
     // --- fleet todo board (todo/*.md SSOT + TODO.md index) ---
     if (path === "/v1/todo" && req.method === "GET")
       return json(handleList(ctx.todo));
-    if (path === "/v1/todo" && req.method === "POST")
+    if (path === "/v1/todo" && req.method === "POST") {
+      // distinguish add (slug+author+content) from update (file+status)
+      if (body.slug && body.author && body.content)
+        return json(handleAdd(ctx.todo, body));
+      if (body.file) return json(handleUpdate(ctx.todo, body as any));
       return json(handleAdd(ctx.todo, body));
+    }
     {
       const tm = path.match(/^\/v1\/todo\/([^/]+)\/done$/);
       if (tm && req.method === "POST")

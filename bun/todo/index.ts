@@ -28,7 +28,9 @@ const CREATED_RE = /^[-*]?\s*created:\s*(.+)$/im;
 const URGENT_RE = /most urgent|urgent/i;
 
 export function parseTodo(file: string, raw: string): TodoItem {
-  const title = (raw.match(/^#\s*TODO\s*—?\s*(.+)$/im)?.[1] ?? file.replace(/\.md$/, "")).trim();
+  const title = (
+    raw.match(/^#\s*TODO\s*—?\s*(.+)$/im)?.[1] ?? file.replace(/\.md$/, "")
+  ).trim();
   const status = (raw.match(STATUS_RE)?.[1] ?? "unknown").trim();
   const author = (raw.match(AUTHOR_RE)?.[1] ?? "unknown").trim();
   const created = (raw.match(CREATED_RE)?.[1] ?? "").trim();
@@ -38,7 +40,8 @@ export function parseTodo(file: string, raw: string): TodoItem {
     author: author.slice(0, 60),
     status: status.slice(0, 80),
     created,
-    urgency: URGENT_RE.test(status) || URGENT_RE.test(title) ? "urgent" : "normal",
+    urgency:
+      URGENT_RE.test(status) || URGENT_RE.test(title) ? "urgent" : "normal",
   };
 }
 
@@ -55,7 +58,13 @@ export function listTodos(deps: TodoDeps): TodoItem[] {
   }
   // Urgent first, then NOT STARTED before partial before done, then newest.
   const rank = (s: string) =>
-    /not started/i.test(s) ? 0 : /in progress|partial/i.test(s) ? 1 : /done|complete/i.test(s) ? 2 : 1;
+    /not started/i.test(s)
+      ? 0
+      : /in progress|partial/i.test(s)
+        ? 1
+        : /done|complete/i.test(s)
+          ? 2
+          : 1;
   return items.sort(
     (a, b) =>
       Number(b.urgency === "urgent") - Number(a.urgency === "urgent") ||
@@ -93,10 +102,18 @@ export function handleList(deps: TodoDeps) {
   return { ok: true, todos: listTodos(deps) };
 }
 
-export function handleAdd(deps: TodoDeps, body: { slug: string; author: string; content: string }) {
+export function handleAdd(
+  deps: TodoDeps,
+  body: { slug: string; author: string; content: string },
+) {
   const ts = new Date().toISOString().replace(/[-:]/g, "").replace(/\..+/, "Z");
-  const authorSlug = (body.author || "unknown").toLowerCase().replace(/[^a-z0-9]+/g, "-");
-  const file = `${ts}-${authorSlug}-${(body.slug || "untitled").toLowerCase().replace(/[^a-z0-9-]+/g, "-").slice(0, 60)}.md`;
+  const authorSlug = (body.author || "unknown")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-");
+  const file = `${ts}-${authorSlug}-${(body.slug || "untitled")
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, "-")
+    .slice(0, 60)}.md`;
   writeFileSync(join(deps.todoDir, file), body.content);
   regenerateIndex(deps);
   return { ok: true, file };
@@ -107,10 +124,37 @@ export function handleDone(deps: TodoDeps, file: string) {
   if (!existsSync(p)) return { ok: false, error: "no such todo" };
   const raw = readFileSync(p, "utf8");
   if (STATUS_RE.test(raw)) {
-    writeFileSync(p, raw.replace(STATUS_RE, (m) => m.replace(/:\s*.*$/, ": DONE (marked by daemon)")));
+    writeFileSync(
+      p,
+      raw.replace(STATUS_RE, (m) =>
+        m.replace(/:\s*.*$/, ": DONE (marked by daemon)"),
+      ),
+    );
   } else {
     writeFileSync(p, `${raw}\n- status: DONE (marked by daemon)\n`);
   }
   regenerateIndex(deps);
   return { ok: true, file };
+}
+
+export function handleUpdate(
+  deps: TodoDeps,
+  body: { file: string; status?: string; title?: string },
+) {
+  const p = join(deps.todoDir, body.file);
+  if (!existsSync(p)) return { ok: false, error: "no such todo" };
+  let raw = readFileSync(p, "utf8");
+  if (body.status && STATUS_RE.test(raw)) {
+    raw = raw.replace(STATUS_RE, (m) =>
+      m.replace(/:\s*.*$/, `: ${body.status}`),
+    );
+  } else if (body.status) {
+    raw = `${raw}\n- status: ${body.status}\n`;
+  }
+  if (body.title && /^#\s*TODO\s*—?\s*/.test(raw)) {
+    raw = raw.replace(/^#\s*TODO\s*—?\s*.*/m, `# TODO — ${body.title}`);
+  }
+  writeFileSync(p, raw);
+  regenerateIndex(deps);
+  return { ok: true, file: body.file };
 }
