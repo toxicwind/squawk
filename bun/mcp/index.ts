@@ -60,6 +60,35 @@ export const MCP_TOOLS: McpTool[] = [
     },
   },
   {
+    name: "send_targeted",
+    description:
+      "Send a DIRECT message to one agent (@name) or channel (#name). Pushes live over WS topic target:@name — recipients subscribed to their own topic get it instantly, no polling.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        from: { type: "string" },
+        to: { type: "string" },
+        body: { type: "string" },
+      },
+      required: ["from", "to", "body"],
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "read_targeted",
+    description: "Read DMs addressed to @you or a #channel since a seq.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        target: { type: "string" },
+        since: { type: "number" },
+        limit: { type: "number" },
+      },
+      required: ["target"],
+      additionalProperties: false,
+    },
+  },
+  {
     name: "read_messages",
     description: "Replay room history.",
     inputSchema: {
@@ -115,6 +144,18 @@ export function mcpCallTool(
       return store.heartbeat(args || {});
     case "post_message":
       return store.postMessage(String(args?.room_id || "fleet"), args || {});
+    case "send_targeted":
+      return store.sendTargeted({
+        from: String(args?.from || ""),
+        to: String(args?.to || ""),
+        body: String(args?.body || ""),
+      });
+    case "read_targeted":
+      return store.readTargeted({
+        target: String(args?.target || ""),
+        since: Number(args?.since || 0),
+        limit: Number(args?.limit || 50),
+      });
     case "read_messages":
       return store.readMessages(
         String(args?.room_id || "fleet"),
