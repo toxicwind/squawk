@@ -18,3 +18,5 @@
 6. c2 :25151 live turn through rig oracle persona (register agents/oracle.toml first)
 7. wezterm AX + screenshot proof persisted (computer helpers)
 8. dossier section + AGENTS row + push all repos
+
+- KITE LANE CLOSED (2026-10-28): hatch peer dead (Meta edge capture); kite lib protocol-proven 13/13, integration = lib-only until real peer. Probe: /home/toxic/tmp/kite-live-probe.ts
