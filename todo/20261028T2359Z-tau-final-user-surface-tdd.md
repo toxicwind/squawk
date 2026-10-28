@@ -17,3 +17,7 @@ not bun test, not curl. Run the kappa-tui-handoff pattern:
 
 ## AMENDED (architect): tau included
 Same gate for TAU — real tau TUI in tmux under wezterm (auto-approve handoff), loading cyoa-router/provenance live, AX/screenshot proof persisted. BOTH tau AND kappa must pass user-surface proof before any of this arc counts as shipped.
+
+
+## ORACLE DOCTRINE (architect): cross-ref + live .db watching
+Tests must CROSS-REFERENCE the live .db as oracle while the TUI runs: kappa-main.db (session/message tables via sqlite3 json_extract) + ~/.tau/sessions JSONL — assert the quiz/provenance turns appear as REAL rows during/after the wezterm/tmux run. Screen text alone = unreliable narrator; the .db row IS the proof. Persist FULL query output to file, read back verbatim (anomaly #46 protocol).
