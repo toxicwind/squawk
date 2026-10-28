@@ -1,6 +1,6 @@
 # FLEET TODO — INDEX (auto-generated; edit the linked files, not this)
 
-Updated: 2026-10-28T16:29:38.469Z
+Updated: 2026-10-28T22:50:56.875Z
 
 | Urgency | Status | Author | Todo | File |
 |---|---|---|---|---|
@@ -25,15 +25,42 @@ Updated: 2026-10-28T16:29:38.469Z
 |  | NOT STARTED | tau (2026-10-28 goal mirror) | Tau swarm 10-model set (NO freeinference until global concurrency queue works; use roundup/benchlink priors; one-model-f | [20261028T023520Z-tau-goal-tau-swarm.md](20261028T023520Z-tau-goal-tau-swarm.md) |
 |  | NOT STARTED | tau (design per architect 2026-10-28) | Yote Telegram-as-a-Service (TaaS) + botfather autonomy | [20261028T023659Z-tau-taas-design.md](20261028T023659Z-tau-taas-design.md) |
 |  | NOT STARTED | tau (session 2026-10-28, awrawr-pc) | roundup: tau + geode integrated and used (freeinference → measured-NVIDIA swap) | [20261028T045000Z-tau-roundup-tau-geode-integration.md](20261028T045000Z-tau-roundup-tau-geode-integration.md) |
+|  | NOT STARTED | tau (2026-10-28 retrospective) | post-retro follow-ups: pitchfork ref repair session (tau, 2026-10-28) | [20261028T1700Z-tau-pitchfork-ref-repair-followups.md](20261028T1700Z-tau-pitchfork-ref-repair-followups.md) |
+|  | NOT STARTED | tau (session 2026-10-28) | backup-forward audit + 195G cleanup (tau, 2026-10-28) | [20261028T2240Z-tau-backup-forward-audit.md](20261028T2240Z-tau-backup-forward-audit.md) |
 |  | NOT STARTED (research DONE, decision MADE) | unknown | fork imagine-server -> olympus/products/eidolon (real image gen) | [20261027T1916Z-eidolon-imagine-server-imagegen-fork.md](20261027T1916Z-eidolon-imagine-server-imagegen-fork.md) |
 |  | NOT STARTED | tau (session 2026-10-27, awrawr-pc) | tauvisor: project scope replaces user scope + default watchdog.yml (tau-specific) | [20261028T005841Z-tau-tau-tauvisor-project-scope.md](20261028T005841Z-tau-tau-tauvisor-project-scope.md) |
 |  | NOT STARTED | tau (session 2026-10-27, awrawr-pc) | Firefox CDP enable on Pixel; saved as own repo inside android-fleet monorepo | [20261028T005841Z-tau-tau-firefox-cdp-android-fleet.md](20261028T005841Z-tau-tau-firefox-cdp-android-fleet.md) |
+|  | NOT STARTED (verification follow-up) | tau | 20261028T2230Z-tau-estate-single-truth-verification | [20261028T2230Z-tau-estate-single-truth-verification.md](20261028T2230Z-tau-estate-single-truth-verification.md) |
+|  | NOT STARTED | tau (architect directive 2026-10-28) | EAP repair lane: Flotilla (Pixel browser) + gcloud combo | [20261029T0000Z-tau-eap-repair-floatilla-gcloud.md](20261029T0000Z-tau-eap-repair-floatilla-gcloud.md) |
+|  | NOT STARTED | tau (kryptos/kryptos-quota session) | status poller + 429 attribution (tau 2026-10-28) | [20261029T0015Z-tau-status-poller-429-attribution.md](20261029T0015Z-tau-status-poller-429-attribution.md) |
+|  | NOT STARTED | tau (2026-10-29) | skills-hub first-class: tau+kappa plugin integration | [20261029T0130Z-tau-skills-hub-firstclass.md](20261029T0130Z-tau-skills-hub-firstclass.md) |
+|  | NOT STARTED | tau 2026-10-28 | FINAL acceptance gate: user-surface TDD via real kappa (wezterm+tmux) | [20261028T2359Z-tau-final-user-surface-tdd.md](20261028T2359Z-tau-final-user-surface-tdd.md) |
 |  | IN PROGRESS | tau (2026-10-28 goal mirror) | IRC awareness: stand up ergo IRCd :25241 + wire rig presence (IN PROGRESS - ergo downloaded, config listening, daemon re | [20261028T023520Z-tau-goal-irc-awareness.md](20261028T023520Z-tau-goal-irc-awareness.md) |
 |  | IN PROGRESS | tau (session 2026-10-27, awrawr-pc) | CONNRESET socket-closed investigation in tau session log; enable fetch verbose | [20261028T005841Z-tau-tau-connreset-investigation.md](20261028T005841Z-tau-tau-connreset-investigation.md) |
 |  | unknown | unknown | 2026-10-27T19-17_kappa-awrawr-pc_estate-coyote-telegram-zuzmod-audit | [2026-10-27T19-17_kappa-awrawr-pc_estate-coyote-telegram-zuzmod-audit.md](2026-10-27T19-17_kappa-awrawr-pc_estate-coyote-telegram-zuzmod-audit.md) |
 |  | unknown | unknown | 20261027-tau-a2a-calibrate-worklog-7f3k | [20261027-tau-a2a-calibrate-worklog-7f3k.md](20261027-tau-a2a-calibrate-worklog-7f3k.md) |
 |  | IN PROGRESS (fork + provider DONE; tiles + dashboard + loop wiring next) | tau (session 2026-10-28, awrawr-pc) | sprite program: living AI-Harvest-Moon citizens (recursive) | [20261028T0215Z-tau-sprite-program.md](20261028T0215Z-tau-sprite-program.md) |
 |  | IN PROGRESS | tau (session 2026-10-28, awrawr-pc) | EMERGENT ENDLESS TASKING (goal-mode maximal board, verbose) | [20261028T0240Z-tau-goal-endless-tasking.md](20261028T0240Z-tau-goal-endless-tasking.md) |
+|  | unknown | unknown | 20261028T1930Z-tau-wire-permanence-extension | [20261028T1930Z-tau-wire-permanence-extension.md](20261028T1930Z-tau-wire-permanence-extension.md) |
+|  | unknown | unknown | 20261028T1930Z-tau-greenblue-mimetite-rollout | [20261028T1930Z-tau-greenblue-mimetite-rollout.md](20261028T1930Z-tau-greenblue-mimetite-rollout.md) |
+|  | unknown | unknown | 20261028T1930Z-tau-tailrec-specimens-standing | [20261028T1930Z-tau-tailrec-specimens-standing.md](20261028T1930Z-tau-tailrec-specimens-standing.md) |
+|  | unknown | unknown | 20261028T1930Z-tau-pcap-swarm-audit-kappa | [20261028T1930Z-tau-pcap-swarm-audit-kappa.md](20261028T1930Z-tau-pcap-swarm-audit-kappa.md) |
+|  | unknown | unknown | 20261028T1930Z-tau-swarm10-followups | [20261028T1930Z-tau-swarm10-followups.md](20261028T1930Z-tau-swarm10-followups.md) |
+|  | unknown | unknown | 20261028T1940Z-tau-advisor-routing-single-lane | [20261028T1940Z-tau-advisor-routing-single-lane.md](20261028T1940Z-tau-advisor-routing-single-lane.md) |
+|  | unknown | unknown | 20261028T1942Z-kappa-goal-tool-locked-while-active | [20261028T1942Z-kappa-goal-tool-locked-while-active.md](20261028T1942Z-kappa-goal-tool-locked-while-active.md) |
+|  | unknown | unknown | 20261028T1943Z-kappa-stuck-curb-blocks-all-tools | [20261028T1943Z-kappa-stuck-curb-blocks-all-tools.md](20261028T1943Z-kappa-stuck-curb-blocks-all-tools.md) |
+|  | unknown | unknown | 20261028T1944Z-kappa-mcp-filesystem-search-timeout | [20261028T1944Z-kappa-mcp-filesystem-search-timeout.md](20261028T1944Z-kappa-mcp-filesystem-search-timeout.md) |
+|  | unknown | unknown | 20261028T2005Z-kappa-qwen-gaslighting-malachite-receipt | [20261028T2005Z-kappa-qwen-gaslighting-malachite-receipt.md](20261028T2005Z-kappa-qwen-gaslighting-malachite-receipt.md) |
+|  | unknown | unknown | 20261028T2008Z-freeinference-global-concurrency-queue | [20261028T2008Z-freeinference-global-concurrency-queue.md](20261028T2008Z-freeinference-global-concurrency-queue.md) |
+|  | unknown | unknown | 20261028T2012Z-kappa-startup-stall-telemetry-dns | [20261028T2012Z-kappa-startup-stall-telemetry-dns.md](20261028T2012Z-kappa-startup-stall-telemetry-dns.md) |
+|  | unknown | unknown | 20261028T2015Z-tau-kappa-dynamic-reasoning-token-redactor | [20261028T2015Z-tau-kappa-dynamic-reasoning-token-redactor.md](20261028T2015Z-tau-kappa-dynamic-reasoning-token-redactor.md) |
+|  | IN PROGRESS (tau executing now) | tau 2026-10-28T23:25Z | full session parquet export for ALL agents (tau + kappa + rig) | [20261028T2325Z-tau-session-parquet-export.md](20261028T2325Z-tau-session-parquet-export.md) |
+|  | unknown | unknown | 20261029T0005Z-tau-max-gate-db-oracle-c2 | [20261029T0005Z-tau-max-gate-db-oracle-c2.md](20261029T0005Z-tau-max-gate-db-oracle-c2.md) |
+|  | unknown | unknown | 20261028T2250Z-tau-kite-pcap-bridge-extractor | [20261028T2250Z-tau-kite-pcap-bridge-extractor.md](20261028T2250Z-tau-kite-pcap-bridge-extractor.md) |
+|  | unknown | unknown | 20261028T2250Z-tau-kite-chaos-api | [20261028T2250Z-tau-kite-chaos-api.md](20261028T2250Z-tau-kite-chaos-api.md) |
+|  | unknown | unknown | 20261028T2250Z-tau-kite-race-api | [20261028T2250Z-tau-kite-race-api.md](20261028T2250Z-tau-kite-race-api.md) |
+|  | unknown | unknown | 20261028T2250Z-tau-kite-soul-api | [20261028T2250Z-tau-kite-soul-api.md](20261028T2250Z-tau-kite-soul-api.md) |
+|  | unknown | unknown | 20261028T2250Z-tau-kite-a2a-api | [20261028T2250Z-tau-kite-a2a-api.md](20261028T2250Z-tau-kite-a2a-api.md) |
 |  | DONE (by daemon, 2026-10-28T16:29:38.469Z) | tau (2026-10-28 goal mirror) | Yote maximal fix: telegram pipeline + botfather AUTONOMOUS creation + yote joins estate chat | [20261028T023520Z-tau-goal-yote-telegram.md](20261028T023520Z-tau-goal-yote-telegram.md) |
 |  | DONE | tau (architect directive 2026-10-28) | Phone Auth SSOT: Bitwarden, Authy & Headless Phone Control | [20261028T120500Z-tau-phone-auth-headless-keys.md](20261028T120500Z-tau-phone-auth-headless-keys.md) |
 |  | DONE (marked by daemon) | kappa (ses_e815d2c0fffeqbvL2TJ11k9uX9, glm-5.3-flash) | freeinference queue contention: dedicated entrypoint + auto fallback (geode/rhodo) | [20261027T1939Z-freeinference-queue-entrypoint-auto-fallback.md](20261027T1939Z-freeinference-queue-entrypoint-auto-fallback.md) |
@@ -44,6 +71,9 @@ Updated: 2026-10-28T16:29:38.469Z
 |  | DONE (verified, committed) | tau | Kappa parity: nvidia nemotron already in kappa.jsonc catalog (DONE by catalog regen) | [20261028T030843Z-tau-kappa-parity--nvidia-nemotron-already-in-kappa-jso.md](20261028T030843Z-tau-kappa-parity--nvidia-nemotron-already-in-kappa-jso.md) |
 |  | DONE (verified, committed) | tau | Session synthesis: pens/ergasterion/docs/session-synthesis-20261028.md (DONE, pushed 6ff25f8) | [20261028T030843Z-tau-session-synthesis--pens-ergasterion-docs-session-s.md](20261028T030843Z-tau-session-synthesis--pens-ergasterion-docs-session-s.md) |
 |  | DONE (verified, committed) | tau | Tau swarm: modelRoles -> nemotron-3-ultra/super (DONE, committed bd371f9120) | [20261028T030843Z-tau-tau-swarm--modelroles----nemotron-3-ultra-super.md](20261028T030843Z-tau-tau-swarm--modelroles----nemotron-3-ultra-super.md) |
+|  | DONE (by daemon, 2026-10-28T22:50:56.861Z) | unknown | 20261028T2250Z-tau-kite-toolbus-noise-responder | [20261028T2250Z-tau-kite-toolbus-noise-responder.md](20261028T2250Z-tau-kite-toolbus-noise-responder.md) |
+|  | DONE (by daemon, 2026-10-28T22:50:56.868Z) | unknown | 20261028T2250Z-tau-kite-interop-vector-api | [20261028T2250Z-tau-kite-interop-vector-api.md](20261028T2250Z-tau-kite-interop-vector-api.md) |
+|  | DONE (by daemon, 2026-10-28T22:50:56.874Z) | unknown | 20261028T2250Z-tau-kite-raw-webfetch-tool | [20261028T2250Z-tau-kite-raw-webfetch-tool.md](20261028T2250Z-tau-kite-raw-webfetch-tool.md) |
 |  | BLOCKED (user): Google account action required | tau (2026-10-28 goal mirror) | EAP billing: prepay or free-tier (USER-BLOCKED) | [20261028T023520Z-tau-goal-eap-billing.md](20261028T023520Z-tau-goal-eap-billing.md) |
 |  | BLOCKED (tau, 2026-10-28T00:58:41.081Z): Google prepay exhausted; architect must | tau (session 2026-10-27, awrawr-pc) | EAP gemini prepay unblock (project gen-lang-client-0111199472) | [20261028T005841Z-tau-tau-eap-gemini-unblock.md](20261028T005841Z-tau-tau-eap-gemini-unblock.md) |
 
