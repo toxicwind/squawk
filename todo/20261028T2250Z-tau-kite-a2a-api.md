@@ -6,3 +6,9 @@ expose src/a2a.ts agent-to-agent envelope as toolbus tool — fleet A2A over Noi
 - TDD: bun test in pens/hatch-kite-cli/bun, byte-exact where protocol
 - Docs: API.md forward-audit required
 - Source: new max kite-cli goal 2026-10-28 (architect: >=8 cutting-edge features, tested with real work)
+
+- status: DONE (by daemon, 2026-10-28T23:36:07.282Z)
+
+## Done
+- marked-by: daemon
+- marked-at: 2026-10-28T23:36:07.282Z

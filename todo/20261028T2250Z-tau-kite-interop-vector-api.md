@@ -7,8 +7,20 @@ fixed-key (bytes(range(1,33))) XX vector endpoint: msg1+running-hash bytes for c
 - Docs: API.md forward-audit required
 - Source: new max kite-cli goal 2026-10-28 (architect: >=8 cutting-edge features, tested with real work)
 
-- status: DONE (by daemon, 2026-10-28T22:50:56.868Z)
+- status: DONE (by daemon, 2026-10-28T23:30:44.540Z)
 
 ## Done
 - marked-by: daemon
 - marked-at: 2026-10-28T22:50:56.868Z
+
+## Done
+- marked-by: daemon
+- marked-at: 2026-10-28T23:14:37.869Z
+
+## Done
+- marked-by: daemon
+- marked-at: 2026-10-28T23:16:27.906Z
+
+## Done
+- marked-by: daemon
+- marked-at: 2026-10-28T23:30:44.540Z

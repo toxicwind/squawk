@@ -1,11 +1,10 @@
 # FLEET TODO — INDEX (auto-generated; edit the linked files, not this)
 
-Updated: 2026-10-28T22:57:23.092Z
+Updated: 2026-10-28T23:36:38.067Z
 
 | Urgency | Status | Author | Todo | File |
 |---|---|---|---|---|
 | 🔥 URGENT | DONE (by daemon, 2026-10-28T12:41:24.653Z) | tau (session 2026-10-27, awrawr-pc) | pens-ui master dashboard (MOST URGENT — architect directive 2026-10-27T20:1xZ) | [20261027T2010Z-tau-pens-ui-master-dashboard.md](20261027T2010Z-tau-pens-ui-master-dashboard.md) |
-|  | NOT STARTED | tau (2026-10-28 goal mirror) | Blackbird persist GITHUB_SESSIONS + doctrine line | [20261028T023520Z-tau-goal-blackbird.md](20261028T023520Z-tau-goal-blackbird.md) |
 |  | NOT STARTED | tau (2026-10-28 goal mirror) | Bun canary real upgrade verify 1.4.4-canary.20261027.1 | [20261028T023520Z-tau-goal-bun-canary.md](20261028T023520Z-tau-goal-bun-canary.md) |
 |  | NOT STARTED | tau (2026-10-28 goal mirror) | 334 fs.writeFile -> Bun.write codemod + worktree ladders | [20261028T023520Z-tau-goal-codemod.md](20261028T023520Z-tau-goal-codemod.md) |
 |  | NOT STARTED | tau (2026-10-28 goal mirror) | Doctrine merge: clean-arch + no-human-gate + unreliable-narrator into 9 rig system.md | [20261028T023520Z-tau-goal-doctrine-rigs.md](20261028T023520Z-tau-goal-doctrine-rigs.md) |
@@ -53,13 +52,9 @@ Updated: 2026-10-28T22:57:23.092Z
 |  | unknown | unknown | 20261028T2015Z-tau-kappa-dynamic-reasoning-token-redactor | [20261028T2015Z-tau-kappa-dynamic-reasoning-token-redactor.md](20261028T2015Z-tau-kappa-dynamic-reasoning-token-redactor.md) |
 |  | IN PROGRESS (tau executing now) | tau 2026-10-28T23:25Z | full session parquet export for ALL agents (tau + kappa + rig) | [20261028T2325Z-tau-session-parquet-export.md](20261028T2325Z-tau-session-parquet-export.md) |
 |  | unknown | unknown | 20261029T0005Z-tau-max-gate-db-oracle-c2 | [20261029T0005Z-tau-max-gate-db-oracle-c2.md](20261029T0005Z-tau-max-gate-db-oracle-c2.md) |
-|  | unknown | unknown | 20261028T2250Z-tau-kite-pcap-bridge-extractor | [20261028T2250Z-tau-kite-pcap-bridge-extractor.md](20261028T2250Z-tau-kite-pcap-bridge-extractor.md) |
-|  | unknown | unknown | 20261028T2250Z-tau-kite-chaos-api | [20261028T2250Z-tau-kite-chaos-api.md](20261028T2250Z-tau-kite-chaos-api.md) |
-|  | unknown | unknown | 20261028T2250Z-tau-kite-race-api | [20261028T2250Z-tau-kite-race-api.md](20261028T2250Z-tau-kite-race-api.md) |
-|  | unknown | unknown | 20261028T2250Z-tau-kite-soul-api | [20261028T2250Z-tau-kite-soul-api.md](20261028T2250Z-tau-kite-soul-api.md) |
-|  | unknown | unknown | 20261028T2250Z-tau-kite-a2a-api | [20261028T2250Z-tau-kite-a2a-api.md](20261028T2250Z-tau-kite-a2a-api.md) |
 |  | DONE (by daemon, 2026-10-28T22:54:21.376Z) | tau (2026-10-28 goal mirror) | AI-gen rig citizens via eidolon nvidia lane | [20261028T023520Z-tau-goal-ai-citizens.md](20261028T023520Z-tau-goal-ai-citizens.md) |
 |  | DONE (by daemon, 2026-10-28T22:55:49.205Z) | tau (2026-10-28 goal mirror) | Agent/subagent/model awareness SSOT: rig-manifest.json + rig agent list published to squawk + ergasterion docs | [20261028T023520Z-tau-goal-awareness-manifest.md](20261028T023520Z-tau-goal-awareness-manifest.md) |
+|  | DONE (by daemon, 2026-10-28T23:36:38.066Z) | tau (2026-10-28 goal mirror) | Blackbird persist GITHUB_SESSIONS + doctrine line | [20261028T023520Z-tau-goal-blackbird.md](20261028T023520Z-tau-goal-blackbird.md) |
 |  | DONE (by daemon, 2026-10-28T22:57:23.092Z) | tau (2026-10-28 goal mirror) | Clean-arch enforcement: purge nested ranch from estate, pens projection invariant, ranch porcelain empty | [20261028T023520Z-tau-goal-clean-arch.md](20261028T023520Z-tau-goal-clean-arch.md) |
 |  | DONE (by daemon, 2026-10-28T16:29:38.469Z) | tau (2026-10-28 goal mirror) | Yote maximal fix: telegram pipeline + botfather AUTONOMOUS creation + yote joins estate chat | [20261028T023520Z-tau-goal-yote-telegram.md](20261028T023520Z-tau-goal-yote-telegram.md) |
 |  | DONE | tau (architect directive 2026-10-28) | Phone Auth SSOT: Bitwarden, Authy & Headless Phone Control | [20261028T120500Z-tau-phone-auth-headless-keys.md](20261028T120500Z-tau-phone-auth-headless-keys.md) |
@@ -71,9 +66,14 @@ Updated: 2026-10-28T22:57:23.092Z
 |  | DONE (verified, committed) | tau | Kappa parity: nvidia nemotron already in kappa.jsonc catalog (DONE by catalog regen) | [20261028T030843Z-tau-kappa-parity--nvidia-nemotron-already-in-kappa-jso.md](20261028T030843Z-tau-kappa-parity--nvidia-nemotron-already-in-kappa-jso.md) |
 |  | DONE (verified, committed) | tau | Session synthesis: pens/ergasterion/docs/session-synthesis-20261028.md (DONE, pushed 6ff25f8) | [20261028T030843Z-tau-session-synthesis--pens-ergasterion-docs-session-s.md](20261028T030843Z-tau-session-synthesis--pens-ergasterion-docs-session-s.md) |
 |  | DONE (verified, committed) | tau | Tau swarm: modelRoles -> nemotron-3-ultra/super (DONE, committed bd371f9120) | [20261028T030843Z-tau-tau-swarm--modelroles----nemotron-3-ultra-super.md](20261028T030843Z-tau-tau-swarm--modelroles----nemotron-3-ultra-super.md) |
-|  | DONE (by daemon, 2026-10-28T22:50:56.861Z) | unknown | 20261028T2250Z-tau-kite-toolbus-noise-responder | [20261028T2250Z-tau-kite-toolbus-noise-responder.md](20261028T2250Z-tau-kite-toolbus-noise-responder.md) |
-|  | DONE (by daemon, 2026-10-28T22:50:56.868Z) | unknown | 20261028T2250Z-tau-kite-interop-vector-api | [20261028T2250Z-tau-kite-interop-vector-api.md](20261028T2250Z-tau-kite-interop-vector-api.md) |
-|  | DONE (by daemon, 2026-10-28T22:50:56.874Z) | unknown | 20261028T2250Z-tau-kite-raw-webfetch-tool | [20261028T2250Z-tau-kite-raw-webfetch-tool.md](20261028T2250Z-tau-kite-raw-webfetch-tool.md) |
+|  | DONE (by daemon, 2026-10-28T23:09:55.524Z) | unknown | 20261028T2250Z-tau-kite-pcap-bridge-extractor | [20261028T2250Z-tau-kite-pcap-bridge-extractor.md](20261028T2250Z-tau-kite-pcap-bridge-extractor.md) |
+|  | DONE (by daemon, 2026-10-28T23:36:07.256Z) | unknown | 20261028T2250Z-tau-kite-toolbus-noise-responder | [20261028T2250Z-tau-kite-toolbus-noise-responder.md](20261028T2250Z-tau-kite-toolbus-noise-responder.md) |
+|  | DONE (by daemon, 2026-10-28T23:30:44.540Z) | unknown | 20261028T2250Z-tau-kite-interop-vector-api | [20261028T2250Z-tau-kite-interop-vector-api.md](20261028T2250Z-tau-kite-interop-vector-api.md) |
+|  | DONE (by daemon, 2026-10-28T23:36:07.268Z) | unknown | 20261028T2250Z-tau-kite-chaos-api | [20261028T2250Z-tau-kite-chaos-api.md](20261028T2250Z-tau-kite-chaos-api.md) |
+|  | DONE (by daemon, 2026-10-28T23:36:07.263Z) | unknown | 20261028T2250Z-tau-kite-race-api | [20261028T2250Z-tau-kite-race-api.md](20261028T2250Z-tau-kite-race-api.md) |
+|  | DONE (by daemon, 2026-10-28T23:36:07.275Z) | unknown | 20261028T2250Z-tau-kite-soul-api | [20261028T2250Z-tau-kite-soul-api.md](20261028T2250Z-tau-kite-soul-api.md) |
+|  | DONE (by daemon, 2026-10-28T23:36:07.282Z) | unknown | 20261028T2250Z-tau-kite-a2a-api | [20261028T2250Z-tau-kite-a2a-api.md](20261028T2250Z-tau-kite-a2a-api.md) |
+|  | DONE (by daemon, 2026-10-28T23:36:07.288Z) | unknown | 20261028T2250Z-tau-kite-raw-webfetch-tool | [20261028T2250Z-tau-kite-raw-webfetch-tool.md](20261028T2250Z-tau-kite-raw-webfetch-tool.md) |
 |  | BLOCKED (user): Google account action required | tau (2026-10-28 goal mirror) | EAP billing: prepay or free-tier (USER-BLOCKED) | [20261028T023520Z-tau-goal-eap-billing.md](20261028T023520Z-tau-goal-eap-billing.md) |
 |  | BLOCKED (tau, 2026-10-28T00:58:41.081Z): Google prepay exhausted; architect must | tau (session 2026-10-27, awrawr-pc) | EAP gemini prepay unblock (project gen-lang-client-0111199472) | [20261028T005841Z-tau-tau-eap-gemini-unblock.md](20261028T005841Z-tau-tau-eap-gemini-unblock.md) |
 
