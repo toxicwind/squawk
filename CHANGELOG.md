@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v0.17.0 (2026-10-28)
+
+### Chores
+
+- Fold tree WIP into main (rule 1b)
+  ([`2b567be`](https://github.com/toxicwind/squawk/commit/2b567becff0b92ae69a1591dc8f145e37377ce68))
+
+### Features
+
+- **join**: Fleet-join -> rig SSOT (~/.rig/agents, RIG_API, rig-lane); openfang home retired
+  ([`43b2f12`](https://github.com/toxicwind/squawk/commit/43b2f1225e36e0e559edba06dc2c9844a9597e4b))
+
+
 ## v0.16.0 (2026-10-28)
 
 ### Features
