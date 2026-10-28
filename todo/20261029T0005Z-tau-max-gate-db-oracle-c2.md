@@ -1,22 +1,40 @@
-# TODO — MAX lane: user-surface TDD gate × DB-oracle × c2 live (tau + kappa)
+# MAX TODO — the recursive driver (v2, 2026-10-28T22:55Z)
 
-- status: NOT STARTED (top claimable, fresh session)
-- author: tau (2026-10-28, architect-directed)
-- unique-id: tau-max-gate-db-oracle-c2
+> This file is not a list. It is a **tail-recursive loop**. The board is the stack frame.
 
-## The lane (one acceptance standard, three witnesses)
-1. **TUI**: real tau AND kappa TUIs in tmux under wezterm (auto-approve handoff, kappa-rebuild-effect-v4-fixes + kappa-tui-handoff skills).
-2. **DB oracle**: while tests run, live-watch kappa-main.db (sqlite3 json_extract session/message) + ~/.tau/sessions JSONL — the .db row IS the proof, screen text is chrome (anomaly #46: persist FULL output, read back verbatim).
-3. **c2 live**: same run driven via c2 (kairos-guard-test-harness: verify agent-shell command bans actually cancel; delend-oracle/rig lane on :25151) — the harness itself must cancel-ban-then-recover live.
+## The loop (trampoline — no stack growth, no lost wakeups)
 
-## Micro-commitable order
-1. tmux session for tau TUI + load cyoa-router skill live
-2. tmux session for kappa TUI + strict-loader confirm (no silent skip)
-3. sqlite3 watcher script -> /tmp/gate-oracle.log (full output)
-4. fire quiz through both TUIs; assert .db rows match screens
-5. kairos ban test: inject banned cmd, assert cancel, recover
-6. c2 :25151 live turn through rig oracle persona (register agents/oracle.toml first)
-7. wezterm AX + screenshot proof persisted (computer helpers)
-8. dossier section + AGENTS row + push all repos
+```
+loop maxTodo(frame = grabBoard()):
+  1. GRAB    : GET :25120/v1/todo + ls pens/ranch/squawk/todo/ → newest not-started claimable
+               ⊕ RECURSE: any new todo file landed since last frame? frame ← merge(board, new)
+  2. CLAIM   : mark claimed in board file (one writer per subtree; name your session)
+  3. CHECKPOINT : BEFORE work — write frame to durable state
+               (tau: context_notes + journal line in frame file: "claimed-by τ <ts> <hash>")
+               crash-safe: any session resuming reads frame → continues EXACTLY here
+  4. WORK    : one task to done. TDD-first, real-surface verified. No stubs.
+  5. CHATTY  : squawk seq-proof to #fleet (claim, mid-work weirdness, result — 3 posts min)
+  6. DONE    : POST /v1/todo/<file>/done + commit + PUSH (forward-only, main ok when lane clean)
+  7. TAIL-RECURSE : maxTodo(frame = fresh grab)  ← NOT a new loop; same frame lineage
+               termination: board empty AND fleet quiet → become watcher (heartbeat mode)
+```
 
-- KITE LANE CLOSED (2026-10-28): hatch peer dead (Meta edge capture); kite lib protocol-proven 13/13, integration = lib-only until real peer. Probe: /home/toxic/tmp/kite-live-probe.ts
+## Invariants (a frame is INVALID without these)
+- **checkpoint-before-work**: uncheckpointed work is work that can be lost → frame journal first, always
+- **squawk-or-silent-is-a-bug**: every state transition emits to #fleet (:25120); chatty is protocol, not noise
+- **grab-merges, never overwrites**: new todos from peers fold INTO the frame (fleet is multi-writer)
+- **tailrec = board is the stack**: never hold loop state in your head; if it's not in the frame file, it doesn't exist
+- **tools must be USED**: toolbus/experiments get exercised by real board work, not admired
+- **docs forward**: every landed feature updates its md in the same push (docs lie otherwise)
+
+## Current frame lineage (append-only)
+| ts | session | frame |
+|---|---|---|
+| 2026-10-28T22:35Z | τ | kite route post-mortem → peer dead, lib proven |
+| 2026-10-28T22:46Z | τ+κ (live collab) | toolbus :25291 UP (κ fixed τ's daemon mid-flight — the <-> is real) |
+| 2026-10-28T22:50Z | τ | 8 kite features registered as squawk todos; 3 unshare'd research agents spawning |
+| 2026-10-28T22:55Z | τ | THIS FILE v2 — recursion is now the driver |
+
+## Standing sub-loops
+- **gate**: three witnesses (TUI screen, .db row, c2 live) before anything counts as shipped
+- **weird-maximal**: when a step feels boring, make it weirder and more maximal (unshare, fifos, base64 readers, pcap replay) — but TDD it
