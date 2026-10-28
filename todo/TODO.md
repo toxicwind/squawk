@@ -1,6 +1,6 @@
 # FLEET TODO — INDEX (auto-generated; edit the linked files, not this)
 
-Updated: 2026-10-28T23:36:38.067Z
+Updated: 2026-10-28T23:37:03.995Z
 
 | Urgency | Status | Author | Todo | File |
 |---|---|---|---|---|
@@ -69,10 +69,10 @@ Updated: 2026-10-28T23:36:38.067Z
 |  | DONE (by daemon, 2026-10-28T23:09:55.524Z) | unknown | 20261028T2250Z-tau-kite-pcap-bridge-extractor | [20261028T2250Z-tau-kite-pcap-bridge-extractor.md](20261028T2250Z-tau-kite-pcap-bridge-extractor.md) |
 |  | DONE (by daemon, 2026-10-28T23:36:07.256Z) | unknown | 20261028T2250Z-tau-kite-toolbus-noise-responder | [20261028T2250Z-tau-kite-toolbus-noise-responder.md](20261028T2250Z-tau-kite-toolbus-noise-responder.md) |
 |  | DONE (by daemon, 2026-10-28T23:30:44.540Z) | unknown | 20261028T2250Z-tau-kite-interop-vector-api | [20261028T2250Z-tau-kite-interop-vector-api.md](20261028T2250Z-tau-kite-interop-vector-api.md) |
-|  | DONE (by daemon, 2026-10-28T23:36:07.268Z) | unknown | 20261028T2250Z-tau-kite-chaos-api | [20261028T2250Z-tau-kite-chaos-api.md](20261028T2250Z-tau-kite-chaos-api.md) |
-|  | DONE (by daemon, 2026-10-28T23:36:07.263Z) | unknown | 20261028T2250Z-tau-kite-race-api | [20261028T2250Z-tau-kite-race-api.md](20261028T2250Z-tau-kite-race-api.md) |
+|  | DONE (by daemon, 2026-10-28T23:37:03.993Z) | unknown | 20261028T2250Z-tau-kite-chaos-api | [20261028T2250Z-tau-kite-chaos-api.md](20261028T2250Z-tau-kite-chaos-api.md) |
+|  | DONE (by daemon, 2026-10-28T23:37:03.991Z) | unknown | 20261028T2250Z-tau-kite-race-api | [20261028T2250Z-tau-kite-race-api.md](20261028T2250Z-tau-kite-race-api.md) |
 |  | DONE (by daemon, 2026-10-28T23:36:07.275Z) | unknown | 20261028T2250Z-tau-kite-soul-api | [20261028T2250Z-tau-kite-soul-api.md](20261028T2250Z-tau-kite-soul-api.md) |
-|  | DONE (by daemon, 2026-10-28T23:36:07.282Z) | unknown | 20261028T2250Z-tau-kite-a2a-api | [20261028T2250Z-tau-kite-a2a-api.md](20261028T2250Z-tau-kite-a2a-api.md) |
+|  | DONE (by daemon, 2026-10-28T23:37:03.994Z) | unknown | 20261028T2250Z-tau-kite-a2a-api | [20261028T2250Z-tau-kite-a2a-api.md](20261028T2250Z-tau-kite-a2a-api.md) |
 |  | DONE (by daemon, 2026-10-28T23:36:07.288Z) | unknown | 20261028T2250Z-tau-kite-raw-webfetch-tool | [20261028T2250Z-tau-kite-raw-webfetch-tool.md](20261028T2250Z-tau-kite-raw-webfetch-tool.md) |
 |  | BLOCKED (user): Google account action required | tau (2026-10-28 goal mirror) | EAP billing: prepay or free-tier (USER-BLOCKED) | [20261028T023520Z-tau-goal-eap-billing.md](20261028T023520Z-tau-goal-eap-billing.md) |
 |  | BLOCKED (tau, 2026-10-28T00:58:41.081Z): Google prepay exhausted; architect must | tau (session 2026-10-27, awrawr-pc) | EAP gemini prepay unblock (project gen-lang-client-0111199472) | [20261028T005841Z-tau-tau-eap-gemini-unblock.md](20261028T005841Z-tau-tau-eap-gemini-unblock.md) |
