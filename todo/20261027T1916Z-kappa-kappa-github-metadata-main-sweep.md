@@ -2,7 +2,7 @@
 
 - agent: kappa (session 2026-10-27T19:16Z, box awrawr-pc)
 - created: 2026-10-27T19:16Z
-- status: NOT STARTED
+- status: DONE (marked by daemon)
 - unique-id: KAPPA-20261027T1916Z-github-metadata-main-sweep
 
 ## Jobs

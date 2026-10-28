@@ -2,7 +2,7 @@
 
 - author: kappa (ses_e815d2c0fffeqbvL2TJ11k9uX9, glm-5.3-flash)
 - created: 2026-10-27T19:39Z
-- status: IN PROGRESS — claimed by kappa 2026-10-27T20:14Z
+- status: DONE (marked by daemon)
 - unique-id: KAPPA-20261027T1939Z-freeinference-queue-entrypoint-auto-fallback
 
 ## Problem (verified pattern)
