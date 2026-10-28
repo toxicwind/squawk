@@ -1,13 +1,13 @@
 #!/usr/bin/env bun
 /**
- * fleet-join — turn a squawk fleet agent into a first-class OpenFang agent.
+ * fleet-join — turn a squawk fleet agent into a first-class Rig agent.
  *
  *   fleet-join --name wren --species "wren" --personality "small, clever, builds intricate nests" \
- *       --lane "fleet-join" --task "building the fleet->OpenFang join flow" --sigil "🪹"
+ *       --lane "fleet-join" --task "building the fleet->Rig join flow" --sigil "🪹"
  *
  * Flow:
  *   1. Render agent.toml + system.md from the fleet identity.
- *   2. Write to estate/agents/<name>/ (canonical, git) AND ~/.openfang/agents/<name>/ (live).
+ *   2. Write to pens/estate/agents/<name>/ (canonical, git) AND ~/.rig/agents/<name>/ (live).
  *   3. Hyper-race activation: POST /api/agents {manifest_toml} vs POST /api/agents {template}
  *      — first 201 wins; the loser is deduped (uninstalled) if it also spawned.
  *   4. Verify via GET /api/agents.
@@ -18,9 +18,9 @@
  * agent up from disk on next boot (idempotent auto-spawn).
  */
 
-const OPENFANG_API = "http://127.0.0.1:25196";
+const RIG_API = "http://127.0.0.1:25196";
 const ESTATE = "/home/toxic/estate";
-const LIVE_AGENTS = "/home/toxic/.openfang/agents";
+const LIVE_AGENTS = "/home/toxic/.rig/agents";
 const DEFAULT_MODEL = "openrouter-free/inclusionai/ling-3.0-flash-sante:free"; // herd free-tier default (Ling-first, verified live 2026-09-30)
 const HERD_BASE_URL = "http://127.0.0.1:25100/v1";
 
@@ -36,7 +36,7 @@ function usage(): never {
   --name         agent dir name: lowercase letters, digits, hyphens (e.g. wren)
   --species      anchored species (e.g. "wren")
   --personality  anchored personality in plain words
-  --lane         fleet lane, e.g. "openfang-lane"
+  --lane         fleet lane, e.g. "rig-lane"
   --task         concrete task in plain words
   --sigil        emoji sigil (default: 🐾)
   --model        herd model id (default: ${DEFAULT_MODEL})
@@ -103,7 +103,7 @@ function renderSystemPrompt(id: Identity): string {
 
 Your lane: ${id.lane}. Your task: ${id.task}.
 
-You joined OpenFang from the squawk fleet. You are Ember's crew — you narrate
+You joined Rig from the squawk fleet. You are Ember's crew — you narrate
 your work in the squawk fleet channel at meaningful milestones (never silent),
 with your anchored persona: name, species, personality, lane and task in plain words.
 
@@ -139,7 +139,7 @@ priority = "Normal"
 skills = []
 mcp_servers = []
 tags = ["fleet-join", "${tomlEscape(id.lane)}"]
-workspace = "/home/toxic/.openfang/workspaces/${id.name}"
+workspace = "/home/toxic/.rig/workspaces/${id.name}"
 generate_identity_files = true
 tool_allowlist = []
 tool_blocklist = []
@@ -191,7 +191,7 @@ function renderSystemMd(id: Identity): string {
   const Name = capitalize(id.name);
   return `# ${Name} ${id.sigil}
 
-Fleet agent joined to OpenFang via \`fleet-join\`.
+Fleet agent joined to Rig via \`fleet-join\`.
 
 - **Species:** ${id.species}
 - **Personality:** ${id.personality}
@@ -222,7 +222,7 @@ async function postSpawn(body: Record<string, string>, strategy: string, timeout
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
-    const r = await fetch(`${OPENFANG_API}/api/agents`, {
+    const r = await fetch(`${RIG_API}/api/agents`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -246,7 +246,7 @@ async function postSpawn(body: Record<string, string>, strategy: string, timeout
 
 async function uninstall(agentId: string): Promise<void> {
   try {
-    await fetch(`${OPENFANG_API}/api/agents/${agentId}/uninstall`, { method: "DELETE" });
+    await fetch(`${RIG_API}/api/agents/${agentId}/uninstall`, { method: "DELETE" });
   } catch {
     /* best effort */
   }
@@ -254,7 +254,7 @@ async function uninstall(agentId: string): Promise<void> {
 
 async function agentListed(name: string): Promise<boolean> {
   try {
-    const r = await fetch(`${OPENFANG_API}/api/agents`);
+    const r = await fetch(`${RIG_API}/api/agents`);
     const list = (await r.json()) as Array<{ name?: string }>;
     return list.some((a) => a.name === name);
   } catch {

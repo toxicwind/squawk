@@ -1,6 +1,6 @@
 # FLEET TODO — INDEX (auto-generated; edit the linked files, not this)
 
-Updated: 2026-10-28T12:41:24.654Z
+Updated: 2026-10-28T16:29:38.469Z
 
 | Urgency | Status | Author | Todo | File |
 |---|---|---|---|---|
@@ -23,19 +23,19 @@ Updated: 2026-10-28T12:41:24.654Z
 |  | NOT STARTED | tau (2026-10-28 goal mirror) | Provider-wide configurability: maxConcurrency/UA/retries as ProviderDef fields, regen, live-probe 3 | [20261028T023520Z-tau-goal-provider-config.md](20261028T023520Z-tau-goal-provider-config.md) |
 |  | NOT STARTED | tau (2026-10-28 goal mirror) | STANDING REMINDER: mise/svelte/pitchfork-monolith/forge/nativelink/secretsmith hella in mind; recursion law forever | [20261028T023520Z-tau-goal-standing-reminder.md](20261028T023520Z-tau-goal-standing-reminder.md) |
 |  | NOT STARTED | tau (2026-10-28 goal mirror) | Tau swarm 10-model set (NO freeinference until global concurrency queue works; use roundup/benchlink priors; one-model-f | [20261028T023520Z-tau-goal-tau-swarm.md](20261028T023520Z-tau-goal-tau-swarm.md) |
-|  | NOT STARTED | tau (2026-10-28 goal mirror) | Yote maximal fix: telegram pipeline + botfather AUTONOMOUS creation + yote joins estate chat | [20261028T023520Z-tau-goal-yote-telegram.md](20261028T023520Z-tau-goal-yote-telegram.md) |
 |  | NOT STARTED | tau (design per architect 2026-10-28) | Yote Telegram-as-a-Service (TaaS) + botfather autonomy | [20261028T023659Z-tau-taas-design.md](20261028T023659Z-tau-taas-design.md) |
 |  | NOT STARTED | tau (session 2026-10-28, awrawr-pc) | roundup: tau + geode integrated and used (freeinference → measured-NVIDIA swap) | [20261028T045000Z-tau-roundup-tau-geode-integration.md](20261028T045000Z-tau-roundup-tau-geode-integration.md) |
 |  | NOT STARTED (research DONE, decision MADE) | unknown | fork imagine-server -> olympus/products/eidolon (real image gen) | [20261027T1916Z-eidolon-imagine-server-imagegen-fork.md](20261027T1916Z-eidolon-imagine-server-imagegen-fork.md) |
 |  | NOT STARTED | tau (session 2026-10-27, awrawr-pc) | tauvisor: project scope replaces user scope + default watchdog.yml (tau-specific) | [20261028T005841Z-tau-tau-tauvisor-project-scope.md](20261028T005841Z-tau-tau-tauvisor-project-scope.md) |
 |  | NOT STARTED | tau (session 2026-10-27, awrawr-pc) | Firefox CDP enable on Pixel; saved as own repo inside android-fleet monorepo | [20261028T005841Z-tau-tau-firefox-cdp-android-fleet.md](20261028T005841Z-tau-tau-firefox-cdp-android-fleet.md) |
 |  | IN PROGRESS | tau (2026-10-28 goal mirror) | IRC awareness: stand up ergo IRCd :25241 + wire rig presence (IN PROGRESS - ergo downloaded, config listening, daemon re | [20261028T023520Z-tau-goal-irc-awareness.md](20261028T023520Z-tau-goal-irc-awareness.md) |
-|  | DONE | tau (architect directive 2026-10-28) | Phone Auth SSOT: Bitwarden, Authy & Headless Phone Control | [20261028T120500Z-tau-phone-auth-headless-keys.md](20261028T120500Z-tau-phone-auth-headless-keys.md) |
 |  | IN PROGRESS | tau (session 2026-10-27, awrawr-pc) | CONNRESET socket-closed investigation in tau session log; enable fetch verbose | [20261028T005841Z-tau-tau-connreset-investigation.md](20261028T005841Z-tau-tau-connreset-investigation.md) |
 |  | unknown | unknown | 2026-10-27T19-17_kappa-awrawr-pc_estate-coyote-telegram-zuzmod-audit | [2026-10-27T19-17_kappa-awrawr-pc_estate-coyote-telegram-zuzmod-audit.md](2026-10-27T19-17_kappa-awrawr-pc_estate-coyote-telegram-zuzmod-audit.md) |
 |  | unknown | unknown | 20261027-tau-a2a-calibrate-worklog-7f3k | [20261027-tau-a2a-calibrate-worklog-7f3k.md](20261027-tau-a2a-calibrate-worklog-7f3k.md) |
 |  | IN PROGRESS (fork + provider DONE; tiles + dashboard + loop wiring next) | tau (session 2026-10-28, awrawr-pc) | sprite program: living AI-Harvest-Moon citizens (recursive) | [20261028T0215Z-tau-sprite-program.md](20261028T0215Z-tau-sprite-program.md) |
 |  | IN PROGRESS | tau (session 2026-10-28, awrawr-pc) | EMERGENT ENDLESS TASKING (goal-mode maximal board, verbose) | [20261028T0240Z-tau-goal-endless-tasking.md](20261028T0240Z-tau-goal-endless-tasking.md) |
+|  | DONE (by daemon, 2026-10-28T16:29:38.469Z) | tau (2026-10-28 goal mirror) | Yote maximal fix: telegram pipeline + botfather AUTONOMOUS creation + yote joins estate chat | [20261028T023520Z-tau-goal-yote-telegram.md](20261028T023520Z-tau-goal-yote-telegram.md) |
+|  | DONE | tau (architect directive 2026-10-28) | Phone Auth SSOT: Bitwarden, Authy & Headless Phone Control | [20261028T120500Z-tau-phone-auth-headless-keys.md](20261028T120500Z-tau-phone-auth-headless-keys.md) |
 |  | DONE (marked by daemon) | kappa (ses_e815d2c0fffeqbvL2TJ11k9uX9, glm-5.3-flash) | freeinference queue contention: dedicated entrypoint + auto fallback (geode/rhodo) | [20261027T1939Z-freeinference-queue-entrypoint-auto-fallback.md](20261027T1939Z-freeinference-queue-entrypoint-auto-fallback.md) |
 |  | DONE (marked by daemon) | unknown | github metadata + MAIN-MAIN sweep (kappa fleet) | [20261027T1916Z-kappa-kappa-github-metadata-main-sweep.md](20261027T1916Z-kappa-kappa-github-metadata-main-sweep.md) |
 |  | DONE (verified, committed) | tau | Blackbird: doctrine in AGENTS + GITHUB_SESSIONS env (DONE) | [20261028T030843Z-tau-blackbird--doctrine-in-agents---github-sessions-en.md](20261028T030843Z-tau-blackbird--doctrine-in-agents---github-sessions-en.md) |
