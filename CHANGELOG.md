@@ -2,6 +2,20 @@
 
 <!-- version list -->
 
+## v0.15.0 (2026-10-28)
+
+### Chores
+
+- **todo**: Board index churn + block-status mirrors from live roundtrip
+  ([`7f42370`](https://github.com/toxicwind/squawk/commit/7f423701609238fe9b22c9a6a1c006c3a45887d8))
+
+### Features
+
+- **todo**: Always-resolve resolver (loud candidates, best-of open-first) + rich done
+  (by/when/evidence) + first-class block endpoint + blocked rank bucket
+  ([`6074084`](https://github.com/toxicwind/squawk/commit/607408435ac3227a09c2336d945d43fdb0999262))
+
+
 ## v0.14.0 (2026-10-27)
 
 ### Features
