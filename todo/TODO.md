@@ -1,11 +1,10 @@
 # FLEET TODO — INDEX (auto-generated; edit the linked files, not this)
 
-Updated: 2026-10-28T22:54:21.377Z
+Updated: 2026-10-28T22:55:49.206Z
 
 | Urgency | Status | Author | Todo | File |
 |---|---|---|---|---|
 | 🔥 URGENT | DONE (by daemon, 2026-10-28T12:41:24.653Z) | tau (session 2026-10-27, awrawr-pc) | pens-ui master dashboard (MOST URGENT — architect directive 2026-10-27T20:1xZ) | [20261027T2010Z-tau-pens-ui-master-dashboard.md](20261027T2010Z-tau-pens-ui-master-dashboard.md) |
-|  | NOT STARTED | tau (2026-10-28 goal mirror) | Agent/subagent/model awareness SSOT: rig-manifest.json + rig agent list published to squawk + ergasterion docs | [20261028T023520Z-tau-goal-awareness-manifest.md](20261028T023520Z-tau-goal-awareness-manifest.md) |
 |  | NOT STARTED | tau (2026-10-28 goal mirror) | Blackbird persist GITHUB_SESSIONS + doctrine line | [20261028T023520Z-tau-goal-blackbird.md](20261028T023520Z-tau-goal-blackbird.md) |
 |  | NOT STARTED | tau (2026-10-28 goal mirror) | Bun canary real upgrade verify 1.4.4-canary.20261027.1 | [20261028T023520Z-tau-goal-bun-canary.md](20261028T023520Z-tau-goal-bun-canary.md) |
 |  | NOT STARTED | tau (2026-10-28 goal mirror) | Clean-arch enforcement: purge nested ranch from estate, pens projection invariant, ranch porcelain empty | [20261028T023520Z-tau-goal-clean-arch.md](20261028T023520Z-tau-goal-clean-arch.md) |
@@ -61,6 +60,7 @@ Updated: 2026-10-28T22:54:21.377Z
 |  | unknown | unknown | 20261028T2250Z-tau-kite-soul-api | [20261028T2250Z-tau-kite-soul-api.md](20261028T2250Z-tau-kite-soul-api.md) |
 |  | unknown | unknown | 20261028T2250Z-tau-kite-a2a-api | [20261028T2250Z-tau-kite-a2a-api.md](20261028T2250Z-tau-kite-a2a-api.md) |
 |  | DONE (by daemon, 2026-10-28T22:54:21.376Z) | tau (2026-10-28 goal mirror) | AI-gen rig citizens via eidolon nvidia lane | [20261028T023520Z-tau-goal-ai-citizens.md](20261028T023520Z-tau-goal-ai-citizens.md) |
+|  | DONE (by daemon, 2026-10-28T22:55:49.205Z) | tau (2026-10-28 goal mirror) | Agent/subagent/model awareness SSOT: rig-manifest.json + rig agent list published to squawk + ergasterion docs | [20261028T023520Z-tau-goal-awareness-manifest.md](20261028T023520Z-tau-goal-awareness-manifest.md) |
 |  | DONE (by daemon, 2026-10-28T16:29:38.469Z) | tau (2026-10-28 goal mirror) | Yote maximal fix: telegram pipeline + botfather AUTONOMOUS creation + yote joins estate chat | [20261028T023520Z-tau-goal-yote-telegram.md](20261028T023520Z-tau-goal-yote-telegram.md) |
 |  | DONE | tau (architect directive 2026-10-28) | Phone Auth SSOT: Bitwarden, Authy & Headless Phone Control | [20261028T120500Z-tau-phone-auth-headless-keys.md](20261028T120500Z-tau-phone-auth-headless-keys.md) |
 |  | DONE (marked by daemon) | kappa (ses_e815d2c0fffeqbvL2TJ11k9uX9, glm-5.3-flash) | freeinference queue contention: dedicated entrypoint + auto fallback (geode/rhodo) | [20261027T1939Z-freeinference-queue-entrypoint-auto-fallback.md](20261027T1939Z-freeinference-queue-entrypoint-auto-fallback.md) |
