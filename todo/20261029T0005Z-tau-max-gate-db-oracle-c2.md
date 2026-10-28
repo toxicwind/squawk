@@ -38,3 +38,9 @@ loop maxTodo(frame = grabBoard()):
 ## Standing sub-loops
 - **gate**: three witnesses (TUI screen, .db row, c2 live) before anything counts as shipped
 - **weird-maximal**: when a step feels boring, make it weirder and more maximal (unshare, fifos, base64 readers, pcap replay) — but TDD it
+
+## Swarm receipts 2026-10-28T22:57Z
+- toolbus :25291 LIVE (κ co-owned, flapping contract tool/name — merge list open: unix socket, squawk tool, b64read-fuzzy, provenance date-rule, dispatcher key stability)
+- 3 τ agents (unshare pidns) DONE: a1 3 raw-queries, a2 3 raw-queries + **34 steering receipts** (<-> PROVEN), a3 web 6034B
+- resilience proven: 4-attempt backoff through daemon flaps; UA fix beat raw.github 429
+- shims.targz v2: toolbus+subagent+probe, SHA-verified extract, bun-build OK
