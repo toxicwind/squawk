@@ -1,6 +1,6 @@
-# TODO — Phone Auth SSOT: Bitwarden, Authy & Headless Fast Keys (Alt+Up/Shift+Up)
+# TODO — Phone Auth SSOT: Bitwarden, Authy & Headless Phone Control
 
-- status: IN PROGRESS
+- status: DONE
 - author: tau (architect directive 2026-10-28)
 - unique-id: tau-phone-auth-headless-keys
 - created: 2026-10-28
@@ -12,8 +12,8 @@
    - `com.x8bit.bitwarden` (Bitwarden vault)
    - `com.authy.authy` (Authy 2FA/OTP tokens)
    - Stored credentials, keys, authenticators
-2. **FAST HEADLESS NAVIGATION DOCTRINE**:
-   - `Alt+Up` / `Shift+Up` preferred for fast headless editing and navigation.
+2. **HEADLESS PHONE CONTROL DOCTRINE** (pure headless, speed-first):
+   - Headless is what matters for speed: no desktop UI, no screen mirroring, no manual taps.
    - Use Flotilla MCP (`pixel_key`, `pixel_tap`, `pixel_ui`, `pixel_text`, `pixel_shell`) to interact without desktop UI requirements.
    - In ADB: `adb -s 10.0.0.77:<port> shell input keyevent ...` or flotilla MCP tool calls.
 
