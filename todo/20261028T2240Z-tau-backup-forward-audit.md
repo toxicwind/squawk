@@ -1,28 +1,28 @@
-# TODO — backup-forward audit: cherry-pick crypto/docs, delete disposable backups
+# TODO — backup-forward audit + 195G cleanup (tau, 2026-10-28)
 
-- status: IN PROGRESS
-- author: tau (2026-10-28)
-- unique-id: tau-backup-forward-audit-20261028
-- created: 2026-10-28
-- repository: pens/estate (plan: backup-plan.md)
+status: NOT STARTED
+author: tau (session 2026-10-28)
+unique-id: tau-backup-forward-audit
+created: 2026-10-28
 
-## Goal
-100%-sure clean of /home/toxic/estate ghost + classify 195G ~/archive backups via
-qdrant; cherry-pick irreplaceable crypto/wallets/docs FORWARD into
-/home/toxic/pens/estate/products/ + docs; delete disposable backup content.
+# Goal
+Complete the backup-forward audit: classify the 195G in ~/archive/* (home-dirs-2026 130G, detached-2026 18G, estate-clone-20261028 42G, root 4.9G), cherry-pick irreplaceable crypto/docs forward into pens/estate, then delete the disposable backup content.
 
-## Key facts
-- 1144 estate refs swept across all NVMe/sata/8TB (indexed in qdrant estate_sweep)
-- Grafana-mesh.sh SOV default was the live estate-recreation vector (FIXED: pens-rooted)
-- Lease-guard now FAILS if /home/toxic/estate exists in ANY form
-- 47 SECRET rows: .ssh/id_estate_sign, .gnupg 2x pgp keys, keyrings, openfang +
-  stake-registry keys (MISSING live), phone id_ed25519, root-ca-key.pem,
-  GEMINI_EAP_KEY_0..6, moonbox-*, doorbell key, .docker token_seed, .9router jwt-secret
+# Done this session
+- Full-disk estate-reference sweep (1144 refs across all mounts), qdrant-indexed into `estate_sweep` + `backup-inventory` collections (2794 rows classified).
+- Discovered + fixed the live recreation vector: grafana-mesh.sh defaulted `ESTATE_ROOT=/home/toxic/estate` and its GF_PATHS_DATA recreated /home/toxic/estate on every start → repointed ALL 12 scripts to pens/estate via perl mass-replace; lease-guard now fails if /home/toxic/estate exists in ANY form. /home/toxic/estate ABSENT.
+- Migrated ~/.openfang state (fleet agents, stake-registry, key-pool, 13 newer workspaces) into ~/.rig (the rig binary's real home); retired ~/.openfang (archived to ~/archive/retired-openfang-home-20261028). estate/rig daemon started (:25196 api/agents = 200, 56 agents).
+- Consolidated rig repo: reconstructed main from scratch (52→2 clean commits), force-pushed; archived empty openfang + openfang-join repos; folded openfang-join into rig/docs; retired estate-scripts ghost (kernel test fixtures → ~/.rig).
+- Started qdrant (ports 25133/25134 untouched, test_freeinference collection intact).
+- Consolidated irreplaceable crypto/wallets into pens/estate/products/backup-recovery/ (53 files, 544K) — KEPT LOCAL-ONLY, NOT committed to GitHub (push-protection correctly blocked GCP EAP keys).
+- Consolidated 30 estate docs forward into docs/backup-consolidated-20261028/.
+- Wrote anomaly dossiers #48-#52 + AGENTS.md table + fleet knowledgebase entry; pushed estate main (merge-forward per rule 4).
 
-## Steps
-1. Move crypto stash → pens/estate/products/backup-recovery/
-2. Copy remaining irreplaceable secrets forward (live SSOT confirmed)
-3. Consolidate DOCS (112) → pens/estate/docs + products
-4. Delete disposable backup subtrees (build-cache/git-checkout/stale-temp/misc)
-5. Verify estate absent + crypto md5 match + daemons healthy
-6. Commit + push + board update
+# Remaining
+- Classify remaining backup trees via qdrant semantic queries; cherry-pick any surviving irreplaceable items into pens/estate; then DELETE the disposable backup trees (~/.archive/home-dirs-2026/.local/share 76G build caches etc.) to reclaim ~195G.
+- Verify /home/toxic/estate still absent (lease-guard) after deletion; no daemon recreates it.
+
+# References
+- anomaly dossiers: pens/estate/docs/anomalies/2026-10-28/ (estate-dual-truth.md, grafana-recreation.md, rig-openfang-consolidation.md, estate-scripts-ghost.md, qdrant-monolith-fragment-two-truth.md)
+- backup inventory: /tmp/backup-inventory.tsv; qdrant collection `estate_sweep`
+- AGENTS.md lease: /home/toxic/estate must NOT exist; bin-contract-audit enforces.
