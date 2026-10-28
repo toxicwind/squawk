@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.16.0 (2026-10-28)
+
+### Features
+
+- **squawk**: A2a roster surface in consolidatedState, Bun.write codemod, and Anomaly 35 test fix
+  ([`f5060fd`](https://github.com/toxicwind/squawk/commit/f5060fd5d39f9935907c2984a7d1a66c5827ee08))
+
+
 ## v0.15.0 (2026-10-28)
 
 ### Chores
