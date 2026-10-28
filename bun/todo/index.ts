@@ -20,6 +20,9 @@ export interface TodoItem {
   status: string;
   created: string;
   urgency: "normal" | "urgent";
+  /** Stable id from the `unique-id:` header (when present). Resolving done
+   *  by id beats file-name or title matching: titles drift, files don't. */
+  uniqueId?: string;
 }
 
 const STATUS_RE = /^[-*]?\s*status:\s*(.+)$/im;
@@ -42,6 +45,7 @@ export function parseTodo(file: string, raw: string): TodoItem {
     created,
     urgency:
       URGENT_RE.test(status) || URGENT_RE.test(title) ? "urgent" : "normal",
+    uniqueId: raw.match(/^[-*]?\s*unique-id:\s*(.+)$/im)?.[1]?.trim(),
   };
 }
 
@@ -57,8 +61,12 @@ export function listTodos(deps: TodoDeps): TodoItem[] {
     }
   }
   // Urgent first, then NOT STARTED before partial before done, then newest.
+  // BLOCKED sorts last-but-visible: blocked items must not sink to invisible
+  // (the 2026-10-27 harness scramble lost blocked items entirely).
   const rank = (s: string) =>
-    /not started/i.test(s)
+    /blocked/i.test(s)
+      ? 3
+      : /not started/i.test(s)
       ? 0
       : /in progress|partial/i.test(s)
         ? 1
@@ -119,22 +127,130 @@ export function handleAdd(
   return { ok: true, file };
 }
 
-export function handleDone(deps: TodoDeps, file: string) {
-  const p = join(deps.todoDir, file);
-  if (!existsSync(p)) return { ok: false, error: "no such todo" };
-  const raw = readFileSync(p, "utf8");
-  if (STATUS_RE.test(raw)) {
-    writeFileSync(
-      p,
-      raw.replace(STATUS_RE, (m) =>
-        m.replace(/:\s*.*$/, ": DONE (marked by daemon)"),
-      ),
-    );
-  } else {
-    writeFileSync(p, `${raw}\n- status: DONE (marked by daemon)\n`);
+// --- resolution: done/address items — ALWAYS resolve, never reject ---
+
+/** Resolve a todo reference to a file name. NEVER rejects a resolvable ref:
+ *  exact file → exact unique-id → exact title → unique substring (id, file,
+ *  then title) → deterministic best-of (open before done, then newest) with
+ *  the runner-up set returned alongside. Only zero candidates is an error —
+ *  there is nothing to point at. The 2026-10-27 harness scramble came from
+ *  HIDDEN fuzzy picks; here ambiguity resolves LOUDLY: callers get the
+ *  chosen file plus `candidates` so drift is visible, not fatal. */
+export function resolveTodoRef(
+  deps: TodoDeps,
+  ref: string,
+): { file: string; candidates?: string[] } | { error: string } {
+  if (!ref?.trim()) return { error: "empty todo ref" };
+  const items = listTodos(deps);
+  if (!items.length) return { error: "todo board is empty" };
+  const one = (t: (typeof items)[number], candidates?: string[]) => ({
+    file: t.file,
+    ...(candidates && candidates.length > 1 ? { candidates } : {}),
+  });
+  const byFile = items.filter((t) => t.file === ref || t.file === `${ref}.md`);
+  if (byFile.length === 1) return one(byFile[0]!);
+  const byId = items.filter((t) => t.uniqueId === ref);
+  if (byId.length === 1) return one(byId[0]!);
+  const norm = ref.trim().toLowerCase();
+  const byTitle = items.filter((t) => t.title.trim().toLowerCase() === norm);
+  if (byTitle.length === 1) return one(byTitle[0]!);
+  // substring tiers: a unique hit wins outright; multi-hit falls to best-of
+  for (const pool of [
+    items.filter((t) => t.uniqueId?.toLowerCase().includes(norm)),
+    items.filter((t) => t.file.toLowerCase().includes(norm)),
+    items.filter((t) => t.title.toLowerCase().includes(norm)),
+  ]) {
+    if (pool.length === 1) return one(pool[0]!);
+    if (pool.length > 1) {
+      const cands = pool.map((t) => t.file);
+      // open-before-done, then newest first (listTodos is already sorted)
+      const best = pool.find((t) => !/done|complete/i.test(t.status)) ?? pool[0]!;
+      return one(best, cands);
+    }
   }
+  return {
+    error: `no todo matches '${ref}' (file, unique-id, title, substring)`,
+  };
+}
+export interface DoneMeta {
+  /** Who marked it (agent name + session id). */
+  by?: string;
+  /** One-line verification/evidence (command, probe, or link). */
+  evidence?: string;
+}
+
+function setStatusAndAppend(
+  deps: TodoDeps,
+  file: string,
+  status: string,
+  extra?: { heading?: string; lines?: string[] },
+): { ok: true; file: string } {
+  const p = join(deps.todoDir, file);
+  let raw = readFileSync(p, "utf8");
+  if (STATUS_RE.test(raw)) {
+    raw = raw.replace(STATUS_RE, (m) => m.replace(/:\s*.*$/, `: ${status}`));
+  } else {
+    raw = `${raw}\n- status: ${status}\n`;
+  }
+  if (extra?.lines?.length) {
+    raw = `${raw}\n## ${extra.heading ?? "Evidence"}\n${extra.lines.map((l) => `- ${l}`).join("\n")}\n`;
+  }
+  writeFileSync(p, raw);
   regenerateIndex(deps);
   return { ok: true, file };
+}
+
+/** Done is a DURABLE RECORD, not a pointer flip: the status line carries who
+ *  and when; an `## Done` evidence block captures the verification. Ref
+ *  resolves via resolveTodoRef — best-effort, never rejecting a resolvable
+ *  ref; best-of picks are recorded on the item via `resolved-via`. */
+export function handleDone(
+  deps: TodoDeps,
+  ref: string,
+  meta: DoneMeta = {},
+): { ok: boolean; file?: string; error?: string } {
+  const r = resolveTodoRef(deps, ref);
+  if ("error" in r) return { ok: false, error: r.error };
+  const when = new Date().toISOString();
+  const lines = [
+    `marked-by: ${meta.by ?? "daemon"}`,
+    `marked-at: ${when}`,
+    ...(meta.evidence ? [`evidence: ${meta.evidence}`] : []),
+  ];
+  if (r.candidates?.length) lines.push(`resolved-via: best-of [${r.candidates.join(", ")}]`);
+  return setStatusAndAppend(
+    deps,
+    r.file,
+    `DONE (by ${meta.by ?? "daemon"}, ${when})`,
+    { heading: "Done", lines },
+  );
+}
+
+/** Blocked is first-class: the reason is durable on the item, not a chat
+ *  aside. Unblock = handleUpdate with a non-blocked status. */
+export function handleBlock(
+  deps: TodoDeps,
+  ref: string,
+  reason: string,
+  by?: string,
+): { ok: boolean; file?: string; error?: string } {
+  if (!reason?.trim()) return { ok: false, error: "block requires a reason" };
+  const r = resolveTodoRef(deps, ref);
+  if ("error" in r) return { ok: false, error: r.error };
+  const when = new Date().toISOString();
+  return setStatusAndAppend(
+    deps,
+    r.file,
+    `BLOCKED (${by ?? "daemon"}, ${when}): ${reason.trim().slice(0, 200)}`,
+    {
+      heading: "Blocked",
+      lines: [
+        `reason: ${reason.trim()}`,
+        `blocked-by: ${by ?? "daemon"}`,
+        `blocked-at: ${when}`,
+      ],
+    },
+  );
 }
 
 export function handleUpdate(

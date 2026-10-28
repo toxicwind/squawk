@@ -7,6 +7,7 @@ import type { Dispatch } from "../dispatch/index.ts";
 import { mcpCallTool, MCP_TOOLS } from "../mcp/index.ts";
 import {
   handleAdd,
+  handleBlock,
   handleDone,
   handleList,
   handleUpdate,
@@ -217,7 +218,23 @@ export async function handleFetch(
     {
       const tm = path.match(/^\/v1\/todo\/([^/]+)\/done$/);
       if (tm && req.method === "POST")
-        return json(handleDone(ctx.todo, decodeURIComponent(tm[1])));
+        return json(
+          handleDone(ctx.todo, decodeURIComponent(tm[1]), {
+            by: typeof body?.by === "string" ? body.by : undefined,
+            evidence:
+              typeof body?.evidence === "string" ? body.evidence : undefined,
+          }),
+        );
+    }
+    if (path === "/v1/todo/block" && req.method === "POST") {
+      return json(
+        handleBlock(
+          ctx.todo,
+          String(body?.file ?? body?.ref ?? ""),
+          String(body?.reason ?? ""),
+          typeof body?.by === "string" ? body.by : undefined,
+        ),
+      );
     }
 
     if (path === "/v1/dispatch/tasks" && req.method === "POST")
