@@ -17,11 +17,10 @@
 
 import { Database } from "bun:sqlite";
 import {
-  mkdirSync,
   existsSync,
+  mkdirSync,
   readdirSync,
   readFileSync,
-  writeFileSync,
 } from "node:fs";
 
 export const STATE_FILENAME = ".kappa-bridge-state.json";
@@ -98,10 +97,9 @@ export function saveState(
   state: Record<string, unknown>,
 ): void {
   mkdirSync(chanDir, { recursive: true });
-  writeFileSync(
+  Bun.write(
     `${chanDir}/${STATE_FILENAME}`,
     JSON.stringify(state, null, 2),
-    "utf-8",
   );
 }
 
@@ -193,7 +191,7 @@ export function rowToFile(chanDir: string, row: BoardRow): string {
     "---\n" +
     `${row.body.replace(/\s+$/, "")}\n`;
   mkdirSync(chanDir, { recursive: true });
-  writeFileSync(fpath, fm, "utf-8");
+  Bun.write(fpath, fm);
   return fpath;
 }
 

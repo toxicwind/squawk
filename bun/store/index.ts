@@ -4,7 +4,7 @@
 // writer of state DB files (SQLite WAL).
 
 import { Database } from "bun:sqlite";
-import { mkdirSync, existsSync, readdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, existsSync, readdirSync } from "node:fs";
 import { normalizeIdentity, nowISO, type Identity } from "../identity/index.ts";
 
 export interface Store {
@@ -80,7 +80,7 @@ export function openStore(opts: StoreOptions): Store {
       const fm =
         `---\nseq: ${seq}\nfrom: ${from}\nto: all\nchannel: ${channel}\n` +
         `ts: ${ts}\nstatus: discussion\n---\n${body}\n`;
-      writeFileSync(f, fm, "utf-8");
+      Bun.write(f, fm);
       return f;
     } catch {
       return null;
@@ -414,10 +414,38 @@ export function openStore(opts: StoreOptions): Store {
     },
 
     consolidatedState(version: string, uptimeS: number) {
+      const act = this.activity();
+      const a2aRoster = (act.agents || []).map((a: any) => {
+        let card = null;
+        let capabilities = ["message", "task"];
+        try {
+          if (a.counters) {
+            const parsed = JSON.parse(a.counters);
+            if (parsed.card) card = parsed.card;
+            if (card?.capabilities) capabilities = card.capabilities;
+          }
+        } catch {}
+        return {
+          agent_id: a.agent_id,
+          name: a.name,
+          activity: a.activity,
+          last_heartbeat: a.last_heartbeat,
+          card,
+          delegation: {
+            capable: true,
+            capabilities,
+          },
+        };
+      });
+
       return {
         service: { name: "squawk", version, uptime_s: uptimeS },
         presence: this.liveAgents(),
-        activity: this.activity(),
+        activity: act,
+        a2a: {
+          roster: a2aRoster,
+          count: a2aRoster.length,
+        },
         decisions: this.recentDecisions(50),
         rooms: this.rooms(),
         ts: nowISO(),

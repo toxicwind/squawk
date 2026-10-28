@@ -6,7 +6,7 @@
 // for first-class access. Single-writer semantics: last write wins per file,
 // status parsed from the `status:` header line.
 
-import { readdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readdirSync, readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
 export interface TodoDeps {
@@ -100,7 +100,7 @@ export function regenerateIndex(deps: TodoDeps): string {
     "",
   ];
   const out = lines.join("\n");
-  writeFileSync(join(deps.todoDir, "TODO.md"), out);
+  Bun.write(join(deps.todoDir, "TODO.md"), out);
   return out;
 }
 
@@ -122,7 +122,7 @@ export function handleAdd(
     .toLowerCase()
     .replace(/[^a-z0-9-]+/g, "-")
     .slice(0, 60)}.md`;
-  writeFileSync(join(deps.todoDir, file), body.content);
+  Bun.write(join(deps.todoDir, file), body.content);
   regenerateIndex(deps);
   return { ok: true, file };
 }
@@ -195,7 +195,7 @@ function setStatusAndAppend(
   if (extra?.lines?.length) {
     raw = `${raw}\n## ${extra.heading ?? "Evidence"}\n${extra.lines.map((l) => `- ${l}`).join("\n")}\n`;
   }
-  writeFileSync(p, raw);
+  Bun.write(p, raw);
   regenerateIndex(deps);
   return { ok: true, file };
 }
@@ -270,7 +270,7 @@ export function handleUpdate(
   if (body.title && /^#\s*TODO\s*—?\s*/.test(raw)) {
     raw = raw.replace(/^#\s*TODO\s*—?\s*.*/m, `# TODO — ${body.title}`);
   }
-  writeFileSync(p, raw);
+  Bun.write(p, raw);
   regenerateIndex(deps);
   return { ok: true, file: body.file };
 }

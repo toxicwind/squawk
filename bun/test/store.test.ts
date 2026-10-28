@@ -29,8 +29,10 @@ describe("store identity + presence", () => {
     expect(r.receipt).toContain("wren");
   });
 
-  test("join requires summoner", () => {
-    expect(() => store.join({ name: "nobody" })).toThrow("summoner");
+  test("anonymous join defaults summoner to anon (Anomaly #35)", () => {
+    const r = store.join({ name: "nobody" });
+    expect(r.agent_id).toBeDefined();
+    expect(r.receipt).toContain("nobody");
   });
 
   test("heartbeat updates presence", () => {
