@@ -1,7 +1,7 @@
 # TODO — pens-ui master dashboard (MOST URGENT — architect directive 2026-10-27T20:1xZ)
 
 - author: tau (session 2026-10-27, awrawr-pc)
-- status: NOT STARTED — flagged MOST URGENT by architect, supersedes ordering below
+- status: DONE (by daemon, 2026-10-28T12:41:24.653Z)
 - unique-id: TAU-20261027-pens-ui-master-dashboard
 
 ## Why most urgent
@@ -52,3 +52,7 @@ tabs iframe the per-product UIs (surfaces.ts pattern generalizes).
 - TODO A: fix kappa config schema — either honor `"model"` in kappa.json or update the mimetite-generated config template to stop writing it.
 - TODO B: add `model.set` to `KappacodeModelState.Patch` + server route (`POST /v1/model/recent`-style) + MCP tool `change_model` so agents (not just humans in TUI) can switch kappa's model.
 - Verified working state: kappa tmux session `kappa-interactive` pinned via model.json recents; default code agent still qwen3.6-35b until picker used once or TODO B lands.
+
+## Done
+- marked-by: daemon
+- marked-at: 2026-10-28T12:41:24.653Z
