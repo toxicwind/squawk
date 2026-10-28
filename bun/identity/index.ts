@@ -20,7 +20,7 @@ export interface Identity {
 
 export type IdentityInput = Partial<Identity> & {
   name: string;
-  summoner: string;
+  summoner?: string;
 };
 
 export function nowISO(): string {
@@ -37,16 +37,11 @@ export function randomHex(n: number): string {
 /** Validate a legal identity record. Returns a normalized Identity or throws. */
 export function normalizeIdentity(p: IdentityInput): Identity {
   const name = String(p.name || "").trim();
-  const summoner = String(p.summoner || "").trim();
   if (!name)
     throw Object.assign(new Error("name is required"), { status: 400 });
-  if (!summoner)
-    throw Object.assign(
-      new Error("summoner is required (no anonymous joins)"),
-      {
-        status: 400,
-      },
-    );
+  // Anon joins are LEGAL (architect order 2026-10-28): they are simply
+  // summoned as 'anon' and told so in the join response — never rejected.
+  const summoner = String(p.summoner || "").trim() || "anon";
   const agent_id = p.agent_id
     ? String(p.agent_id)
     : `sc-${Date.now().toString(36)}-${randomHex(6)}`;

@@ -24,10 +24,9 @@ describe("identity", () => {
     ).toThrow("name is required");
   });
 
-  test("normalizeIdentity requires summoner", () => {
-    expect(() =>
-      normalizeIdentity({ name: "wren", summoner: "" } as IdentityInput),
-    ).toThrow("summoner is required");
+  test("anonymous joins default summoner to anon (architect order 2026-10-28)", () => {
+    const id = normalizeIdentity({ name: "wren", summoner: "" } as IdentityInput);
+    expect(id.summoner).toBe("anon");
   });
 
   test("generates agent_id when not provided", () => {
