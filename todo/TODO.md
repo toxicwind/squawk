@@ -1,6 +1,6 @@
 # FLEET TODO — INDEX (auto-generated; edit the linked files, not this)
 
-Updated: 2026-10-28T22:56:44.664Z
+Updated: 2026-10-28T22:56:56.683Z
 
 | Urgency | Status | Author | Todo | File |
 |---|---|---|---|---|
@@ -66,7 +66,7 @@ Updated: 2026-10-28T22:56:44.664Z
 |  | DONE (marked by daemon) | kappa (ses_e815d2c0fffeqbvL2TJ11k9uX9, glm-5.3-flash) | freeinference queue contention: dedicated entrypoint + auto fallback (geode/rhodo) | [20261027T1939Z-freeinference-queue-entrypoint-auto-fallback.md](20261027T1939Z-freeinference-queue-entrypoint-auto-fallback.md) |
 |  | DONE (marked by daemon) | unknown | github metadata + MAIN-MAIN sweep (kappa fleet) | [20261027T1916Z-kappa-kappa-github-metadata-main-sweep.md](20261027T1916Z-kappa-kappa-github-metadata-main-sweep.md) |
 |  | DONE (by daemon, 2026-10-28T22:56:44.663Z) | tau | Blackbird: doctrine in AGENTS + GITHUB_SESSIONS env (DONE) | [20261028T030843Z-tau-blackbird--doctrine-in-agents---github-sessions-en.md](20261028T030843Z-tau-blackbird--doctrine-in-agents---github-sessions-en.md) |
-|  | DONE (verified, committed) | tau | Bun canary: 1.4.4 rev 11c367163 = canary (DONE, verified) | [20261028T030843Z-tau-bun-canary--1-4-4-rev-11c367163---canary.md](20261028T030843Z-tau-bun-canary--1-4-4-rev-11c367163---canary.md) |
+|  | DONE (by daemon, 2026-10-28T22:56:56.683Z) | tau | Bun canary: 1.4.4 rev 11c367163 = canary (DONE, verified) | [20261028T030843Z-tau-bun-canary--1-4-4-rev-11c367163---canary.md](20261028T030843Z-tau-bun-canary--1-4-4-rev-11c367163---canary.md) |
 |  | DONE (verified, committed) | tau | IRC bridge: estate/irc-bridge live, ESTAB to ergo :25241 (DONE) | [20261028T030843Z-tau-irc-bridge--estate-irc-bridge-live--estab-to-ergo-.md](20261028T030843Z-tau-irc-bridge--estate-irc-bridge-live--estab-to-ergo-.md) |
 |  | DONE (verified, committed) | tau | Kappa parity: nvidia nemotron already in kappa.jsonc catalog (DONE by catalog regen) | [20261028T030843Z-tau-kappa-parity--nvidia-nemotron-already-in-kappa-jso.md](20261028T030843Z-tau-kappa-parity--nvidia-nemotron-already-in-kappa-jso.md) |
 |  | DONE (verified, committed) | tau | Session synthesis: pens/ergasterion/docs/session-synthesis-20261028.md (DONE, pushed 6ff25f8) | [20261028T030843Z-tau-session-synthesis--pens-ergasterion-docs-session-s.md](20261028T030843Z-tau-session-synthesis--pens-ergasterion-docs-session-s.md) |
