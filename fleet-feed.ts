@@ -80,7 +80,8 @@ export function startFleetFeed(): void {
   const dir = fleetDir();
   try {
     watch(dir, { persistent: true }, (_event, filename) => {
-      if (filename && filename.endsWith(".md")) onFileEvent(join(dir, filename));
+      if (filename && filename.endsWith(".md"))
+        onFileEvent(join(dir, filename));
     });
   } catch (err) {
     console.error(`[fleet-feed] watcher failed: ${String(err)}`);
@@ -89,11 +90,13 @@ export function startFleetFeed(): void {
   console.log(`[fleet-feed] watching ${dir}`);
 }
 
-function addClient(): Client {
-  let sock: { send: (d: string) => void; close: () => void } | null = null;
+function addClient(sock: {
+  send: (d: string) => void;
+  close: () => void;
+}): Client {
   const client: Client = {
-    send: (frame) => sock?.send(frame),
-    close: () => sock?.close(),
+    send: (frame) => sock.send(frame),
+    close: () => sock.close(),
   };
   clients.add(client);
   return client;
@@ -112,7 +115,9 @@ Bun.serve({
     }
 
     if (url.pathname.startsWith("/api/agents/")) {
-      const name = decodeURIComponent(url.pathname.slice("/api/agents/".length));
+      const name = decodeURIComponent(
+        url.pathname.slice("/api/agents/".length),
+      );
       // agent_ok in the Rust original: bounded, ascii-alphanumeric plus - and _.
       if (!name || name.length > 64 || !/^[A-Za-z0-9_-]+$/.test(name)) {
         return Response.json({ error: "invalid agent name" }, { status: 400 });
@@ -139,13 +144,10 @@ Bun.serve({
   },
   websocket: {
     open(sock) {
-      const client = addClient();
+      const client = addClient(sock);
       // Bind the socket into the client so broadcast can reach it, then send
       // hello + the full snapshot so a new client paints with no HTTP round-trip.
       (sock as unknown as { _client?: Client })._client = client;
-      const clientRef = client;
-      client.send = (frame) => sock.send(frame);
-      client.close = () => sock.close();
       sock.send(
         JSON.stringify({
           type: "hello",
@@ -160,7 +162,6 @@ Bun.serve({
           messages: recentMessages(50),
         }),
       );
-      
     },
     close(sock) {
       const client = (sock as unknown as { _client?: Client })._client;

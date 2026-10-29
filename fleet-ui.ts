@@ -76,7 +76,11 @@ async function uiHtml(): Promise<string> {
   return raw.replace("<script>", "<script>\nwindow.SERVER_AUTH=true;");
 }
 
-type SockData = { target: string; backend?: WebSocket; pending: (string | Buffer)[] };
+type SockData = {
+  target: string;
+  backend?: WebSocket;
+  pending: (string | Buffer)[];
+};
 
 Bun.serve<SockData>({
   port: 25136,
@@ -89,10 +93,14 @@ Bun.serve<SockData>({
       if (target && server.upgrade(req, { data: { target, pending: [] } })) {
         return; // upgraded: the socket now lives in the websocket handlers
       }
-      return new Response("no websocket target for " + url.pathname, { status: 404 });
+      return new Response("no websocket target for " + url.pathname, {
+        status: 404,
+      });
     }
     if (url.pathname === "/" || url.pathname === "/ui") {
-      return new Response(await uiHtml(), { headers: { "Content-Type": "text/html" } });
+      return new Response(await uiHtml(), {
+        headers: { "Content-Type": "text/html" },
+      });
     }
     // proxy everything else to the feed
     // the feed serves everything under /squawk-feed/*; the client speaks
@@ -102,9 +110,13 @@ Bun.serve<SockData>({
     const resp = await fetch(target, {
       method: req.method,
       headers: authHeaders(req.headers),
-      body: req.method === "GET" || req.method === "HEAD" ? undefined : req.body,
+      body:
+        req.method === "GET" || req.method === "HEAD" ? undefined : req.body,
     });
-    return new Response(resp.body, { status: resp.status, headers: resp.headers });
+    return new Response(resp.body, {
+      status: resp.status,
+      headers: resp.headers,
+    });
   },
   websocket: {
     open(ws) {
@@ -112,36 +124,60 @@ Bun.serve<SockData>({
       try {
         backend = new WebSocket(ws.data.target);
       } catch {
-        try { ws.close(1011, "backend dial failed"); } catch {}
+        try {
+          ws.close(1011, "backend dial failed");
+        } catch {}
         return;
       }
       ws.data.backend = backend;
       backend.onopen = () => {
         for (const m of ws.data.pending.splice(0)) {
-          try { backend.send(m); } catch {}
+          try {
+            backend.send(
+              typeof m === "string"
+                ? m
+                : new Uint8Array(
+                    m.buffer as ArrayBuffer,
+                    m.byteOffset,
+                    m.byteLength,
+                  ),
+            );
+          } catch {}
         }
       };
       backend.onmessage = (ev) => {
-        try { ws.send(ev.data); } catch {}
+        try {
+          ws.send(ev.data);
+        } catch {}
       };
       backend.onclose = (ev) => {
-        try { ws.close(ev.code || 1000, ev.reason || "backend closed"); } catch {}
+        try {
+          ws.close(ev.code || 1000, ev.reason || "backend closed");
+        } catch {}
       };
       backend.onerror = () => {
-        try { ws.close(1011, "backend error"); } catch {}
+        try {
+          ws.close(1011, "backend error");
+        } catch {}
       };
     },
     message(ws, message) {
       const b = ws.data.backend;
       if (b && b.readyState === WebSocket.OPEN) {
-        try { b.send(message); } catch {}
+        try {
+          b.send(message);
+        } catch {}
       } else {
         ws.data.pending.push(message); // queue the subscribe frame until dial completes
       }
     },
     close(ws) {
-      try { ws.data.backend?.close(); } catch {}
+      try {
+        ws.data.backend?.close();
+      } catch {}
     },
   },
 });
-console.log("fleet-ui on 0.0.0.0:25136 (funnel /fleet + tailnet-direct), ws-aware, server-auth, hot-reload");
+console.log(
+  "fleet-ui on 0.0.0.0:25136 (funnel /fleet + tailnet-direct), ws-aware, server-auth, hot-reload",
+);

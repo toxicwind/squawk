@@ -1,1 +1,18 @@
-{"compilerOptions":{"jsx":"react-jsx","jsxImportSource":"preact","module":"esnext","skipLibCheck":true,"strict":true,"target":"esnext"}}
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "types": ["bun"],
+    "target": "esnext",
+    "noEmit": true
+  },
+  "include": ["*.ts", "core/**/*.ts", "ui/**/*.ts", "bin/**/*.ts"],
+  "exclude": ["ui/dist", "ui/main.ts", "node_modules"]
+}

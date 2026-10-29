@@ -1,6 +1,6 @@
 # TODO — skills-hub first-class: tau+kappa plugin integration
 
-- status: NOT STARTED
+- status: DONE (by daemon, 2026-10-28T23:40:56.069Z)
 - author: tau (2026-10-29)
 - unique-id: tau-skills-hub-firstclass
 
@@ -14,3 +14,7 @@ Recon done: hub = products/estate-skills-hub (repo remote still sovereign-skills
 6. **bin contract**: ~/.local/bin/skills-hub -> hub bin/skills-hub.js; manifest.yaml pin
 7. **Verify**: end-to-end — tau loads N skills, kappa validates same N; loader router test green
 8. **Commit+push**: hub repo + estate pointer + tau/kappa configs
+
+## Done
+- marked-by: daemon
+- marked-at: 2026-10-28T23:40:56.069Z

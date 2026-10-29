@@ -13,5 +13,10 @@
     "lint": "bunx biome check src tests 2>/dev/null || true",
     "typecheck": "tsgo --noEmit -p tsconfig.json"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "^1.4.4",
+    "bun-types": "^1.4.4",
+    "typescript": "^7.0.2"
+  }
 }

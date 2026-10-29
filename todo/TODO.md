@@ -1,6 +1,6 @@
 # FLEET TODO — INDEX (auto-generated; edit the linked files, not this)
 
-Updated: 2026-10-28T23:37:03.995Z
+Updated: 2026-10-28T23:40:56.070Z
 
 | Urgency | Status | Author | Todo | File |
 |---|---|---|---|---|
@@ -29,7 +29,6 @@ Updated: 2026-10-28T23:37:03.995Z
 |  | NOT STARTED (verification follow-up) | tau | 20261028T2230Z-tau-estate-single-truth-verification | [20261028T2230Z-tau-estate-single-truth-verification.md](20261028T2230Z-tau-estate-single-truth-verification.md) |
 |  | NOT STARTED | tau (architect directive 2026-10-28) | EAP repair lane: Flotilla (Pixel browser) + gcloud combo | [20261029T0000Z-tau-eap-repair-floatilla-gcloud.md](20261029T0000Z-tau-eap-repair-floatilla-gcloud.md) |
 |  | NOT STARTED | tau (kryptos/kryptos-quota session) | status poller + 429 attribution (tau 2026-10-28) | [20261029T0015Z-tau-status-poller-429-attribution.md](20261029T0015Z-tau-status-poller-429-attribution.md) |
-|  | NOT STARTED | tau (2026-10-29) | skills-hub first-class: tau+kappa plugin integration | [20261029T0130Z-tau-skills-hub-firstclass.md](20261029T0130Z-tau-skills-hub-firstclass.md) |
 |  | NOT STARTED | tau 2026-10-28 | FINAL acceptance gate: user-surface TDD via real kappa (wezterm+tmux) | [20261028T2359Z-tau-final-user-surface-tdd.md](20261028T2359Z-tau-final-user-surface-tdd.md) |
 |  | IN PROGRESS | tau (2026-10-28 goal mirror) | IRC awareness: stand up ergo IRCd :25241 + wire rig presence (IN PROGRESS - ergo downloaded, config listening, daemon re | [20261028T023520Z-tau-goal-irc-awareness.md](20261028T023520Z-tau-goal-irc-awareness.md) |
 |  | IN PROGRESS | tau (session 2026-10-27, awrawr-pc) | CONNRESET socket-closed investigation in tau session log; enable fetch verbose | [20261028T005841Z-tau-tau-connreset-investigation.md](20261028T005841Z-tau-tau-connreset-investigation.md) |
@@ -66,6 +65,7 @@ Updated: 2026-10-28T23:37:03.995Z
 |  | DONE (verified, committed) | tau | Kappa parity: nvidia nemotron already in kappa.jsonc catalog (DONE by catalog regen) | [20261028T030843Z-tau-kappa-parity--nvidia-nemotron-already-in-kappa-jso.md](20261028T030843Z-tau-kappa-parity--nvidia-nemotron-already-in-kappa-jso.md) |
 |  | DONE (verified, committed) | tau | Session synthesis: pens/ergasterion/docs/session-synthesis-20261028.md (DONE, pushed 6ff25f8) | [20261028T030843Z-tau-session-synthesis--pens-ergasterion-docs-session-s.md](20261028T030843Z-tau-session-synthesis--pens-ergasterion-docs-session-s.md) |
 |  | DONE (verified, committed) | tau | Tau swarm: modelRoles -> nemotron-3-ultra/super (DONE, committed bd371f9120) | [20261028T030843Z-tau-tau-swarm--modelroles----nemotron-3-ultra-super.md](20261028T030843Z-tau-tau-swarm--modelroles----nemotron-3-ultra-super.md) |
+|  | DONE (by daemon, 2026-10-28T23:40:56.069Z) | tau (2026-10-29) | skills-hub first-class: tau+kappa plugin integration | [20261029T0130Z-tau-skills-hub-firstclass.md](20261029T0130Z-tau-skills-hub-firstclass.md) |
 |  | DONE (by daemon, 2026-10-28T23:09:55.524Z) | unknown | 20261028T2250Z-tau-kite-pcap-bridge-extractor | [20261028T2250Z-tau-kite-pcap-bridge-extractor.md](20261028T2250Z-tau-kite-pcap-bridge-extractor.md) |
 |  | DONE (by daemon, 2026-10-28T23:36:07.256Z) | unknown | 20261028T2250Z-tau-kite-toolbus-noise-responder | [20261028T2250Z-tau-kite-toolbus-noise-responder.md](20261028T2250Z-tau-kite-toolbus-noise-responder.md) |
 |  | DONE (by daemon, 2026-10-28T23:30:44.540Z) | unknown | 20261028T2250Z-tau-kite-interop-vector-api | [20261028T2250Z-tau-kite-interop-vector-api.md](20261028T2250Z-tau-kite-interop-vector-api.md) |

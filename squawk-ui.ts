@@ -25,13 +25,21 @@
 // channel store (/home/toxic/.fleet-bus/squawk-root/<channel>/*.md) so tabs
 // actually isolate per channel. The legacy feed proxy at :25135 remains for
 // CLI/other consumers; the UI no longer depends on its /wait channel filtering.
-import { readFileSync, statSync, mkdirSync, writeFileSync, readdirSync } from "node:fs";
+import {
+  readFileSync,
+  statSync,
+  mkdirSync,
+  writeFileSync,
+  readdirSync,
+} from "node:fs";
 import { join } from "node:path";
+import type { ServerWebSocket } from "bun";
 
 const FEED = "http://127.0.0.1:25135";
-const SQUAWK_DIR = "/home/toxic/estate/ranch/squawk";
+const SQUAWK_DIR = "/home/toxic/pens/ranch/squawk";
 const UI_ENTRY = join(SQUAWK_DIR, "ui", "dist", "bundle.js");
-const FEED_TOKEN_PATH = "/home/toxic/hatch/agents/ember/squawk-relay/feed-token";
+const FEED_TOKEN_PATH =
+  "/home/toxic/hatch/agents/ember/squawk-relay/feed-token";
 const SQUAWK_ROOT = "/home/toxic/.fleet-bus/squawk-root";
 
 // websocket upgrade targets: client path -> backend ws url.
@@ -96,19 +104,42 @@ function getTunnelToken(): string {
       tunnelToken = readFileSync(TUNNEL_TOKEN_PATH, "utf8").trim();
       tunnelTokenMtimeMs = st.mtimeMs;
     }
-  } catch { /* keep whatever we have */ }
+  } catch {
+    /* keep whatever we have */
+  }
   return tunnelToken;
 }
 
-const TUNNELED_PATHS = new Set(["/", "/ui", "/wait", "/channels", "/send", "/health"]);
-const TUNNEL_HOP_HEADERS = new Set(["connection", "transfer-encoding", "keep-alive",
-  "proxy-authenticate", "proxy-authorization", "te", "trailer", "upgrade", "host"]);
+const TUNNELED_PATHS = new Set([
+  "/",
+  "/ui",
+  "/wait",
+  "/channels",
+  "/send",
+  "/health",
+]);
+const TUNNEL_HOP_HEADERS = new Set([
+  "connection",
+  "transfer-encoding",
+  "keep-alive",
+  "proxy-authenticate",
+  "proxy-authorization",
+  "te",
+  "trailer",
+  "upgrade",
+  "host",
+]);
 
 let tunnelSock: ServerWebSocket<SockData> | null = null;
 let tunnelSeq = 0;
-const tunnelHttpPending = new Map<string, {
-  resolve: (r: Response) => void; reject: (e: Error) => void; timer: Timer;
-}>();
+const tunnelHttpPending = new Map<
+  string,
+  {
+    resolve: (r: Response) => void;
+    reject: (e: Error) => void;
+    timer: Timer;
+  }
+>();
 // bridge id -> browser websocket, for WS connections shuttled through the tunnel
 const tunnelWsBridges = new Map<string, ServerWebSocket<SockData>>();
 
@@ -122,9 +153,14 @@ function tunnelSend(obj: any): boolean {
   }
 }
 
-function tunnelHttp(method: string, path: string, headers: Headers, body: ArrayBuffer | null): Promise<Response> {
+function tunnelHttp(
+  method: string,
+  path: string,
+  headers: Headers,
+  body: ArrayBuffer | null,
+): Promise<Response> {
   return new Promise((resolve, reject) => {
-    const id = "h" + (++tunnelSeq) + "-" + Date.now().toString(36);
+    const id = "h" + ++tunnelSeq + "-" + Date.now().toString(36);
     const timer = setTimeout(() => {
       tunnelHttpPending.delete(id);
       reject(new Error("tunnel http timeout"));
@@ -135,7 +171,11 @@ function tunnelHttp(method: string, path: string, headers: Headers, body: ArrayB
       if (!TUNNEL_HOP_HEADERS.has(k.toLowerCase())) h[k] = v;
     });
     const ok = tunnelSend({
-      type: "http", id, method, path, headers: h,
+      type: "http",
+      id,
+      method,
+      path,
+      headers: h,
       body_b64: body ? Buffer.from(body).toString("base64") : "",
     });
     if (!ok) {
@@ -149,8 +189,12 @@ function tunnelHttp(method: string, path: string, headers: Headers, body: ArrayB
 function handleTunnelMessage(raw: string | Buffer) {
   let msg: any;
   try {
-    msg = JSON.parse(typeof raw === "string" ? raw : Buffer.from(raw).toString());
-  } catch { return; }
+    msg = JSON.parse(
+      typeof raw === "string" ? raw : Buffer.from(raw).toString(),
+    );
+  } catch {
+    return;
+  }
   const t = msg?.type;
   if (t === "http-res" && msg.id) {
     const p = tunnelHttpPending.get(msg.id);
@@ -158,10 +202,12 @@ function handleTunnelMessage(raw: string | Buffer) {
     tunnelHttpPending.delete(msg.id);
     clearTimeout(p.timer);
     const body = msg.body_b64 ? Buffer.from(msg.body_b64, "base64") : null;
-    p.resolve(new Response(body, {
-      status: Number(msg.status) || 200,
-      headers: msg.headers || {},
-    }));
+    p.resolve(
+      new Response(body, {
+        status: Number(msg.status) || 200,
+        headers: msg.headers || {},
+      }),
+    );
     return;
   }
   if (t === "ws-data" && msg.id) {
@@ -180,7 +226,9 @@ function handleTunnelMessage(raw: string | Buffer) {
     const bws = tunnelWsBridges.get(msg.id);
     tunnelWsBridges.delete(msg.id);
     if (bws) {
-      try { bws.close(Number(msg.code) || 1000, String(msg.reason || "")); } catch {}
+      try {
+        bws.close(Number(msg.code) || 1000, String(msg.reason || ""));
+      } catch {}
     }
     return;
   }
@@ -198,7 +246,13 @@ function handleTunnelMessage(raw: string | Buffer) {
 const VALID_CHANNEL = /^[a-z0-9-_]{1,32}$/;
 
 function slugify(s: string): string {
-  return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 32) || "msg";
+  return (
+    s
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 32) || "msg"
+  );
 }
 
 type Msg = {
@@ -217,13 +271,17 @@ type Msg = {
 // minimal frontmatter parse: ---\nkey: value\n---\n<body>
 function parseMsgFile(path: string, fallbackSeq: number): Msg | null {
   let raw: string;
-  try { raw = readFileSync(path, "utf8"); } catch { return null; }
+  try {
+    raw = readFileSync(path, "utf8");
+  } catch {
+    return null;
+  }
   const m = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
   const fm: Record<string, string> = {};
   let text = raw;
   if (m) {
-    text = m[2];
-    for (const line of m[1].split("\n")) {
+    text = m[2] ?? "";
+    for (const line of (m[1] ?? "").split("\n")) {
       const i = line.indexOf(":");
       if (i > 0) fm[line.slice(0, i).trim()] = line.slice(i + 1).trim();
     }
@@ -253,15 +311,25 @@ function parseMsgFile(path: string, fallbackSeq: number): Msg | null {
 function handleWait(url: URL): Response {
   const channel = (url.searchParams.get("channel") || "fleet").toLowerCase();
   if (!VALID_CHANNEL.test(channel)) {
-    return Response.json({ ok: false, error: "invalid channel" }, { status: 400 });
+    return Response.json(
+      { ok: false, error: "invalid channel" },
+      { status: 400 },
+    );
   }
   const since = Number(url.searchParams.get("since") || 0);
-  const tail = Math.min(Math.max(Number(url.searchParams.get("tail") || 200), 1), 1000);
+  const tail = Math.min(
+    Math.max(Number(url.searchParams.get("tail") || 200), 1),
+    1000,
+  );
   const beforeRaw = url.searchParams.get("before");
   const before = beforeRaw ? Number(beforeRaw) : null;
   const dir = join(SQUAWK_ROOT, channel);
   let files: string[];
-  try { files = readdirSync(dir); } catch { files = []; }
+  try {
+    files = readdirSync(dir);
+  } catch {
+    files = [];
+  }
   // filenames start with <seq>-... so filter by name before reading
   if (before !== null && Number.isFinite(before)) {
     // Name-first paging: sort candidate filenames by seq and parse only the
@@ -281,9 +349,15 @@ function handleWait(url: URL): Response {
       if (msg) msgs.push(msg);
     }
     msgs.sort((a, b) => a.seq - b.seq);
-    const cursor = msgs.length ? msgs[msgs.length - 1].seq : before;
-    const oldest = msgs.length ? msgs[0].seq : null;
-    return Response.json({ ok: true, messages: msgs, cursor, oldest, has_more: cand.length > page.length });
+    const cursor = msgs.length ? msgs[msgs.length - 1]!.seq : before;
+    const oldest = msgs.length ? msgs[0]!.seq : null;
+    return Response.json({
+      ok: true,
+      messages: msgs,
+      cursor,
+      oldest,
+      has_more: cand.length > page.length,
+    });
   }
   const msgs: Msg[] = [];
   let minSeq = Infinity;
@@ -298,10 +372,16 @@ function handleWait(url: URL): Response {
   }
   msgs.sort((a, b) => a.seq - b.seq);
   const sliced = msgs.slice(-tail);
-  const cursor = sliced.length ? sliced[sliced.length - 1].seq : since;
-  const oldest = sliced.length ? sliced[0].seq : null;
+  const cursor = sliced.length ? sliced[sliced.length - 1]!.seq : since;
+  const oldest = sliced.length ? sliced[0]!.seq : null;
   const has_more = oldest !== null && minSeq < oldest;
-  return Response.json({ ok: true, messages: sliced, cursor, oldest, has_more });
+  return Response.json({
+    ok: true,
+    messages: sliced,
+    cursor,
+    oldest,
+    has_more,
+  });
 }
 
 const HISTORY = "http://127.0.0.1:25152";
@@ -313,44 +393,77 @@ const HISTORY = "http://127.0.0.1:25152";
 async function handlePack(url: URL): Promise<Response> {
   const channel = (url.searchParams.get("channel") || "fleet").toLowerCase();
   if (!VALID_CHANNEL.test(channel)) {
-    return Response.json({ ok: false, error: "invalid channel" }, { status: 400 });
+    return Response.json(
+      { ok: false, error: "invalid channel" },
+      { status: 400 },
+    );
   }
   const q = url.searchParams.get("q") || "";
-  const budget = Math.min(Math.max(Number(url.searchParams.get("budget") || 4000), 1000), 16000);
-  const target = `${HISTORY}/pack?channel=${encodeURIComponent(channel)}`
-    + `&q=${encodeURIComponent(q)}&budget=${budget}`;
+  const budget = Math.min(
+    Math.max(Number(url.searchParams.get("budget") || 4000), 1000),
+    16000,
+  );
+  const target =
+    `${HISTORY}/pack?channel=${encodeURIComponent(channel)}` +
+    `&q=${encodeURIComponent(q)}&budget=${budget}`;
   try {
     const resp = await fetch(target, {
       headers: { authorization: "Bearer " + getFeedToken() },
       signal: AbortSignal.timeout(45000),
     });
     const body = await resp.text();
-    return new Response(body, { status: resp.status, headers: { "Content-Type": "application/json" } });
+    return new Response(body, {
+      status: resp.status,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch {
-    return Response.json({ ok: false, error: "history service unreachable" }, { status: 502 });
+    return Response.json(
+      { ok: false, error: "history service unreachable" },
+      { status: 502 },
+    );
   }
 }
 
 // GET /channels -> {ok, channels: [...]}
 function handleChannels(): Response {
   let dirs: string[];
-  try { dirs = readdirSync(SQUAWK_ROOT, { withFileTypes: true }).filter(d => d.isDirectory()).map(d => d.name); }
-  catch { dirs = []; }
+  try {
+    dirs = readdirSync(SQUAWK_ROOT, { withFileTypes: true })
+      .filter((d) => d.isDirectory())
+      .map((d) => d.name);
+  } catch {
+    dirs = [];
+  }
   // Canonical channel list (Pry, 2026-10-19): same rule as squawk-ws --
   // exclude the key store, the presence dir, and dash-prefixed junk dirs.
   const RESERVED = new Set(["keys", "presence"]);
-  return Response.json({ ok: true, channels: dirs.filter(d => VALID_CHANNEL.test(d) && !RESERVED.has(d) && !d.startsWith("-")).sort() });
+  return Response.json({
+    ok: true,
+    channels: dirs
+      .filter(
+        (d) => VALID_CHANNEL.test(d) && !RESERVED.has(d) && !d.startsWith("-"),
+      )
+      .sort(),
+  });
 }
 
 // POST /send {channel, text} -> {ok, seq}
 async function handleSend(req: Request): Promise<Response> {
   let body: any;
-  try { body = await req.json(); }
-  catch { return Response.json({ ok: false, error: "bad json" }, { status: 400 }); }
-  const channel = String(body.channel || "").trim().toLowerCase();
+  try {
+    body = await req.json();
+  } catch {
+    return Response.json({ ok: false, error: "bad json" }, { status: 400 });
+  }
+  const channel = String(body.channel || "")
+    .trim()
+    .toLowerCase();
   const text = String(body.text || "").trim();
   if (!VALID_CHANNEL.test(channel)) {
-    return Response.json({ ok: false, error: "invalid channel" }, { status: 400 });
+    return Response.json(
+      { ok: false, error: "invalid channel" },
+      { status: 400 },
+    );
   }
   if (!text) {
     return Response.json({ ok: false, error: "empty text" }, { status: 400 });
@@ -375,8 +488,13 @@ let bundleJs = "";
 let bundleMtimeMs = 0;
 async function uiBundle(): Promise<string> {
   let mtime = 0;
-  try { mtime = statSync(UI_ENTRY).mtimeMs; } catch { /* fall through to error below */ }
-  if (!mtime) throw new Error("ui bundle missing: run `mise run build` in squawk/");
+  try {
+    mtime = statSync(UI_ENTRY).mtimeMs;
+  } catch {
+    /* fall through to error below */
+  }
+  if (!mtime)
+    throw new Error("ui bundle missing: run `mise run build` in squawk/");
   if (mtime !== bundleMtimeMs || !bundleJs) {
     bundleJs = readFileSync(UI_ENTRY, "utf8");
     bundleMtimeMs = mtime;
@@ -392,7 +510,11 @@ let uiCss = "";
 let cssMtimeMs = 0;
 function uiStyle(): string {
   let mtime = 0;
-  try { mtime = statSync(CSS_PATH).mtimeMs; } catch { /* fall through */ }
+  try {
+    mtime = statSync(CSS_PATH).mtimeMs;
+  } catch {
+    /* fall through */
+  }
   if (!mtime) throw new Error("ui stylesheet missing: ui/design.css");
   if (mtime !== cssMtimeMs || !uiCss) {
     uiCss = readFileSync(CSS_PATH, "utf8");
@@ -403,18 +525,24 @@ function uiStyle(): string {
 
 async function uiHtml(): Promise<string> {
   const js = await uiBundle();
-  return `<!doctype html><html><head><meta charset="utf-8">`
-    + `<meta name="viewport" content="width=device-width,initial-scale=1">`
-    + `<title>SQUAWK</title><meta name="color-scheme" content="dark"><meta name="theme-color" content="#0b0908"><style>${uiStyle()}</style></head>`
-    + `<body><div id="root"></div>`
-    + `<script>window.SERVER_AUTH=true;</script>`
-    + `<script type="module">${js}</script>`
-    + `</body></html>`;
+  return (
+    `<!doctype html><html><head><meta charset="utf-8">` +
+    `<meta name="viewport" content="width=device-width,initial-scale=1">` +
+    `<title>SQUAWK</title><meta name="color-scheme" content="dark"><meta name="theme-color" content="#0b0908"><style>${uiStyle()}</style></head>` +
+    `<body><div id="root"></div>` +
+    `<script>window.SERVER_AUTH=true;</script>` +
+    `<script type="module">${js}</script>` +
+    `</body></html>`
+  );
 }
 
 type SockData = {
-  target?: string; backend?: WebSocket; pending?: (string | Buffer)[];
-  tunnel?: boolean; tunnelBridge?: boolean; bridgeId?: string;
+  target?: string;
+  backend?: WebSocket;
+  pending?: (string | Buffer)[];
+  tunnel?: boolean;
+  tunnelBridge?: boolean;
+  bridgeId?: string;
 };
 
 Bun.serve<SockData>({
@@ -434,7 +562,10 @@ Bun.serve<SockData>({
     if (req.headers.get("upgrade")?.toLowerCase() === "websocket") {
       // --- cell reverse tunnel: the cell dials in here (token-authenticated) ---
       if (url.pathname === "/squawk-tunnel") {
-        const tok = url.searchParams.get("token") || req.headers.get("x-tunnel-token") || "";
+        const tok =
+          url.searchParams.get("token") ||
+          req.headers.get("x-tunnel-token") ||
+          "";
         if (tok && tok === getTunnelToken()) {
           if (server.upgrade(req, { data: { tunnel: true } })) return;
           return new Response("upgrade failed", { status: 426 });
@@ -443,36 +574,61 @@ Bun.serve<SockData>({
       }
       // --- squawk-ws via tunnel when the cell is connected ---
       if (url.pathname === "/squawk-ws" && tunnelSock) {
-        if (server.upgrade(req, { data: { tunnelBridge: true, bridgeId: "", pending: [] } })) return;
+        if (
+          server.upgrade(req, {
+            data: { tunnelBridge: true, bridgeId: "", pending: [] },
+          })
+        )
+          return;
         return new Response("upgrade failed", { status: 426 });
       }
       const target = wsTarget(url.pathname, url.search);
       if (target && server.upgrade(req, { data: { target, pending: [] } })) {
         return; // upgraded: the socket now lives in the websocket handlers
       }
-      return new Response("no websocket target for " + url.pathname, { status: 404 });
+      return new Response("no websocket target for " + url.pathname, {
+        status: 404,
+      });
     }
     if (url.pathname === "/" || url.pathname === "/ui") {
       try {
-        return new Response(await uiHtml(), { headers: { "Content-Type": "text/html" } });
+        return new Response(await uiHtml(), {
+          headers: { "Content-Type": "text/html" },
+        });
       } catch (e) {
-        return new Response("ui build error: " + String(e), { status: 500, headers: { "Content-Type": "text/plain" } });
+        return new Response("ui build error: " + String(e), {
+          status: 500,
+          headers: { "Content-Type": "text/plain" },
+        });
       }
     }
     // --- channel-aware endpoints served from the local store ---
-    if (url.pathname === "/wait" && req.method === "GET") return handleWait(url);
-    if (url.pathname === "/pack" && req.method === "GET") return handlePack(url);
-    if (url.pathname === "/channels" && req.method === "GET") return handleChannels();
-    if (url.pathname === "/send" && req.method === "POST") return handleSend(req);
+    if (url.pathname === "/wait" && req.method === "GET")
+      return handleWait(url);
+    if (url.pathname === "/pack" && req.method === "GET")
+      return handlePack(url);
+    if (url.pathname === "/channels" && req.method === "GET")
+      return handleChannels();
+    if (url.pathname === "/send" && req.method === "POST")
+      return handleSend(req);
     // --- cell-primary tunnel: proxy squawk traffic to the cell when connected ---
     if (tunnelSock && TUNNELED_PATHS.has(url.pathname)) {
       try {
-        const bodyBuf = (req.method === "GET" || req.method === "HEAD")
-          ? null : await req.arrayBuffer();
-        return await tunnelHttp(req.method, url.pathname + url.search, req.headers, bodyBuf);
+        const bodyBuf =
+          req.method === "GET" || req.method === "HEAD"
+            ? null
+            : await req.arrayBuffer();
+        return await tunnelHttp(
+          req.method,
+          url.pathname + url.search,
+          req.headers,
+          bodyBuf,
+        );
       } catch (e) {
-        console.log("squawk-tunnel: http proxy failed, local fallback:",
-          String(e).slice(0, 80));
+        console.log(
+          "squawk-tunnel: http proxy failed, local fallback:",
+          String(e).slice(0, 80),
+        );
         // fall through to local serving
       }
     }
@@ -484,9 +640,13 @@ Bun.serve<SockData>({
     const resp = await fetch(target, {
       method: req.method,
       headers: authHeaders(req.headers),
-      body: req.method === "GET" || req.method === "HEAD" ? undefined : req.body,
+      body:
+        req.method === "GET" || req.method === "HEAD" ? undefined : req.body,
     });
-    return new Response(resp.body, { status: resp.status, headers: resp.headers });
+    return new Response(resp.body, {
+      status: resp.status,
+      headers: resp.headers,
+    });
   },
   websocket: {
     open(ws) {
@@ -494,7 +654,9 @@ Bun.serve<SockData>({
       // --- cell tunnel connection ---
       if (d.tunnel) {
         if (tunnelSock) {
-          try { tunnelSock.close(1000, "replaced"); } catch {}
+          try {
+            tunnelSock.close(1000, "replaced");
+          } catch {}
         }
         tunnelSock = ws;
         console.log("squawk-tunnel: cell connected");
@@ -502,12 +664,14 @@ Bun.serve<SockData>({
       }
       // --- browser WS bridged through the tunnel to the cell ---
       if (d.tunnelBridge) {
-        const id = "w" + (++tunnelSeq) + "-" + Date.now().toString(36);
+        const id = "w" + ++tunnelSeq + "-" + Date.now().toString(36);
         d.bridgeId = id;
         tunnelWsBridges.set(id, ws);
         if (!tunnelSend({ type: "ws-open", id, path: "/squawk-ws" })) {
           tunnelWsBridges.delete(id);
-          try { ws.close(1011, "tunnel down"); } catch {}
+          try {
+            ws.close(1011, "tunnel down");
+          } catch {}
         }
         return;
       }
@@ -516,23 +680,41 @@ Bun.serve<SockData>({
       try {
         backend = new WebSocket(d.target!);
       } catch {
-        try { ws.close(1011, "backend dial failed"); } catch {}
+        try {
+          ws.close(1011, "backend dial failed");
+        } catch {}
         return;
       }
       d.backend = backend;
       backend.onopen = () => {
         for (const m of (d.pending || []).splice(0)) {
-          try { backend.send(m); } catch {}
+          try {
+            backend.send(
+              typeof m === "string"
+                ? m
+                : new Uint8Array(
+                    m.buffer as ArrayBuffer,
+                    m.byteOffset,
+                    m.byteLength,
+                  ),
+            );
+          } catch {}
         }
       };
       backend.onmessage = (ev) => {
-        try { ws.send(ev.data); } catch {}
+        try {
+          ws.send(ev.data);
+        } catch {}
       };
       backend.onclose = (ev) => {
-        try { ws.close(ev.code || 1000, ev.reason || "backend closed"); } catch {}
+        try {
+          ws.close(ev.code || 1000, ev.reason || "backend closed");
+        } catch {}
       };
       backend.onerror = () => {
-        try { ws.close(1011, "backend error"); } catch {}
+        try {
+          ws.close(1011, "backend error");
+        } catch {}
       };
     },
     message(ws, message) {
@@ -549,8 +731,11 @@ Bun.serve<SockData>({
           if (typeof message === "string") {
             tunnelSend({ type: "ws-data", id, text: message });
           } else {
-            tunnelSend({ type: "ws-data", id,
-              b64: Buffer.from(message).toString("base64") });
+            tunnelSend({
+              type: "ws-data",
+              id,
+              b64: Buffer.from(message).toString("base64"),
+            });
           }
         }
         return;
@@ -558,9 +743,12 @@ Bun.serve<SockData>({
       // --- legacy shuttle ---
       const b = d.backend;
       if (b && b.readyState === WebSocket.OPEN) {
-        try { b.send(message); } catch {}
+        try {
+          b.send(message);
+        } catch {}
       } else {
-        (d.pending || (d.pending = [])).push(message);
+        if (!d.pending) d.pending = [];
+        d.pending.push(message);
       }
     },
     close(ws) {
@@ -574,7 +762,9 @@ Bun.serve<SockData>({
         }
         tunnelHttpPending.clear();
         for (const [, bws] of tunnelWsBridges) {
-          try { bws.close(1011, "tunnel closed"); } catch {}
+          try {
+            bws.close(1011, "tunnel closed");
+          } catch {}
         }
         tunnelWsBridges.clear();
         console.log("squawk-tunnel: cell disconnected, local fallback active");
@@ -590,8 +780,12 @@ Bun.serve<SockData>({
         return;
       }
       // --- legacy ---
-      try { d.backend?.close(); } catch {}
+      try {
+        d.backend?.close();
+      } catch {}
     },
   },
 });
-console.log("squawk-ui on 0.0.0.0:25136 (funnel /fleet + tailnet-direct), ws-aware, server-auth, hot-reload, channel-aware");
+console.log(
+  "squawk-ui on 0.0.0.0:25136 (funnel /fleet + tailnet-direct), ws-aware, server-auth, hot-reload, channel-aware",
+);

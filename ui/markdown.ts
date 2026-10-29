@@ -5,11 +5,17 @@
  * Callers must trust the source (server-auth'd local feed).
  */
 
-const RAW_OPEN = /^<(div|span|section|article|style|details|summary|table|pre|img|a|p|h[1-6]|ul|ol|li|br|hr|button|input)[\s>]/i;
-const RAW_CLOSE = /^<\s*\/\s*(div|span|section|article|style|details|summary|table)\s*>/i;
+const RAW_OPEN =
+  /^<(div|span|section|article|style|details|summary|table|pre|img|a|p|h[1-6]|ul|ol|li|br|hr|button|input)[\s>]/i;
+const RAW_CLOSE =
+  /^<\s*\/\s*(div|span|section|article|style|details|summary|table)\s*>/i;
 
 export function esc(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 /** Link hrefs: attribute-escape the URL and block scriptable schemes. */
@@ -37,12 +43,21 @@ export function mdInline(src: string): string {
   out = esc(out);
   out = out.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
   out = out.replace(/(^|[^*\w])\*([^*]+)\*/g, "$1<em>$2</em>");
-  out = out.replace(/!\[([^\]\n]*)\]\(([^)\s\n]+)\)/g, (_m, alt, u) =>
-    `<img src="${safeHref(unescUrl(u))}" alt="${alt}" loading="lazy">`);
-  out = out.replace(/\[([^\]\n]+)\]\(([^)\s\n]+)\)/g, (_m, t, u) =>
-    `<a href="${safeHref(unescUrl(u))}" target="_blank" rel="noopener">${t}</a>`);
+  out = out.replace(
+    /!\[([^\]\n]*)\]\(([^)\s\n]+)\)/g,
+    (_m, alt, u) =>
+      `<img src="${safeHref(unescUrl(u))}" alt="${alt}" loading="lazy">`,
+  );
+  out = out.replace(
+    /\[([^\]\n]+)\]\(([^)\s\n]+)\)/g,
+    (_m, t, u) =>
+      `<a href="${safeHref(unescUrl(u))}" target="_blank" rel="noopener">${t}</a>`,
+  );
   const re = new RegExp(SENT + "(\\d+)" + SENT, "g");
-  out = out.replace(re, (_m, i) => `<code>${esc(codes[+i])}</code>`);
+  out = out.replace(
+    re,
+    (_m, i) => `<code>${esc(codes[Number(i)] ?? "")}</code>`,
+  );
   return out;
 }
 
@@ -70,7 +85,8 @@ export function mdBlock(src: string): string {
   };
   const flushQ = () => {
     if (quote.length) {
-      html += "<blockquote>" + quote.map(mdInline).join("<br>") + "</blockquote>";
+      html +=
+        "<blockquote>" + quote.map(mdInline).join("<br>") + "</blockquote>";
       quote = [];
     }
   };
@@ -100,7 +116,7 @@ export function mdBlock(src: string): string {
       continue;
     }
     const rawOpen = ln.match(RAW_OPEN);
-    if (rawOpen && !rawClose(rawOpen[1]).test(ln)) {
+    if (rawOpen && rawOpen[1] && !rawClose(rawOpen[1]).test(ln)) {
       // multi-line raw block: pass through until the closing tag
       flushP();
       closeL();
@@ -109,7 +125,11 @@ export function mdBlock(src: string): string {
       html += ln + "\n";
       continue;
     }
-    if (RAW_OPEN.test(ln) || RAW_CLOSE.test(ln) || /^<(br|hr|img)[\s>]/i.test(ln)) {
+    if (
+      RAW_OPEN.test(ln) ||
+      RAW_CLOSE.test(ln) ||
+      /^<(br|hr|img)[\s>]/i.test(ln)
+    ) {
       // single-line raw html
       flushP();
       closeL();
@@ -118,7 +138,7 @@ export function mdBlock(src: string): string {
       continue;
     }
     const h = ln.match(/^(#{1,6})\s+(.*)$/);
-    if (h) {
+    if (h && h[1] && h[2]) {
       flushP();
       closeL();
       flushQ();
@@ -126,7 +146,7 @@ export function mdBlock(src: string): string {
       continue;
     }
     const bq = ln.match(/^>\s?(.*)$/);
-    if (bq) {
+    if (bq && bq[1]) {
       flushP();
       closeL();
       quote.push(bq[1]);
@@ -134,7 +154,7 @@ export function mdBlock(src: string): string {
     }
     const ul = ln.match(/^[-*]\s+(.*)$/);
     const ol = ln.match(/^\d+[.)]\s+(.*)$/);
-    if (ul || ol) {
+    if ((ul && ul[1]) || (ol && ol[1])) {
       flushP();
       flushQ();
       const t = ul ? "ul" : "ol";
@@ -143,7 +163,7 @@ export function mdBlock(src: string): string {
         html += `<${t}>`;
         list = t;
       }
-      html += `<li>${mdInline((ul || ol)![1])}</li>`;
+      html += `<li>${mdInline((ul ?? ol)![1]!)}</li>`;
       continue;
     }
     if (/^\s*$/.test(ln)) {
