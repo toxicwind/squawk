@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.17.1 (2026-10-29)
+
+### Bug Fixes
+
+- Squawk-ui ghost-path SQUAWK_DIR -> pens (lease), full LSP/typecheck green (22 diagnostics),
+  fleet-feed dead-stub removal, tsconfig bun-types
+  ([`f974b36`](https://github.com/toxicwind/squawk/commit/f974b36989197045c33e62e27903c47b3318094f))
+
+
 ## v0.17.0 (2026-10-28)
 
 ### Chores
