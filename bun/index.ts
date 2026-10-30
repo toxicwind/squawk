@@ -20,7 +20,7 @@ import { handleFetch } from "./routes/index.ts";
 import { MCP_TOOLS, mcpCallTool } from "./mcp/index.ts";
 
 const VERSION = "2.0.0";
-const PORT = parseInt(process.env.SQUAWK_CHAT_PORT || "25122", 10);
+const PORT = parseInt(process.env.SQUAWK_CHAT_PORT || "25120", 10);
 const TOKEN_FILE =
   process.env.SQUAWK_CHAT_TOKEN_FILE ||
   `${process.env.HOME || "/home/toxic"}/.config/estate-chat-token`;
