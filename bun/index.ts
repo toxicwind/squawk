@@ -21,7 +21,9 @@ import { MCP_TOOLS, mcpCallTool } from "./mcp/index.ts";
 
 const VERSION = "2.0.0";
 const PORT = parseInt(process.env.SQUAWK_CHAT_PORT || "25122", 10);
-const TOKEN_FILE = process.env.SQUAWK_CHAT_TOKEN_FILE || "";
+const TOKEN_FILE =
+  process.env.SQUAWK_CHAT_TOKEN_FILE ||
+  `${process.env.HOME || "/home/toxic"}/.config/estate-chat-token`;
 const STATE_DIR = process.env.SQUAWK_CHAT_STATE_DIR || "/home/toxic/.squawk";
 const MIRROR_DIR = process.env.DISPATCH_MIRROR_DIR || "/home/toxic/.squawk";
 const BUS_ROOT =
