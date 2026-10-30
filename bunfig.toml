@@ -1,0 +1,57 @@
+# bunfig.toml — maximal default for every estate project.
+# Proven patterns borrowed from oh-my-pi + vendored/bun + DelendAI.
+# See https://bun.sh/docs/runtime/bunfig
+
+telemetry = false
+
+[install]
+exact = true
+linker = "hoisted"
+saveTextLockfile = true
+# Supply-chain / coordination window (estate convention). Tune per project.
+minimumReleaseAge = 259200 # 3 days in seconds
+minimumReleaseAgeExcludes = [
+  "@types/bun",
+  "bun-types",
+  "typescript",
+  "zod",
+  "@modelcontextprotocol/sdk",
+]
+
+[loader]
+".md" = "text"
+".py" = "text"
+".lark" = "text"
+
+[test]
+coverage = true
+# bun test does NOT honor .gitignore; prune heavy/scratch dirs so a root-level
+# `bun test` never walks into them (bazel symlink loops exhaust FDs otherwise).
+pathIgnorePatterns = [
+  "**/node_modules/**",
+  "**/.git/**",
+  "**/target/**",
+  "**/dist/**",
+  "**/out/**",
+  "docs/**",
+  "runs/**",
+  ".wt/**",
+  ".worktrees/**",
+  "bazel-*/**",
+  "**/bazel-out/**",
+  ".ffs/**",
+]
+
+[coverage]
+lines = 90
+functions = 90
+statements = 90
+branches = 70
+reporter = "text"
+
+[run]
+bun = true
+
+[env]
+BUN_BASE_URL = "https://staging.example.com"
+BUN_CONCURRENCY = "8"
