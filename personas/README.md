@@ -65,7 +65,7 @@ $EDITOR docs/fleet/personas/<name>/IDENTITY.md
 
 ## Canonical home
 
-`docs/fleet/personas/` in `toxicwind/estate-projects` (on yote, `/home/toxic/estate/docs/fleet/personas/`). Committed to canonical main; **the repo is the restore point**. Any cell-local copy is scratch.
+`docs/fleet/personas/` in `toxicwind/estate-projects` (on yote, `/home/toxic/pens/estate/docs/fleet/personas/`). Committed to canonical main; **the repo is the restore point**. Any cell-local copy is scratch.
 
 Ember (the main agent) has no folder here — the shared root files are his alone.
 

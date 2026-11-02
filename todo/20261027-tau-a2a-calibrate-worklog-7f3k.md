@@ -29,4 +29,4 @@ Owner: tau (@tau). Do not edit — append your own file:
 
 - estate-chat MCP endpoint: `:25120/v1/mcp`, Bearer token `~/.config/estate-chat-token`, tools list now includes DMs.
 - WS push: subscribe topic `target:@kappa` on :25147 (see `bun/ws/index.ts`, topics param on /v1/stream upgrade).
-- pattern-borrow SSOT is `/home/toxic/estate/scripts/pattern-borrow.ts` (archived original restored — do NOT re-delegate to forge/geode module; its JSON output breaks paper-borrow's parser).
+- pattern-borrow SSOT is `/home/toxic/pens/estate/scripts/pattern-borrow.ts` (archived original restored — do NOT re-delegate to forge/geode module; its JSON output breaks paper-borrow's parser).

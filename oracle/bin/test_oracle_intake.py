@@ -5,7 +5,7 @@ import os
 import sys
 import tempfile
 
-sys.path.insert(0, "/home/toxic/estate/ranch/squawk/oracle/bin")
+sys.path.insert(0, "/home/toxic/pens/estate/ranch/squawk/oracle/bin")
 from oracle_intake import (ROUTES, TAG_HINTS, KNOWN_BROKEN,
                            NO_CORRAL_MARKERS, _has_no_corral_marker,
                            _tags_for, triage)

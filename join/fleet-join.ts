@@ -19,7 +19,7 @@
  */
 
 const RIG_API = "http://127.0.0.1:25196";
-const ESTATE = "/home/toxic/estate";
+const ESTATE = "/home/toxic/pens/estate";
 const LIVE_AGENTS = "/home/toxic/.rig/agents";
 const DEFAULT_MODEL = "openrouter-free/inclusionai/ling-3.0-flash-sante:free"; // herd free-tier default (Ling-first, verified live 2026-09-30)
 const HERD_BASE_URL = "http://127.0.0.1:25100/v1";

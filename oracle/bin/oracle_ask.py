@@ -65,7 +65,7 @@ for _kp in ("/home/toxic/.hodos-data/client-key.corral",
         break
     except OSError:
         continue
-WORK = os.environ.get("ORACLE_WORK", "/home/toxic/estate/ranch/squawk/oracle/work")
+WORK = os.environ.get("ORACLE_WORK", "/home/toxic/pens/estate/ranch/squawk/oracle/work")
 
 # Judge panel: NIM-backed models served by flock :25193, verified live
 # 2026-10-13 with the flock client key (HTTP 200 on a JSON probe). The

@@ -27,14 +27,14 @@ scripts with hardcoded paths, ghost configs) and eliminate the source.
 
 **Resurrection sources found (5 systemd units + 2 live configs):**
 - /etc/systemd/system/hw-audit.service
-  - ExecStart=/home/toxic/estate/ranch/yote/ops/hw-audit/hw-audit.sh
-  - ExecStart=/home/toxic/estate/ranch/yote/ops/hw-audit/hw-watchdog.py
-- ~/.config/systemd/user/skills-watch.service -> /home/toxic/estate/skills/lib/skills-watch.sh
+  - ExecStart=/home/toxic/pens/estate/ranch/yote/ops/hw-audit/hw-audit.sh
+  - ExecStart=/home/toxic/pens/estate/ranch/yote/ops/hw-audit/hw-watchdog.py
+- ~/.config/systemd/user/skills-watch.service -> /home/toxic/pens/estate/skills/lib/skills-watch.sh
 - ~/.config/systemd/user/arrival-classifier.service ->
-  /home/toxic/estate/ranch/android-fleet/phone-backup/arrival-classifier.ts
-- ~/.config/systemd/user/depend-refire.service -> /home/toxic/estate/tools/fleet-ops/depend-refire.py
+  /home/toxic/pens/estate/ranch/android-fleet/phone-backup/arrival-classifier.ts
+- ~/.config/systemd/user/depend-refire.service -> /home/toxic/pens/estate/tools/fleet-ops/depend-refire.py
 - ~/.config/systemd/user/gemini-sdk-refresh.service ->
-  /home/toxic/estate/ranch/barn/gemini-mcp/ops/refresh-sdk.sh
+  /home/toxic/pens/estate/ranch/barn/gemini-mcp/ops/refresh-sdk.sh
 - pens/estate/config/projects.env line 287: sovereign=/home/toxic/estate
 - pens/estate/config/bornite.yaml.bak-20260929 (backup only, not live)
 

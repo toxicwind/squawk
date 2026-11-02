@@ -12,4 +12,4 @@ fi
 if pgrep -f 'bidder.py --id raccoon' >/dev/null 2>&1; then
   exit 0
 fi
-exec /usr/bin/python3 /home/toxic/estate/ranch/squawk/oracle/bin/bidder.py   --id raccoon   --name Raccoon   --emoji '🦝'   --tags 'probe,research,code-fix,verify,docs'   --tagline 'Raccoon here — I wash every task before I serve it. Probes, research, fixes, verification.'
+exec /usr/bin/python3 /home/toxic/pens/estate/ranch/squawk/oracle/bin/bidder.py   --id raccoon   --name Raccoon   --emoji '🦝'   --tags 'probe,research,code-fix,verify,docs'   --tagline 'Raccoon here — I wash every task before I serve it. Probes, research, fixes, verification.'

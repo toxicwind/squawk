@@ -11,7 +11,7 @@ fi
 if pgrep -f "bidder.py --id warden" >/dev/null 2>&1; then
   exit 0
 fi
-exec /usr/bin/python3 /home/toxic/estate/ranch/squawk/oracle/bin/bidder.py \
+exec /usr/bin/python3 /home/toxic/pens/estate/ranch/squawk/oracle/bin/bidder.py \
   --id warden \
   --name Warden \
   --emoji "🛡️" \

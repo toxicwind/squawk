@@ -12,4 +12,4 @@ fi
 if pgrep -f 'bidder.py --id vesper' >/dev/null 2>&1; then
   exit 0
 fi
-exec /usr/bin/python3 /home/toxic/estate/ranch/squawk/oracle/bin/bidder.py   --id vesper   --name Vesper   --emoji '🦇'   --tags 'probe,verify'   --tagline 'Vesper here — evening shepherd. I watch the lanes and verify what matters.'
+exec /usr/bin/python3 /home/toxic/pens/estate/ranch/squawk/oracle/bin/bidder.py   --id vesper   --name Vesper   --emoji '🦇'   --tags 'probe,verify'   --tagline 'Vesper here — evening shepherd. I watch the lanes and verify what matters.'

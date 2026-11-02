@@ -8,8 +8,8 @@
 
 [daemons.squawk-feed]
 port = 25135
-run = "exec /usr/bin/python3 /home/toxic/estate/ranch/squawk/relay/feed.py"
-dir = "/home/toxic/estate/ranch/squawk/relay"
+run = "exec /usr/bin/python3 /home/toxic/pens/estate/ranch/squawk/relay/feed.py"
+dir = "/home/toxic/pens/estate/ranch/squawk/relay"
 mise = false
 retry = true
 boot_start = true

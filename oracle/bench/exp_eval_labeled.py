@@ -68,7 +68,7 @@ def ask_text(q):
 def load_panel_snapshot():
     """Alias -> concrete target from config/herd.yaml (conditions record)."""
     snap = {}
-    path = "/home/toxic/estate/config/herd.yaml"
+    path = "/home/toxic/pens/estate/config/herd.yaml"
     try:
         with open(path) as f:
             txt = f.read()
@@ -207,7 +207,7 @@ def main(argv):
 
     ts = int(time.time())
     tag = ("-" + a.tag) if a.tag else ""
-    work = "/home/toxic/estate/ranch/squawk/oracle/work-eval-%d%s" % (ts, tag)
+    work = "/home/toxic/pens/estate/ranch/squawk/oracle/work-eval-%d%s" % (ts, tag)
     os.makedirs(work, exist_ok=True)
     os.environ["ORACLE_WORK"] = work
 
@@ -225,7 +225,7 @@ def main(argv):
     os.makedirs(RESULTS, exist_ok=True)
     rows_path = os.path.join(RESULTS, "eval_%d%s.jsonl" % (ts, tag))
     sum_path = os.path.join(RESULTS, "eval_%d%s_summary.json" % (ts, tag))
-    gitsha = subprocess.run(["git", "-C", "/home/toxic/estate",
+    gitsha = subprocess.run(["git", "-C", "/home/toxic/pens/estate",
                              "rev-parse", "--short", "HEAD"],
                             capture_output=True, text=True).stdout.strip()
 

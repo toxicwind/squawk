@@ -16,7 +16,7 @@ import sys
 import time
 from pathlib import Path
 
-BIN = Path("/home/toxic/estate/ranch/squawk/oracle/bin")
+BIN = Path(__file__).resolve().parent
 sys.path.insert(0, str(BIN))
 
 _spec = importlib.util.spec_from_file_location("bidder", BIN / "bidder.py")

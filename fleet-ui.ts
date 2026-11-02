@@ -21,7 +21,7 @@
 import { readFileSync, statSync } from "node:fs";
 
 const FEED = "http://127.0.0.1:25135";
-const UI_PATH = "/home/toxic/estate/ranch/squawk/ui.html";
+const UI_PATH = "/home/toxic/pens/estate/ranch/squawk/ui.html";
 const FEED_TOKEN_PATH = "/home/toxic/.fleet-bus/squawk-relay/feed-token";
 
 // websocket upgrade targets: client path -> backend ws url.

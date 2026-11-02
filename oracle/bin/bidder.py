@@ -122,7 +122,7 @@ OUT_CAP = 8000
 ERR_CAP = 2000
 PARTIAL_CAP = 65536  # bound for the on-disk partial-output evidence file
 RALPH_POST_BUFFER_S = 30.0  # time to preserve evidence + post result
-CORRAL_CLI = Path("/home/toxic/estate/ranch/corral/src/cli/index.ts")
+CORRAL_CLI = Path("/home/toxic/pens/estate/ranch/corral/src/cli/index.ts")
 CORRAL_CAP_S = 1740  # same class as super-ralph: agentic runs are slow
 
 # ---- orphaned smithers worktree sweep (2026-10-19, scout T1) ----

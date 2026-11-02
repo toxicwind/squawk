@@ -94,7 +94,7 @@ Notes:
 
 - Daemons: pitchfork `estate/bidder-<id>` ×6 (finch, forge,
   raccoon, scout, vesper, warden). Restart:
-  `/home/toxic/estate/bin/pitchfork-restart bidder-<id>`.
+  `/home/toxic/pens/estate/bin/pitchfork-restart bidder-<id>`.
   Verify with `ps` (start times), not pitchfork status alone —
   pitchfork has lost process tracking before while daemons lived.
 - Single-instance flock per bidder id: a second launch exits
