@@ -1,22 +1,18 @@
-# bge auto-correlate: code ↔ fleet todos
+# bge per-todo code correlation (lite)
 
 ## The ask
-Use the estate's free, unlimited bge-m3 lane to AUTO-CORRELATE code surfaces
-to fleet todos — when a new todo lands, surface the repo files it most likely
-touches (and vice versa: when a file changes, surface open todos it affects).
+Embed EVERY fleet todo with bge-m3 and attach its top code-surface matches —
+a small "touches:" line per todo on the board, so any agent reading a task
+sees the files it most likely concerns. No daemon, no webhook: one enricher
+script, run on-demand or on a slow timer.
 
-## Why now (evidence, 2026-11-03)
-- freeinference bge-m3 verified unlimited/free ~99.9% (estate doctrine 2026-11-02)
-- The concurrent-batch short-answer race is FIXED in tau 4b6a7eae19 + omp-wtf ce9ff9b — serial embeds + full-answer invariant + 1 retry; the lane is now reliable enough to serve an always-on correlator
-- qdrant :25133 embed-cache pattern proven (cold 33s → warm 2.5s, sha256→UUID keys)
-- The fleet board has 21 items, mostly un-parsed titles — no mapping from todo→code exists today
-- tau-wtf carryback already computes fix↔tree similarity — the same instrument, pointed at todos
+## Contract (from 2026-11-03 audit)
+- Serial embeds + full-answer invariant + 1 retry (freeinference concurrent-batch race, tau 4b6a7eae19)
+- qdrant :25133 collection fleet_todo_vectors (sha256→UUID keys, deterministic cache)
+- Enricher writes back a "touches: <top-3 files>" footer into each todo .md
+- Board daemon (v2.0.0, watches this dir) picks the edit up as-is — no daemon change needed
 
-## Shape
-1. `pens/ranch/squawk/mcp` or a small estate daemon: embed every open todo (title+body) into qdrant collection `fleet_todo_vectors`
-2. Embed touched files' signatures (reuse wtf fileSignature) into `fleet_code_vectors`
-3. Correlate on: todo-create (webhook/file-watch), todo-done, and on-demand `GET /correlate?file=<path>` / `?todo=<slug>`
-4. Emit top-3 file↔todo matches per event to kafka estate.events + squawk #fleet card
-5. Short-answer race contract: SERIAL embeds, full-answer invariant, 1 retry — per 4b6a7eae19
-
+## Output shape per todo
+---
+touches: packages/ai/src/providers/openai-completions.ts (0.79), packages/coding-agent/src/eval/js/executor.ts (0.74), packages/coding-agent/src/session/session-tools.ts (0.71)
 ## Owner: tau
