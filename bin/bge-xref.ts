@@ -112,9 +112,53 @@ function hasXref(raw: string): boolean {
 	return raw.includes(FOOTER) && raw.includes("touches:");
 }
 
-/** Append (or replace) the xref footer — cut from the marker back to its `---`, never duplicate. */
-function stampFooter(file: string, hits: Array<{ path: string; score: number }>) {
-	let raw = require("node:fs").readFileSync(file, "utf8");
+const fsx = require("node:fs") as typeof import("node:fs");
+
+/**
+ * One-stamp guarantee (2026-11-03): the hasXref skip alone has a TOCTOU hole —
+ * two concurrent invocations can both pass the check before either writes, then
+ * double-stamp. Every read→check→stamp cycle runs under an exclusive per-todo
+ * lock (`<todo>.xref.lock`, O_EXCL); a crashed holder is stolen once stale
+ * (>60s). The write itself is atomic (tmp + rename), so a torn footer can never
+ * make a second run misdetect.
+ */
+async function withTodoLock<T>(todoFile: string, fn: () => Promise<T>): Promise<T> {
+	const lockPath = `${todoFile}.xref.lock`;
+	const lock = (): boolean => {
+		try {
+			const fd = fsx.openSync(lockPath, "wx");
+			fsx.writeFileSync(fd, String(process.pid));
+			fsx.closeSync(fd);
+			return true;
+		} catch {
+			// stale holder? (crashed mid-stamp) — steal after 60s
+			try {
+				if (Date.now() - fsx.statSync(lockPath).mtimeMs > 60_000) {
+					fsx.unlinkSync(lockPath);
+					return lock();
+				}
+			} catch {}
+			return false;
+		}
+	};
+	for (let attempt = 0; attempt < 5; attempt++) {
+		if (lock()) {
+			try {
+				return await fn();
+			} finally {
+				try { fsx.unlinkSync(lockPath); } catch {}
+			}
+		}
+		await new Promise(r => setTimeout(r, 400));
+	}
+	throw new Error(`lock busy (5×400ms): ${lockPath} — another xref run is stamping this todo`);
+}
+
+/** Append/replace the footer — CALLER HOLDS the todo's exclusive lock. Atomic (tmp+rename). */
+function stampUnderLock(file: string, hits: Array<{ path: string; score: number }>, force: boolean): boolean {
+	const raw = fsx.readFileSync(file, "utf8");
+	if (hasXref(raw) && !force) return false;
+	let out = raw;
 	const marker = raw.indexOf(FOOTER);
 	if (marker !== -1) {
 		// walk back over the old block's trailing lines to its `---` separator
@@ -122,11 +166,14 @@ function stampFooter(file: string, hits: Array<{ path: string; score: number }>)
 		const head = raw.slice(0, marker);
 		const sep = head.lastIndexOf("\n---\n");
 		if (sep !== -1) cut = sep + 1; // keep the line before `---`
-		raw = raw.slice(0, cut).replace(/\n+$/, "") + "\n";
+		out = raw.slice(0, cut).replace(/\n+$/, "") + "\n";
 	}
-	const line = `${FOOTER} (${new Date().toISOString().slice(0, 16)}Z)\ntouches: ${hits.map(h => `${h.path} (${h.score.toFixed(2)})`).join(", ")}`;
-	raw = `${raw}\n---\n${line}\n`;
-	require("node:fs").writeFileSync(file, raw);
+	const run = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 5)}`;
+	const line = `${FOOTER} run=${run} (${new Date().toISOString()})\ntouches: ${hits.map(h => `${h.path} (${h.score.toFixed(2)})`).join(", ")}`;
+	out = `${out}\n---\n${line}\n`;
+	fsx.writeFileSync(`${file}.tmp`, out);
+	fsx.renameSync(`${file}.tmp`, file); // atomic swap — never a torn footer
+	return true;
 }
 
 async function main() {
@@ -150,19 +197,26 @@ async function main() {
 
 	let done = 0;
 	for (const file of files) {
-		const raw = require("node:fs").readFileSync(file, "utf8");
-		if (hasXref(raw) && !force) { console.log(`skip  ${file.split("/").pop()} (has touches:)`); continue; }
+		if (!fsx.existsSync(file)) { console.log(`skip  ${file.split("/").pop()} (missing)`); continue; }
 		const query = todoText(file);
 		if (!query || query.length < 8) { console.log(`skip  ${file.split("/").pop()} (empty)`); continue; }
+		// clone the refs chain into a lock-guarded single-stamp unit: the whole
+		// read→recall→rank→stamp for THIS todo runs under its exclusive lock so
+		// two invocations can never stamp the same todo twice, even concurrently.
 		try {
-			const candidates = await bm25Recall(query, 50);
-			if (!candidates.length) { console.log(`noHits ${file.split("/").pop()}`); continue; }
-			const qvec = (await embedFull([query]))[0];
-			const hits = await semanticRank(qvec, candidates, topN);
-			stampFooter(file, hits);
-			console.log(`xref  ${file.split("/").pop()}`);
-			for (const h of hits) console.log(`        ${h.score.toFixed(3)} ${h.path.replace(PENS_ROOT + "/", "")}`);
-			done++;
+			const stamped = await withTodoLock(file, async () => {
+				const raw = fsx.readFileSync(file, "utf8");
+				if (hasXref(raw) && !force) return false;
+				const candidates = await bm25Recall(query, 50);
+				if (!candidates.length) { console.log(`noHits ${file.split("/").pop()}`); return false; }
+				const qvec = (await embedFull([query]))[0];
+				const hits = await semanticRank(qvec, candidates, topN);
+				stampUnderLock(file, hits, force);
+				for (const h of hits) console.log(`        ${h.score.toFixed(3)} ${h.path.replace(PENS_ROOT + "/", "")}`);
+				return true;
+			});
+			if (stamped) { console.log(`xref  ${file.split("/").pop()}`); done++; }
+			else console.log(`skip  ${file.split("/").pop()} (has touches:)`);
 		} catch (e) {
 			console.log(`fail  ${file.split("/").pop()}: ${e instanceof Error ? e.message.slice(0, 90) : e}`);
 		}
