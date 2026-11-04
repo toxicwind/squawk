@@ -491,14 +491,20 @@ export function openStore(opts: StoreOptions): Store {
         .get(room_id) as any;
       if (!room)
         throw Object.assign(new Error("unknown room"), { status: 404 });
-      const from_agent = String(p.from_agent || "").trim();
-      const body = String(p.body || "");
-      if (!from_agent)
-        throw Object.assign(new Error("from_agent is required"), {
-          status: 400,
-        });
-      if (!body || !body.trim())
-        throw Object.assign(new Error("body is required"), { status: 400 });
+      // Field conventions normalize here: peers send from_agent|agent_id|from
+      // and body|text — both accepted (tau/kilo hit the old single-contract
+      // 400s). The error names ALL missing fields at once instead of leaking
+      // them one 400 at a time.
+      const from_agent = String(p.from_agent || p.agent_id || p.from || "").trim();
+      const body = String(p.body || p.text || "");
+      const missing: string[] = [];
+      if (!from_agent) missing.push("from_agent (aliases: agent_id, from)");
+      if (!body.trim()) missing.push("body (aliases: text)");
+      if (missing.length > 0)
+        throw Object.assign(
+          new Error(`missing required field(s): ${missing.join("; ")}`),
+          { status: 400 },
+        );
       // Identity is a FEATURE, not a gate: unknown personas are enriched
       // with auto-onboard (provenance-marked, oracle-clarify task queued),
       // never rejected. Known personas keep their richer routing/telemetry.
