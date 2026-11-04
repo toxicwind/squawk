@@ -101,10 +101,10 @@ describe("without busRoot (headless/mcp)", () => {
     headless.db.close();
   });
 
-  test("post with empty/whitespace body is rejected", () => {
+  test("post with empty/whitespace body is rejected (all missing fields named)", () => {
     expect(() =>
       store.postMessage("fleet", { from_agent: "bus-bot", body: "   " }),
-    ).toThrow("body is required");
+    ).toThrow("missing required field(s): body (aliases: text)");
   });
 
   test("join twice is idempotent upsert", () => {
