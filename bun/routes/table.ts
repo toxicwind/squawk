@@ -117,6 +117,12 @@ const agents = ({ ctx }: RouteHandlerArgs) => json({ ok: true, ...ctx.store.agen
 // --- rooms (fleet-chat) ---
 const roomsGet = ({ ctx }: RouteHandlerArgs) => json({ ok: true, rooms: ctx.store.rooms() });
 const roomsPost = ({ ctx, body }: RouteHandlerArgs) => json({ ok: true, room: ctx.store.createRoom(body) });
+const roomGet = ({ ctx, params }: RouteHandlerArgs) => {
+  const room = ctx.store.room(params.room_id);
+  if (!room)
+    return json({ ok: false, error: "room not found" }, 404);
+  return json({ ok: true, room });
+};
 const roomMessagesPost = ({ ctx, params, body }: RouteHandlerArgs) =>
   json({ ok: true, message: ctx.store.postMessage(params.room_id, body) });
 const roomMessagesGet = ({ ctx, params, url }: RouteHandlerArgs) => {
@@ -199,6 +205,7 @@ export const ROUTE_TABLE: Route[] = [
   // rooms (fleet-chat)
   { method: "GET", pattern: "/v1/rooms", auth: true, handler: roomsGet },
   { method: "POST", pattern: "/v1/rooms", auth: true, handler: roomsPost },
+  { method: "GET", pattern: "/v1/rooms/:room_id", auth: true, handler: roomGet },
   { method: "POST", pattern: "/v1/rooms/:room_id/messages", auth: true, handler: roomMessagesPost },
   { method: "GET", pattern: "/v1/rooms/:room_id/messages", auth: true, handler: roomMessagesGet },
   // fleetd-style targeted messaging (#channel / @agent)

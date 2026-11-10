@@ -16,6 +16,7 @@ export interface Store {
   recentDecisions(limit?: number): any;
   consolidatedState(version: string, uptimeS: number): any;
   rooms(): any[];
+  room(room_id: string): any;
   createRoom(p: Record<string, any>): any;
   postMessage(room_id: string, p: Record<string, any>): any;
   readMessages(room_id: string, since_seq?: number, limit?: number): any;
@@ -459,6 +460,15 @@ export function openStore(opts: StoreOptions): Store {
            FROM rooms r ORDER BY r.created_at`,
         )
         .all();
+    },
+
+    room(room_id: string) {
+      return db
+        .query(
+          `SELECT r.*, (SELECT COUNT(*) FROM messages m WHERE m.room_id = r.room_id) AS message_count
+           FROM rooms r WHERE r.room_id = ?`,
+        )
+        .get(room_id);
     },
 
     createRoom(p: Record<string, any>) {
