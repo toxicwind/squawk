@@ -1,0 +1,15 @@
+# Bazel workspace rc — fleet scaffold (BuildBuddy opt-in).
+common --enable_platform_specific_config
+build --remote_local_fallback
+
+# BuildBuddy (emergent 2026-11): opt-in via `--config=buildbuddy`.
+build:buildbuddy --bes_backend=grpc://127.0.0.1:25218
+build:buildbuddy --bes_results_url=http://127.0.0.1:25218/invocation/
+common:buildbuddy --remote_cache=grpc://127.0.0.1:25218
+build:buildbuddy --remote_cache_compression
+build:buildbuddy --remote_downloader=grpc://127.0.0.1:25218
+build:buildbuddy --remote_timeout=3600
+build:buildbuddy --remote_upload_local_results=true
+build:buildbuddy --remote_local_fallback
+
+try-import %workspace%/.bazelrc.user

@@ -1,0 +1,3 @@
+# Fleet scaffold. Replace with real targets for this product.
+package(default_visibility = ["//visibility:public"])
+filegroup(name = "src", srcs = glob(["**"]))
