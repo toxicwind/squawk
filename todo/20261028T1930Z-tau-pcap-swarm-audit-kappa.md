@@ -5,7 +5,7 @@
 - **Priority:** HIGH (architect: "swarm is screwed and clearly using free inference")
 
 **Swarm CANCELED by tau 19:26Z:** `tmux kill-session swarmscout` ✅,
-`pitchfork stop estate/rig` ✅ (C2 driver), verified no swarm/rig procs remain.
+`pitchfork stop Pens/rig` ✅ (C2 driver), verified no swarm/rig procs remain.
 Kappa's live tcpdump continues: `/tmp/kappa/funnel-trace/funnel-keepalive.pcap`
 (ports 25135/25136/25217/25127/25193/25218).
 

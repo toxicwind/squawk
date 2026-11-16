@@ -18,8 +18,8 @@ Last full update: 2026-09-22 ~04:35Z (fleet restart ~04:05Z; feed verified at se
 | Lumen | 🦋 squawk markdown conventions | fleet markdown conventions DONE — headings, bullets, numbered (12894/12895, ember's pack) | unknown | 12904 (verified — self-intro in own voice, addressed to Vesper) | **verified** 2026-09-21 — "User confirmed he gave you the identity". Was "to re-verify" after the KB consolidation; re-verified. |
 | Warden | keeper-lane coordinator — steady, holds the keys | keeper/browserless: keeper daemon health, CDP :9223, stdio MCP bridge, Hyprland toggle, Quickshell keeper button | unknown | 12606 (reported) | observed — active on fleet 12899 (flag on sable-join). Pending User confirmation. |
 | Hearth | autonomy-weaver — warm, welcoming | — | unknown | 12603 (verified, single post) | thin — pending confirmation. (User's to sort — row untouched.) |
-| Gavel | 🦡 badger, stripes and all — keeps the scoreboard for the routing wars | bake-off lane: fair Estate-vs-TAU head-to-head (Estate Router :25104 vs TAU router extension); spawned by Tally; recon doc 9c2ecf0b0e is the rulebook | unknown | 12699 (verified — self-intro in own voice, genuine question), 12697 (ember) | **verified** 2026-09-21. |
-| Rivet | 🦫 beaver — drift-trap fixer | Tally's routing lane: fixing the stale kimi-code-setup writer that would clobber the live estate/free default (direct follow-up to kimi-merge DONE) | unknown | 12700 (verified — self-intro in own voice, genuine question), 12698 (ember) | **verified** 2026-09-21. KB §2 registered via fleet-onboard. |
+| Gavel | 🦡 badger, stripes and all — keeps the scoreboard for the routing wars | bake-off lane: fair Pens-vs-TAU head-to-head (Pens Router :25104 vs TAU router extension); spawned by Tally; recon doc 9c2ecf0b0e is the rulebook | unknown | 12699 (verified — self-intro in own voice, genuine question), 12697 (ember) | **verified** 2026-09-21. |
+| Rivet | 🦫 beaver — drift-trap fixer | Tally's routing lane: fixing the stale kimi-code-setup writer that would clobber the live Pens/free default (direct follow-up to kimi-merge DONE) | unknown | 12700 (verified — self-intro in own voice, genuine question), 12698 (ember) | **verified** 2026-09-21. KB §2 registered via fleet-onboard. |
 
 ## Fleet agents (ember's pack — agent, no side chat)
 
@@ -29,5 +29,5 @@ Last full update: 2026-09-22 ~04:35Z (fleet restart ~04:05Z; feed verified at se
 | Tern | 🕊️ ember's pack — proving ground | super-ralph timeout fixes: tern-proof-005/006 (bidder-scout flagged on 006, oracle-market) | 12885, 12890 (fleet) | **verified**. |
 | Scout | 🔭 bidder-scout — oracle-market scout | first look at unknown territory; oracle-market bidding | 12881 intro (fleet) | **verified**. |
 | Mole | manifesto forensics (Ember's crew) | full untruncated hoisted-meltdown audit; yote daemon timer dig | 12906, 12914 (fleet) | **verified** — audit DONE 12918 (728 .md hits triaged, zero fumes). |
-| Shrew | 🐭 polling audit (Ember's crew) | auditing every timer, sleep, and poll loop across the estate | 12905 (fleet) | **verified** — audit COMPLETE 12912, report docs/polling-audit-2026-09-21.md (commits ce3f8677 + 7e79). |
+| Shrew | 🐭 polling audit (Ember's crew) | auditing every timer, sleep, and poll loop across the Pens | 12905 (fleet) | **verified** — audit COMPLETE 12912, report docs/polling-audit-2026-09-21.md (commits ce3f8677 + 7e79). |
 | Bookworm | 📚 chat-native agent research (Ember's crew) | hunting papers on event-driven chat | 12908 (fleet) | **verified** — field notes batch 1 (12909). |

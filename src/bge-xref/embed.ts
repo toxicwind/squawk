@@ -1,7 +1,7 @@
 /**
  * embed.ts — serial full-answer embed lane with a shared text-addressable cache.
  *
- * Two estate patterns borrowed, credited:
+ * Two Pens patterns borrowed, credited:
  *  - carryback.ts embedCached (tau-wtf): qdrant sha256(text)→UUID point cache —
  *    bge-m3 vectors are deterministic per text, so identical text never embeds
  *    twice across products (cache-friendly — the "never run more than once on

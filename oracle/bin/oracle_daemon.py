@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """oracle-core daemon: HTTP front door for the fused Oracle.
 
-Supervised by pitchfork as estate-scripts/oracle-core (see pitchfork.toml).
+Supervised by pitchfork as Pens-scripts/oracle-core (see pitchfork.toml).
 Endpoints (localhost only):
   GET  /health  -> {"ok": true, "uptime_s": ..., "verdicts": n}
   POST /ask     -> {"question": str, "models"?: [...], "timeout_s"?: float,
@@ -26,7 +26,7 @@ import oracle_ask
 
 LISTEN = os.environ.get("ORACLE_CORE_LISTEN", "127.0.0.1:25151")
 LOG = os.path.join(os.environ.get("ORACLE_WORK",
-                                  "/home/toxic/pens/estate/ranch/squawk/oracle/work"),
+                                  "/home/toxic/pens/Pens/ranch/squawk/oracle/work"),
                    "oracle-core.log")
 START = time.time()
 VERDICTS = 0

@@ -5,8 +5,8 @@
 ## LIVE (first-class)
 
 **WebSocket push feed** — the primary live transport (the Architect: "websocket first class").
-- Server: `/home/toxic/pens/estate/services/squawk-ws/src/index.ts` (bun, pitchfork `estate/squawk-ws`, 127.0.0.1:25147)
-- NOTE: the live :25147 is the estate-repo TypeScript service, NOT `relay/squawk_ws_server.py` in this repo (divergent draft, never deployed).
+- Server: `/home/toxic/pens/Pens/services/squawk-ws/src/index.ts` (bun, pitchfork `Pens/squawk-ws`, 127.0.0.1:25147)
+- NOTE: the live :25147 is the Pens-repo TypeScript service, NOT `relay/squawk_ws_server.py` in this repo (divergent draft, never deployed).
 - Public: `wss://github-mcp-host.tailc9ac71.ts.net/squawk-ws` (Tailscale funnel, Bearer auth on handshake)
 - Protocol: subscribe `{"subscribe": ["fleet","leads"]}` -> backfill replay -> live push `{seq,channel,sender,text,ts,sealed}`
 - Sealed messages are broadcast as `{"sealed": true}` with NO text, ever.
@@ -16,7 +16,7 @@
 ## LIVE (relay-out)
 
 **Fat HTTP long-poll** — serves the Rig relay agent + main-chat hook. NOT a competing push transport; different consumer.
-- Server: `/home/toxic/squawk/squawk_feed.py` (pitchfork `estate-scripts/squawk-feed`, 127.0.0.1:25135)
+- Server: `/home/toxic/squawk/squawk_feed.py` (pitchfork `Pens-scripts/squawk-feed`, 127.0.0.1:25135)
 - `GET /squawk-feed/ping` and `/squawk-feed/seq` — public, content-free `{seq:N}` (funnel-routed)
 - `GET /squawk-feed/wait?since=N` — Bearer auth, 55s hold, fat `{seq, messages[]}`
 
@@ -28,7 +28,7 @@
 
 ## DIVERGENCE — DO NOT DEPLOY
 
-- Any `squawk_ws_server.py` under `relay/` in this repo is a **divergent draft, NEVER deployed, SUPERSEDED** by the estate TypeScript service on :25147.
+- Any `squawk_ws_server.py` under `relay/` in this repo is a **divergent draft, NEVER deployed, SUPERSEDED** by the Pens TypeScript service on :25147.
 - Do NOT copy it over the live server. Reconcile deliberately if changes are needed.
 
 ## STORE (not a transport)

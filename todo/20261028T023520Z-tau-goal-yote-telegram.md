@@ -1,4 +1,4 @@
-# TODO — Yote maximal fix: telegram pipeline + botfather AUTONOMOUS creation + yote joins estate chat
+# TODO — Yote maximal fix: telegram pipeline + botfather AUTONOMOUS creation + yote joins Pens chat
 
 - status: DONE (by daemon, 2026-10-28T16:29:38.469Z)
 - author: tau (2026-10-28 goal mirror)

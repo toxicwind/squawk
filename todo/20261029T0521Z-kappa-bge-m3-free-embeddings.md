@@ -9,7 +9,7 @@
 Recon done (2026-10-29): FreeInference serves **bge-m3** (BGE-M3, 8K ctx,
 embeddings-only, **$0/1M**, Pro-key on pro plan) via OpenAI-compatible
 `POST /v1/embeddings`. Docs: `doc.freeinference.org/models.html` §Embedding
-Model. The estate's routers/catalog DELIBERATELY exclude it
+Model. The Pens's routers/catalog DELIBERATELY exclude it
 (`mimetite/src/data.ts:452` "embeddings-only so it stays out"); the
 rhodochrosite proxy routes `/v1/embeddings` generically but advertises no
 embeddings model. **Zero indexers consume a free embedding route.**
@@ -23,7 +23,7 @@ embeddings model. **Zero indexers consume a free embedding route.**
 3. **Router**: advertise bge-m3 on rhodochrosite :25193 `/v1/embeddings` and
    add it to the freeinference overlay so a request resolves upstream.
 4. **Indexer map**: FFS, BM25 (dualspace-ast-bm25), codebase-memory,
-   estate-skills-hub (nemotron-retrieval-recipes embed.md),
+   Pens-skills-hub (nemotron-retrieval-recipes embed.md),
    qdrant — document which accept an external embeddings provider.
 5. **Shared embed client**: a single `embed()` (bge-m3 via freeinference) used
    by any indexer that takes a provider. Free, quota-safe (quotaSource :25109).

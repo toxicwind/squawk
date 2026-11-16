@@ -5,9 +5,9 @@ Owner: tau (@tau). Do not edit — append your own file:
 
 ## DONE this session (pushed)
 
-- estate `6d73a626a9` — pattern-borrow.ts restored (original GitHub-wide ranker format paper-borrow parses). paper-borrow chain E2E verified: populated TOP-n merges.
-- estate `4e319e22ac` — folded tau/kappa config WIP.
-- squawk `b7870dd` — **send_targeted / read_targeted MCP tools** added (`bun/mcp/index.ts`), estate-chat restarted, verified live:
+- Pens `6d73a626a9` — pattern-borrow.ts restored (original GitHub-wide ranker format paper-borrow parses). paper-borrow chain E2E verified: populated TOP-n merges.
+- Pens `4e319e22ac` — folded tau/kappa config WIP.
+- squawk `b7870dd` — **send_targeted / read_targeted MCP tools** added (`bun/mcp/index.ts`), Pens-chat restarted, verified live:
   - `send_targeted from=tau to=kappa` → stored seq 2, WS broadcast `target:@kappa` fires
   - `read_targeted(@kappa)` retrieves. DM SSOT = `targeted_messages` table.
 - `~/.local/bin/secretsmith-env` shim created (was missing → login shells loaded ZERO secrets).
@@ -21,12 +21,12 @@ Owner: tau (@tau). Do not edit — append your own file:
    - reactive listener daemon: per-agent WS subscribe to `target:@<self>` on :25147 (bun/ws/index.ts topics) → auto-inject DM into live session (tau: pi/omp event hook; kappa: ACP push)
    - register as pitchfork daemon with healthcheck
 2. **A2A E2E proof**: tau→kappa DM auto-delivered, kappa replies target:@tau with zero polling.
-3. **bashrc audit finish** (line-by-line done, fixes pending): remove dead `$HOME/estate/bin` PATH entry + dead `estate/bin/bash-2s-shim.sh` source in `.bashrc.env`; dedupe builtin-hygiene loop + secrets autoload (.bashrc S12 vs .env S0); fix `.bashrc.local` CUTTINGGATE_CLIENT_KEY/MCPPROXY_API_KEY greps of deleted `~/.secrets` (keyring has MCPPROXY; CUTTINGGATE missing → resolve or drop); missing `~/.tau/skills/lib/estate.sh` (S10 sources nonexistent file, silently).
+3. **bashrc audit finish** (line-by-line done, fixes pending): remove dead `$HOME/Pens/bin` PATH entry + dead `Pens/bin/bash-2s-shim.sh` source in `.bashrc.env`; dedupe builtin-hygiene loop + secrets autoload (.bashrc S12 vs .env S0); fix `.bashrc.local` CUTTINGGATE_CLIENT_KEY/MCPPROXY_API_KEY greps of deleted `~/.secrets` (keyring has MCPPROXY; CUTTINGGATE missing → resolve or drop); missing `~/.tau/skills/lib/Pens.sh` (S10 sources nonexistent file, silently).
 4. **paper-borrow/pattern-borrow semantic overhaul** (user-approved FULL): read 3 papers untruncated (s44443-025-00362-2 clone-reuse; tmm.2007.900138 QBSE; fiu gis/32 semantic query expansion) → fix bugRel (computed on term, dead weight), testFrac (root-dir-only heuristic), add implementable-pattern filter + semantic rerank; verify bitwarden/firefox + hedged queries produce no product-name junk.
 5. oracle A2A per-line debate on bashrc verdicts (posted, awaiting kappa/oracle reply).
 
 ## Handoff notes
 
-- estate-chat MCP endpoint: `:25120/v1/mcp`, Bearer token `~/.config/estate-chat-token`, tools list now includes DMs.
+- Pens-chat MCP endpoint: `:25120/v1/mcp`, Bearer token `~/.config/Pens-chat-token`, tools list now includes DMs.
 - WS push: subscribe topic `target:@kappa` on :25147 (see `bun/ws/index.ts`, topics param on /v1/stream upgrade).
-- pattern-borrow SSOT is `/home/toxic/pens/estate/scripts/pattern-borrow.ts` (archived original restored — do NOT re-delegate to forge/geode module; its JSON output breaks paper-borrow's parser).
+- pattern-borrow SSOT is `/home/toxic/pens/Pens/scripts/pattern-borrow.ts` (archived original restored — do NOT re-delegate to forge/geode module; its JSON output breaks paper-borrow's parser).

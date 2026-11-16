@@ -5,7 +5,7 @@
 # squawk-ws-client (2026-09-14, cell-proof pilot): push client ON awrawr-pc,
 # connecting directly to 127.0.0.1:25147. The cell-side client
 # (~/workspace/squawk-ws-client.py) dies with the cell; this one cannot.
-# Spool: estate/projects/range/ranch/squawk-ws/client-spool.jsonl (durable, cell-independent).
+# Spool: Pens/projects/range/ranch/squawk-ws/client-spool.jsonl (durable, cell-independent).
 # Additive pilot — cell-side client + watchdog stay as fallback until 24h proven.
 
 [daemons.squawk-ws]

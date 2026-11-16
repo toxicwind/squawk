@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Regression tests: bare-frontmatter messages still serve plaintext bodies.
 
-fleet seq 12712-12717 (2026-09-21): estate-reconcile's _squawk() wrote
+fleet seq 12712-12717 (2026-09-21): Pens-reconcile's _squawk() wrote
 frontmatter with NO opening --- fence (fields, then a closing ---).
 fleet_identity._parse_file rejects that, and _unverified_body gave up,
 so build_relay_record returned body=None and the feed rendered empty
@@ -29,7 +29,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import fleet_relay  # noqa: E402
 import squawk_seal  # noqa: E402
 
-# Exact replica of the 12712-estate-reconcile.md format: bare frontmatter,
+# Exact replica of the 12712-Pens-reconcile.md format: bare frontmatter,
 # real non-empty body, no hmac (unsigned).
 BARE = (
     "seq: 12712\n"
@@ -38,10 +38,10 @@ BARE = (
     "channel: fleet\n"
     "ts: 2026-09-21T14:03:48-06:00\n"
     "status: discussion\n"
-    "title: estate-reconcile ALERT: herd-keypool drifted, not restored\n"
+    "title: Pens-reconcile ALERT: herd-keypool drifted, not restored\n"
     "---\n"
-    "estate-reconcile ALERT: herd-keypool drifted, not restored\n"
-    "Binary /home/toxic/pens/estate/bin/herd-keypool.py could not be restored "
+    "Pens-reconcile ALERT: herd-keypool drifted, not restored\n"
+    "Binary /home/toxic/pens/Pens/bin/herd-keypool.py could not be restored "
     "because HEAD was unsigned; no trusted restore source available.\n"
 )
 
@@ -73,14 +73,14 @@ class BareFrontmatterTest(unittest.TestCase):
         return p
 
     def test_bare_frontmatter_body_served_flagged_invalid(self):
-        p = self._file("12712-estate-reconcile.md", BARE)
+        p = self._file("12712-Pens-reconcile.md", BARE)
         body, sealed = fleet_relay._unverified_body(p, "fleet")
         self.assertFalse(sealed)
         self.assertIsNotNone(body)
         self.assertIn("herd-keypool drifted, not restored", body)
 
     def test_bare_frontmatter_relay_record_has_body(self):
-        p = self._file("12712-estate-reconcile.md", BARE)
+        p = self._file("12712-Pens-reconcile.md", BARE)
         rec = fleet_relay.build_relay_record(
             p, channel="fleet", identity="relay", key_dir=_KEYS)
         self.assertEqual(rec["seq"], 12712)
@@ -92,7 +92,7 @@ class BareFrontmatterTest(unittest.TestCase):
     def test_bare_frontmatter_sealed_envelope_still_withheld(self):
         evil = BARE.replace("Binary /home/toxic", squawk_seal.BEGIN_MARK +
                             "\nBinary /home/toxic")
-        p = self._file("12714-estate-reconcile.md", evil)
+        p = self._file("12714-Pens-reconcile.md", evil)
         body, sealed = fleet_relay._unverified_body(p, "fleet")
         self.assertTrue(sealed)
         self.assertIsNone(body)
@@ -110,7 +110,7 @@ class BareFrontmatterTest(unittest.TestCase):
         self.assertEqual(body, "a normal fenced unsigned post")
 
     def test_priv_channel_still_withheld(self):
-        p = self._file("12712-estate-reconcile.md", BARE)
+        p = self._file("12712-Pens-reconcile.md", BARE)
         body, sealed = fleet_relay._unverified_body(p, "priv-ops")
         self.assertTrue(sealed)
         self.assertIsNone(body)

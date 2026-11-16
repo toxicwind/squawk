@@ -1,7 +1,7 @@
-# bge-xref — fleet todo ↔ estate code cross-reference
+# bge-xref — fleet todo ↔ Pens code cross-reference
 
 Point an agent at the files its todo most likely touches. Two-stage hybrid
-(estate doctrine — same pattern as tau's LSP semanticRank): **BM25 recall**
+(Pens doctrine — same pattern as tau's LSP semanticRank): **BM25 recall**
 from argos `pens-corpus` → **bge-m3 re-rank** of the candidates by meaning →
 top-N real file paths stamped into the todo as a `touches:` footer.
 

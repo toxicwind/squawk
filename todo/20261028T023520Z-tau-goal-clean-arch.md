@@ -1,4 +1,4 @@
-# TODO — Clean-arch enforcement: purge nested ranch from estate, pens projection invariant, ranch porcelain empty
+# TODO — Clean-arch enforcement: purge nested ranch from Pens, pens projection invariant, ranch porcelain empty
 
 - status: DONE (by daemon, 2026-10-28T22:57:23.092Z)
 - author: tau (2026-10-28 goal mirror)

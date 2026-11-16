@@ -14,7 +14,7 @@ to the user — leaked internals, confusing "gaslighting" surface.
 ## Fix direction (forward, dynamic, not model-locked)
 
 1. **Hyper research task (untruncated):** enumerate every tag-like leak class seen in the
-   estate — grep tau session stores (~/.tau/agent/sessions) + kappa storage + report
+   Pens — grep tau session stores (~/.tau/agent/sessions) + kappa storage + report
    bundles for `<thinking>`, `<antThinking>`, `<reasoning>`, `<|`, `SAT>`, `<next>`,
    `<thought>`, provider tags (z-ai glm, minimax, qwen variants). Log the inventory with
    counts and provenance.

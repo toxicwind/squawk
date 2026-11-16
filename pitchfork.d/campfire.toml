@@ -15,6 +15,6 @@ timeout = "10s"
 # No HTTP healthcheck yet — uses process health.
 
 [logging]
-# Pipe logs to the estate log-sink.
+# Pipe logs to the Pens log-sink.
 level = "info"
 format = "text"

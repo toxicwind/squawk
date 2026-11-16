@@ -2,8 +2,8 @@
 # Owned by the ranch/squawk/oracle project; the parent only composes it.
 
 [daemons.market-watchdog]
-run = "exec /home/toxic/estate/ranch/squawk/oracle/bin/market-watchdog.sh"
-dir = "/home/toxic/estate/ranch/squawk/oracle"
+run = "exec /home/toxic/pens/estate/ranch/squawk/oracle/bin/market-watchdog.sh"
+dir = "/home/toxic/pens/estate/ranch/squawk/oracle"
 mise = false
 retry = true
 auto = ["start"]

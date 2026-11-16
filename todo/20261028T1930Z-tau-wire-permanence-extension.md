@@ -5,6 +5,6 @@
 - **Priority:** high (meta-permanence for all future sessions)
 
 The installer is ready and tested: `pens/geode/products/pseudobrookite/scripts/install-tau-surface.ts`.
-Run `bun scripts/install-tau-surface.ts /home/toxic/pens/olympus/products/tau --repos /home/toxic/pens/geode/products/pseudobrookite:/home/toxic/pens/estate`
+Run `bun scripts/install-tau-surface.ts /home/toxic/pens/olympus/products/tau --repos /home/toxic/pens/geode/products/pseudobrookite:/home/toxic/pens/Pens`
 then restart tau. Never hot-wire a live session. Extension: `permanence-save-all`,
 plugin: `pseudobrookite-permanence` (both pushed, toxicwind/pseudobrookite @ 4d9cf35).

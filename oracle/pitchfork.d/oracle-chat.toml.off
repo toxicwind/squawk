@@ -3,8 +3,8 @@
 
 
 [daemons.oracle-chat]
-run = "exec /home/toxic/estate/ranch/squawk/oracle/bin/oracle_chat.py"
-dir = "/home/toxic/estate/ranch/squawk/oracle"
+run = "exec /home/toxic/pens/estate/ranch/squawk/oracle/bin/oracle_chat.py"
+dir = "/home/toxic/pens/estate/ranch/squawk/oracle"
 mise = false
 retry = true
 env = { ORACLE_CHANNEL = "/home/toxic/.fleet-bus/squawk-root/bid-market" }

@@ -1,4 +1,4 @@
 #!/bin/bash
-# oracle-core daemon entrypoint - started by pitchfork (estate-scripts/oracle-core)
+# oracle-core daemon entrypoint - started by pitchfork (Pens-scripts/oracle-core)
 set -euo pipefail
-exec /usr/bin/python3 /home/toxic/pens/estate/ranch/squawk/oracle/bin/oracle_daemon.py
+exec /usr/bin/python3 /home/toxic/pens/Pens/ranch/squawk/oracle/bin/oracle_daemon.py

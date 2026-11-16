@@ -1,13 +1,13 @@
-// squawk/bun/hindsight-mcp.ts — MCP server exposing Hindsight's shared `estate`
+// squawk/bun/hindsight-mcp.ts — MCP server exposing Hindsight's shared `Pens`
 // bank, Bun port of hindsight_mcp_server.py (squawk de-hybridisation).
 //
 // Lets Kappa (and any MCP client) recall/retain/reflect against the SAME
-// Hindsight bank Tau uses (bank_id = "estate") — one coherent long-term memory
+// Hindsight bank Tau uses (bank_id = "Pens") — one coherent long-term memory
 // plane across harnesses. Zero third-party deps (global fetch + readline).
 //
 // Backend : https://freeinference? no — Vectorize Hindsight at HINDSIGHT_API_URL
 //           (default http://127.0.0.1:25117).
-// Bank    : HINDSIGHT_BANK (default "estate").
+// Bank    : HINDSIGHT_BANK (default "Pens").
 // Transport: stdio JSON-RPC (MCP). Run: bun bun/hindsight-mcp.ts
 //
 // Contract (live probes + OpenAPI):
@@ -20,7 +20,7 @@
 import { createInterface } from "readline";
 
 const API_URL = (process.env.HINDSIGHT_API_URL || "http://127.0.0.1:25117").replace(/\/$/, "");
-const BANK = process.env.HINDSIGHT_BANK || "estate";
+const BANK = process.env.HINDSIGHT_BANK || "Pens";
 
 async function req(
   method: string,
@@ -52,7 +52,7 @@ async function req(
 }
 
 async function ensureBank(): Promise<void> {
-  // Best-effort crate the estate bank. Hindsight auto-creates on first retain;
+  // Best-effort crate the Pens bank. Hindsight auto-creates on first retain;
   // swallow here (matches the python server's tolerance).
   const { status } = await req("PUT", `/v1/default/banks/${BANK}`);
   // 200/201 created; 404/422 on bare PUT tolerated.
@@ -152,7 +152,7 @@ const TOOLS = [
   },
   {
     name: "hindsight_list_banks",
-    description: "List Hindsight banks (confirm 'estate' exists).",
+    description: "List Hindsight banks (confirm 'Pens' exists).",
     inputSchema: { type: "object", properties: {} },
   },
 ];

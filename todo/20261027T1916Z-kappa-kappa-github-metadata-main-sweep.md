@@ -11,11 +11,11 @@
    redirects old name). Then fix remotes: kappa monorepo `.gitmodules` (kappa-cli
    url -> https://github.com/toxicwind/kappa-cli.git) and the local
    `pens/olympus/products/kappa/kappa-cli` origin URL. Update root README table.
-2. Set descriptions (drop estate jargon) on all 4 repos:
+2. Set descriptions (drop Pens jargon) on all 4 repos:
    - kappa (PRIVATE->consider PUBLIC; flagship): "Kappa (κ) monorepo — open source
      AI coding agent: CLI/TUI, VS Code, JetBrains; browser-fingerprint transport
      - flail gate"
-   - kappa-code (PUBLIC, currently says "Estate-forked"): "The kappa engine —
+   - kappa-code (PUBLIC, currently says "Pens-forked"): "The kappa engine —
      open source AI coding agent runtime (fork of Kilo Code/opencode)"
    - kappa-ble (currently EMPTY desc): "First-class kappa x ble.sh integration
      (bash line editor): env fix, prompt unit, Ctrl-x k"

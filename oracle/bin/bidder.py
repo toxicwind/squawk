@@ -81,7 +81,7 @@ def _cuttinggate_client_key():
     CUTTINGGATE_CLIENT_KEY from the vault file /home/toxic/.secrets;
     bidder daemons inherit it in their environment. Fall back to
     parsing that one line out of the vault file (no shell eval) for
-    contexts running without the estate env (rig/cron shells).
+    contexts running without the Pens env (rig/cron shells).
     None if unreadable."""
     v = os.environ.get("CUTTINGGATE_CLIENT_KEY")
     if v:
@@ -122,7 +122,7 @@ OUT_CAP = 8000
 ERR_CAP = 2000
 PARTIAL_CAP = 65536  # bound for the on-disk partial-output evidence file
 RALPH_POST_BUFFER_S = 30.0  # time to preserve evidence + post result
-CORRAL_CLI = Path("/home/toxic/pens/estate/ranch/corral/src/cli/index.ts")
+CORRAL_CLI = Path("/home/toxic/pens/Pens/ranch/corral/src/cli/index.ts")
 CORRAL_CAP_S = 1740  # same class as super-ralph: agentic runs are slow
 
 # ---- orphaned smithers worktree sweep (2026-10-19, scout T1) ----
@@ -460,10 +460,10 @@ def _resolve_ralph_model(base_url, timeout=15):
 # overlapping work. The oracle rejects unattested bids
 # (bid_rejected{reason:no-attestation}, SPEC §10) — so a bidder
 # that cannot attest must skip the bid loudly, never bid blind.
-KB_COMMITS_API = ("https://api.github.com/repos/toxicwind/estate"
+KB_COMMITS_API = ("https://api.github.com/repos/toxicwind/Pens"
                   "/commits?path=docs/fleet-knowledgebase.md&per_page=1")
 KB_RAW_URL = ("https://raw.githubusercontent.com/toxicwind/"
-              "estate/main/docs/fleet-knowledgebase.md")
+              "Pens/main/docs/fleet-knowledgebase.md")
 KB_CACHE = BIN.parent / "work" / "kb-attestation-cache.json"  # runtime cache: regenerable, untracked
 KB_HTTP_TIMEOUT = 10
 
@@ -1270,7 +1270,7 @@ class Bidder:
 
         Corral is the ticket-driven agent orchestrator (Smithers); the task
         payload IS the ticket prompt. Model calls route through the claude
-        NIM shim (CORRAL_BASE_URL, default :25104 estate-scripts router --
+        NIM shim (CORRAL_BASE_URL, default :25104 Pens-scripts router --
         verified live 2026-10-12). Headless stdout carries the final reply.
         On corral failure the caller falls back to super-ralph -- a dead
         backend must never no-result a task another backend could run.
@@ -1290,7 +1290,7 @@ class Bidder:
         cenv = dict(env)
         cenv["NIM_BASE_URL"] = CORRAL_BASE_URL
         cenv["ANTHROPIC_BASE_URL"] = CORRAL_BASE_URL
-        cenv["estate-scripts_ROUTER_URL"] = CORRAL_BASE_URL
+        cenv["Pens-scripts_ROUTER_URL"] = CORRAL_BASE_URL
         # 2026-10-12 (oracle-repair): the oracle's exec deadline is
         # assign_ts + timeout_ms/1000, but the bidder starts the
         # subprocess after assignment. Leave room to preserve evidence

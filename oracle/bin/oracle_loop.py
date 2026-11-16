@@ -74,7 +74,7 @@ _SLASH_NEGATED_RE = re.compile(r"(not|no|never|without)\s+(?:been\s+)?$",
                                re.IGNORECASE)
 
 # Shared sidechat_shim screening (2026-10-05): every fleet post goes through
-# the shim's pipeline (estate allowlist -> preflight gate -> format_safe),
+# the shim's pipeline (Pens allowlist -> preflight gate -> format_safe),
 # so screening and delivery confirmation apply uniformly across all fleet
 # send paths. Fail-open: any error leaves the text unchanged. Emergency
 # opt-out: ORACLE_SHIM_DIRECT=1.

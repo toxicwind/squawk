@@ -1,6 +1,6 @@
-// tools/estate-chat/dispatch.ts — fleet dispatch: durable lease-based task queue.
+// tools/Pens-chat/dispatch.ts — fleet dispatch: durable lease-based task queue.
 //
-// In-process module loaded by chat.ts (estate-chat). The estate-chat
+// In-process module loaded by chat.ts (Pens-chat). The Pens-chat
 // process is the SINGLE WRITER of dispatch.db (SQLite WAL, co-located with
 // chat.db in STATE_DIR). Readers take short-lived handles.
 //

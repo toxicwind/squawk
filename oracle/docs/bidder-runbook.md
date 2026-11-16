@@ -15,14 +15,14 @@ Written 2026-10-19 by scout from source + the full ledger
    attestation (fleet rule, SPEC §10; the oracle rejects unattested
    bids with `bid_rejected{reason:no-attestation}`):
    - `kb_attestation()` fetches FRESH on every bid: latest commit
-     touching `docs/fleet-knowledgebase.md` in **toxicwind/estate**
+     touching `docs/fleet-knowledgebase.md` in **toxicwind/Pens**
      (commits API) + the raw file, parses §2 Active Crews.
    - On any fetch failure it falls back to
      `work/kb-attestation-cache.json` (rewritten on each successful
      fetch). No fresh + no cache = **skip the bid loudly**, never
      bid blind.
    - HISTORY (fixed 2026-10-19, ranch `c97289e`): the URLs pointed
-     at `toxicwind/estate-scripts-projects`, which is 404. Fresh
+     at `toxicwind/Pens-scripts-projects`, which is 404. Fresh
      fetches failed from ~2026-10-15 and the whole fleet attested a
      stale 147-crew cache while the canonical KB listed 22 crews.
      The oracle gate checks attestation FORM, not canonicality —
@@ -92,9 +92,9 @@ Notes:
 
 ## Ops
 
-- Daemons: pitchfork `estate/bidder-<id>` ×6 (finch, forge,
+- Daemons: pitchfork `Pens/bidder-<id>` ×6 (finch, forge,
   raccoon, scout, vesper, warden). Restart:
-  `/home/toxic/pens/estate/bin/pitchfork-restart bidder-<id>`.
+  `/home/toxic/pens/Pens/bin/pitchfork-restart bidder-<id>`.
   Verify with `ps` (start times), not pitchfork status alone —
   pitchfork has lost process tracking before while daemons lived.
 - Single-instance flock per bidder id: a second launch exits
@@ -104,5 +104,5 @@ Notes:
   `stake-lock-failed` = stake drained (slashes, concurrent bonds),
   not a bidding fault.
 - Attestation health: cache `fetched_ts` should be recent and
-  `kb_sha` should equal the latest estate commit touching the KB.
+  `kb_sha` should equal the latest Pens commit touching the KB.
   One probe intake + a ledger grep for `kb_sha` proves it live.

@@ -7,7 +7,7 @@
  * actually concern the todo surface first. Purely additive: candidates come
  * from recall, semantics only re-order them.
  *
- * Dedupe (measured 2026-11-03): estate/estate-skills-hub and geode/azurite
+ * Dedupe (measured 2026-11-03): Pens/Pens-skills-hub and geode/azurite
  * index the SAME skill docs under different ax_paths — collapse to the
  * canonical azurite copy, keeping the best cosine score.
  */
@@ -21,7 +21,7 @@ function canonicalKey(ax: string): string {
 	return ax
 		.replace(/^kind:[a-z0-9_-]+\//i, "")
 		.replace(/^\/home\/toxic\/pens\//, "")
-		.replace(/^(estate\/estate-skills-hub|geode\/azurite)\/skills\//, "geode/azurite/skills/")
+		.replace(/^(Pens\/Pens-skills-hub|geode\/azurite)\/skills\//, "geode/azurite/skills/")
 		.replace(/^geode\/azurite\/upstream\/skills-hub\//, "geode/azurite/skills/");
 }
 

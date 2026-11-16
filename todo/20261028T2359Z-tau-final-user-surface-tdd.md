@@ -11,7 +11,7 @@ not bun test, not curl. Run the kappa-tui-handoff pattern:
 2. Inside real kappa: load cyoa-router skill (tau-side resolvable + kappa strict-loader OK)
 3. Real quiz run end-to-end inside kappa TUI (12 questions -> weighted route)
 4. Provenance gate live call inside kappa (unreliable-narrator filter on a real search)
-5. Screenshot/AX proof from wezterm surface; persist to estate snapshots
+5. Screenshot/AX proof from wezterm surface; persist to Pens snapshots
 6. Then (and only then) mark cyoa-router "final-TDD: user-verified" in AGENTS/KB
 
 

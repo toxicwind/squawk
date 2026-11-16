@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """routing-topology — expose the LIVE router alias map to the oracle.
 
-The oracle used to read `herd.yaml` (a YAML file in the estate config
+The oracle used to read `herd.yaml` (a YAML file in the Pens config
 store) to learn which upstream provider each alias forwards to, so it can
 attribute a judge failure to the PROVIDER rather than the alias. That file
 is gone: the routing SSOT is now
@@ -74,7 +74,7 @@ def parse(path: str) -> dict:
         alias = m.group(1) or m.group(2) or m.group(3)
         if alias:
             out.setdefault(alias, [])
-    # The estate routing lanes (estate/auto, estate/code, ...) live in the
+    # The Pens routing lanes (Pens/auto, Pens/code, ...) live in the
     # RUNTIME store, not the static TS config — merge them in so provider
     # attribution resolves for the lanes the oracle actually judges with.
     for alias, targets in parse_store(DEFAULT_STORE).items():
@@ -86,7 +86,7 @@ def parse_store(path: str) -> dict:
     """{alias: [provider/model, ...]} from the router's runtime config store.
 
     The store (DATA_DIR/config.json) holds each provider's `model_map`:
-    {"estate/auto": "qwen3.6-35b", ...}. The provider that serves a lane
+    {"Pens/auto": "qwen3.6-35b", ...}. The provider that serves a lane
     is the one whose `models` list contains the mapped model.
     """
     if not os.path.exists(path):

@@ -21,7 +21,7 @@ WINNER: https://github.com/Amery2010/imagine-server (MIT, TS, 120 stars, active)
    README crediting Amery2010/imagine-server), clone to
    pens/olympus/products/eidolon. Greek name fits olympus lineage (eidolon =
    image/phantom).
-2. Register in olympus + barn/estate-ops bin manifest if it ships a bin.
+2. Register in olympus + barn/Pens-ops bin manifest if it ships a bin.
 3. Add providers (one file + registry entry each, per their plugin guide):
    Pollinations (flux, NO key — make it the default provider), Cloudflare Workers
    AI (FLUX.2 Klein free tier), fal.ai (100 free credits), NVIDIA NIM free

@@ -6,8 +6,8 @@
 
 ## Why most urgent
 
-The estate has FOUR overlapping dashboard/UI surfaces and no single master:
-- ranch-ui :25218 (bun, estate/stack/services/ranch-ui.ts) — proxies delendai-control-plane
+The Pens has FOUR overlapping dashboard/UI surfaces and no single master:
+- ranch-ui :25218 (bun, Pens/stack/services/ranch-ui.ts) — proxies delendai-control-plane
   SPA (React 19, pens/ranch/range/apps/delendai-control-plane, vite :25156) + bornite API
 - range-ui.tmp/ui — Svelte 5 tabbed surfaces app (52-entry iframe registry,
   src/lib/surfaces.ts; ports SSOT via config/ports.env → generated ports.ts)
@@ -34,7 +34,7 @@ tabs iframe the per-product UIs (surfaces.ts pattern generalizes).
 - forge-nl-lib landed: pens/ranch/forge/lib/forge-nl-lib.ts (polygot cache
   wrapper: bazel/cargo/bun/python/go/bash/perl + NL_LANGUAGE_SERVERS map).
   bazel+http probes verified live (grpcUp true after Promise.race fix).
-  NOT yet wired into estate-wide buildscripts; not committed/pushed yet.
+  NOT yet wired into Pens-wide buildscripts; not committed/pushed yet.
 - tsgo purged from code-insiders (typescript-go#2239 leak froze Wayland);
   tsserver restored. marketplace reinstall fails signature-verify — wait for
   7.1-based extension tag before re-enabling.

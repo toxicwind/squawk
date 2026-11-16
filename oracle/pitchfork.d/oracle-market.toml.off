@@ -1,6 +1,6 @@
 [daemons.oracle-market]
-run = "exec /home/toxic/estate/ranch/squawk/oracle/bin/run.sh"
-dir = "/home/toxic/estate/ranch/squawk/oracle"
+run = "exec /home/toxic/pens/estate/ranch/squawk/oracle/bin/run.sh"
+dir = "/home/toxic/pens/estate/ranch/squawk/oracle"
 mise = false
 retry = true
 env = { ORACLE_INTAKE = "1" }

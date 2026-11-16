@@ -12,8 +12,8 @@ WS=http://127.0.0.1:25147
 CHAT=http://127.0.0.1:25120
 DB=/home/toxic/.local/share/kappa/kappa-main.db
 WT=$(cat /home/toxic/.squawk-ws-token 2>/dev/null)
-CT=$(cat /home/toxic/.config/estate-chat-token 2>/dev/null)
-HOST=estate.tailc9ac71.ts.net
+CT=$(cat /home/toxic/.config/Pens-chat-token 2>/dev/null)
+HOST=Pens.tailc9ac71.ts.net
 PASS=0 FAIL=0
 pass(){ PASS=$((PASS+1)); echo "  ✓ $1"; }
 fail(){ FAIL=$((FAIL+1)); echo "  ✗ $1"; }
@@ -96,7 +96,7 @@ if [ "$WS_HTTP" = "302" ] || [ "$WS_HTTP" = "101" ]; then pass "external ws rout
 
 # ---------------------------------------------------------------
 echo "[8] Real daemons running (the 'agents' that collab)"
-RUN=$(pitchfork list 2>/dev/null | grep -iE "campfire|estate-chat|kappa-board|oracle-core|oracle-chat|oracle-market|squawk-feed|squawk-ws" | grep -c running)
+RUN=$(pitchfork list 2>/dev/null | grep -iE "campfire|Pens-chat|kappa-board|oracle-core|oracle-chat|oracle-market|squawk-feed|squawk-ws" | grep -c running)
 if [ "$RUN" -ge 7 ]; then pass "7+ squawk daemons running ($RUN)"; else fail "only $RUN/8 daemons running"; fi
 
 echo ""

@@ -6,8 +6,8 @@
 # so rust-web's launcher could only ever fall into `cargo build` and fail.
 
 [daemons.fleet-feed]
-run = "exec /home/toxic/.bun/bin/bun /home/toxic/estate/ranch/squawk/fleet-feed.ts"
-dir = "/home/toxic/estate/ranch/squawk"
+run = "exec /home/toxic/.bun/bin/bun /home/toxic/pens/estate/ranch/squawk/fleet-feed.ts"
+dir = "/home/toxic/pens/estate/ranch/squawk"
 mise = false
 retry = true
 boot_start = true

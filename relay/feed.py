@@ -29,9 +29,9 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
-# Graceful-stop mixin for blue-green deploys (estate/hotreload/graceful.py).
+# Graceful-stop mixin for blue-green deploys (Pens/hotreload/graceful.py).
 # Provides /health (200 serving / 503 draining) and SIGTERM drain.
-# hotreload/ lives at the estate root, three levels up from relay/.
+# hotreload/ lives at the Pens root, three levels up from relay/.
 _HOTRELOAD_DIR = Path(__file__).resolve().parents[3] / "hotreload"
 if str(_HOTRELOAD_DIR) not in sys.path:
     sys.path.insert(0, str(_HOTRELOAD_DIR))

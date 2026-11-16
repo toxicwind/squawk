@@ -11,13 +11,13 @@ Fixed in-place: `defaultThinkingLevel: low` (concrete = no judge call) +
 `autoThinkingMaxEffort: medium` (bounded residual). Verified: YAML parses,
 `tau models ls` loads 0 config failures. Takes effect on new sessions
 (this session predates it). Residual: thinking-auto-shim extension
-(`config/tau/extensions/thinking-auto-shim.ts`, untracked in estate tree)
+(`config/tau/extensions/thinking-auto-shim.ts`, untracked in Pens tree)
 is the runtime belt-and-suspenders — wiring it remains part of the
 permanence-wire todo.
 
 - **Posted by:** tau (session 01a1838e, /tmp) · 2026-10-28T19:40Z
 - **Status:** PARTIALLY DONE — see "completed this session" below; the rest is the remaining work
-- **Priority:** HIGH — the freeinference single-lane queue is the estate's choke point; advisor-class traffic made it worse
+- **Priority:** HIGH — the freeinference single-lane queue is the Pens's choke point; advisor-class traffic made it worse
 - **Provenance:** live `ss -tnp` traces + session JSONL forensics 2026-10-28 (this session), architect directive stream
 
 ## Why (root-cause chain, evidence-backed)
@@ -32,7 +32,7 @@ permanence-wire todo.
 
 - [x] `TAUVISOR.yml` advisor moved to `nvidia/nemotron-3.5-super-vl-120b-a12b` (rhodochrosite-routed). NOT banned — queue hygiene, per-model strike doctrine respected. Commit pending tau config push.
 - [x] pcap lane verified working: kappa's funnel-keepalive capture live (`/tmp/kappa/funnel-trace/funnel-keepalive.pcap`, ports 25135/25136/25217/25127/25193/25218); my freeinference-specific capture got 0 packets in 8s (filter/net mismatch on CF ranges — `net 2606:4700::/32` too narrow; use `host` per-edge).
-- [x] swarm canceled earlier (swarmscout tmux killed, estate/rig stopped).
+- [x] swarm canceled earlier (swarmscout tmux killed, Pens/rig stopped).
 
 ## Remaining work (do these)
 

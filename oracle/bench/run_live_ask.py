@@ -31,7 +31,7 @@ def main(argv):
     verdict = oracle_ask.run_ask(question, timeout_s=timeout)
     elapsed = time.time() - t0
     work = os.environ.get("ORACLE_WORK",
-                          "/home/toxic/pens/estate/ranch/squawk/oracle/work")
+                          "/home/toxic/pens/Pens/ranch/squawk/oracle/work")
     outdir = os.path.join(work, "proof-runs")
     os.makedirs(outdir, exist_ok=True)
     path = os.path.join(outdir, "proof-%d.json" % int(t0))

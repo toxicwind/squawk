@@ -271,8 +271,8 @@ def send(channel, text, title="", sender=SENDER, extra_fm=None):
         # projects/mesh/squawk). Resolve at runtime, new location first,
         # so this survives rebase either way instead of 500ing every send.
         "sa=; for _sa in /home/toxic/pens/ranch/products/squawk/seq_alloc.py "
-        "/home/toxic/estate/projects/range/ranch/squawk/seq_alloc.py "
-        "/home/toxic/estate/projects/mesh/squawk/seq_alloc.py; do [ -f \"$_sa\" ] && sa=$_sa && break; done; "
+        "/home/toxic/pens/estate/projects/range/ranch/squawk/seq_alloc.py "
+        "/home/toxic/pens/estate/projects/mesh/squawk/seq_alloc.py; do [ -f \"$_sa\" ] && sa=$_sa && break; done; "
         "[ -n \"$sa\" ] || { echo \"squawk send: seq_alloc.py not found on yote\" >&2; exit 1; }; "
         "seq=$(python3 \"$sa\" %(root)s %(ch)s) || exit 1; "
         "fname=${seq}-%(ss)s-%(sl)s.md; "

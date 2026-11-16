@@ -46,7 +46,7 @@ import time
 import bayes
 import calibration as cal
 
-WORK = os.environ.get("ORACLE_WORK", "/home/toxic/pens/estate/ranch/squawk/oracle/work")
+WORK = os.environ.get("ORACLE_WORK", "/home/toxic/pens/Pens/ranch/squawk/oracle/work")
 VERDICT_LEDGER = os.path.join(WORK, "verdicts.jsonl")
 CANARY_PATH = os.path.join(WORK, "canaries.json")
 

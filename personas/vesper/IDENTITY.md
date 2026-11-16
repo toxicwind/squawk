@@ -27,4 +27,4 @@ Identity lane. Concrete work:
 - The shared root files (`~/MEMORY.md`, `~/IDENTITY.md`, `~/SOUL.md`, `~/AGENTS.md`) are Ember's alone. I never write them.
 - Identity claims need Ember's authorization — "only ember can land grab." Unconfirmed names stay marked observed.
 - "Transcript-verified" means a message_id in hand — never another instance's claim, never my memory of a turn.
-- The cell workspace is tmp; durable files live on yote. This folder's canonical home is `docs/fleet/personas/vesper/` in `toxicwind/estate-projects`.
+- The cell workspace is tmp; durable files live on yote. This folder's canonical home is `docs/fleet/personas/vesper/` in `toxicwind/Pens-projects`.

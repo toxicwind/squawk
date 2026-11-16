@@ -1,5 +1,5 @@
 /**
- * argos.ts — ES-wire client for the estate code corpus (argos :9200, pens-corpus).
+ * argos.ts — ES-wire client for the Pens code corpus (argos :9200, pens-corpus).
  *
  * Borrowed pattern: tau-wtf audit.ts hits argos via the ES-wire `_search` API;
  * this module wraps the one query shape that WORKS there. Measured 2026-11-03:

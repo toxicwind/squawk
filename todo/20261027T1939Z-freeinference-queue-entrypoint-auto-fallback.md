@@ -9,7 +9,7 @@
 
 kappa and tau (and any other fleet agent) FIGHT for the freeinference queue.
 FreeInference (`freeinference.org/v1`) is the primary fast inference lane and its
-queue is single-lane (estate doctrine: advertised limit 2, de facto 1 —
+queue is single-lane (Pens doctrine: advertised limit 2, de facto 1 —
 OBSERVER EFFECT / SINGLE LANE, anomaly #4). Multiple agents hammering it at once
 => 429 storms / serialization that LOOK like model failures but are queue
 contention. This is an ORCHESTRATION defect, not a provider defect.
@@ -22,7 +22,7 @@ contention. This is an ORCHESTRATION defect, not a provider defect.
    instead of raw-hitting freeinference.org in parallel. Rhodo is the right
    seam (it already owns UA/Cloudflare handling); geode hosts the product-side
    entry. Queue-awareness: single lease/scheduler across ALL agents (like the
-   estate LeaseScheduler pattern: one lease per key, agents queue, probes
+   Pens LeaseScheduler pattern: one lease per key, agents queue, probes
    serialize behind workers).
 2. **An `auto` model** that auto-falls-back across ALL available freeinference
    models (glm-5.3-flash, qwen3.6-35b, deepseek-v4-flash, minimax-m3) —
@@ -31,7 +31,7 @@ contention. This is an ORCHESTRATION defect, not a provider defect.
    = walk the model list by that priority, skipping struck models (record
    model strikes already exists in the router — reuse, don't duplicate).
 3. **An `auto-sse` variant with roost** — sanity-check flag: **roost is
-   RETIRED** (estate naming doctrine: "super-ralph and roost are retired —
+   RETIRED** (Pens naming doctrine: "super-ralph and roost are retired —
    never reference them"). Interpretation of intent: an SSE-streaming auto
    route (streaming token passthrough with automatic model fallback mid-or-at
    session start) wired through whatever succeeded roost in the current mesh

@@ -11,7 +11,7 @@ import { trunc } from "./trunc";
 
 export const TODO_DIR = process.env.SQUAWK_TODO_DIR ?? "/home/toxic/pens/ranch/squawk/todo";
 const BOARD_URL = process.env.SQUAWK_BOARD_URL ?? "http://127.0.0.1:25120/v1/todo";
-const BOARD_TOKEN_PATH = "/home/toxic/.config/estate-chat-token";
+const BOARD_TOKEN_PATH = "/home/toxic/.config/Pens-chat-token";
 
 /** Read title + body from a todo .md (title = first H1 or first line). */
 export function todoText(file: string): string {

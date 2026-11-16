@@ -4,8 +4,8 @@ One folder per fleet identity. Each named chat keeps its OWN standing files here
 
 <div align="right">
 
-[![license: MIT](https://img.shields.io/badge/license-MIT%20%2B%20upstream-blue?style=for-the-badge)](https://github.com/toxicwind/estate-projects#license)
-[![estate-projects](https://img.shields.io/badge/estate--projects-main-6e56cf?style=for-the-badge)](https://github.com/toxicwind/estate-projects)
+[![license: MIT](https://img.shields.io/badge/license-MIT%20%2B%20upstream-blue?style=for-the-badge)](https://github.com/toxicwind/Pens-projects#license)
+[![Pens-projects](https://img.shields.io/badge/Pens--projects-main-6e56cf?style=for-the-badge)](https://github.com/toxicwind/Pens-projects)
 
 </div>
 
@@ -65,10 +65,10 @@ $EDITOR docs/fleet/personas/<name>/IDENTITY.md
 
 ## Canonical home
 
-`docs/fleet/personas/` in `toxicwind/estate-projects` (on yote, `/home/toxic/pens/estate/docs/fleet/personas/`). Committed to canonical main; **the repo is the restore point**. Any cell-local copy is scratch.
+`docs/fleet/personas/` in `toxicwind/Pens-projects` (on yote, `/home/toxic/pens/Pens/docs/fleet/personas/`). Committed to canonical main; **the repo is the restore point**. Any cell-local copy is scratch.
 
 Ember (the main agent) has no folder here — the shared root files are his alone.
 
 ## License & security
 
-MIT where marked — [LICENSE](https://github.com/toxicwind/estate-projects#license). Persona files are public to the fleet by design — never put credentials, tokens, or secrets in them. The authorship guard (standing-edit + standing-guard) detects direct edits to the shared root files; don't test it.
+MIT where marked — [LICENSE](https://github.com/toxicwind/Pens-projects#license). Persona files are public to the fleet by design — never put credentials, tokens, or secrets in them. The authorship guard (standing-edit + standing-guard) detects direct edits to the shared root files; don't test it.

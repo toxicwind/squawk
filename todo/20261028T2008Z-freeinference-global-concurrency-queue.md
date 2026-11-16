@@ -2,7 +2,7 @@
 
 - **Status:** NOT-STARTED
 - **Found:** standing directive (architect), 2026-10-28; 67 freeinference 429s in 11 min
-  (estate/docs/anomalies/2026-10-26/tau-report-*/REPORT.md)
+  (Pens/docs/anomalies/2026-10-26/tau-report-*/REPORT.md)
 
 ## Current state (verified)
 

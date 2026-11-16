@@ -65,7 +65,7 @@ for _kp in ("/home/toxic/.hodos-data/client-key.corral",
         break
     except OSError:
         continue
-WORK = os.environ.get("ORACLE_WORK", "/home/toxic/pens/estate/ranch/squawk/oracle/work")
+WORK = os.environ.get("ORACLE_WORK", "/home/toxic/pens/Pens/ranch/squawk/oracle/work")
 
 # Judge panel: NIM-backed models served by flock :25193, verified live
 # 2026-10-13 with the flock client key (HTTP 200 on a JSON probe). The
@@ -76,13 +76,13 @@ DEFAULT_JUDGES = [
     # Priority: FREE > FAST > instruction-following (2026-10-27 architect
     # order). The free lanes answer on the free tier (zero credit burn);
     # auto/code route through providers whose keys may be credit-exhausted,
-    # which is a 402 + a failover hop. Verified live: estate/free 200 in
-    # 0.38s; estate/reasoning 402 (openrouter credits) when last probed.
-    "estate/free",  # -> openrouter/nemotron free + freeinference/diffusiongemma
-    "estate/auto",  # -> qwen3.6-35b on freeinference
-    "estate/code",  # -> deepseek-v4-flash on freeinference
+    # which is a 402 + a failover hop. Verified live: Pens/free 200 in
+    # 0.38s; Pens/reasoning 402 (openrouter credits) when last probed.
+    "Pens/free",  # -> openrouter/nemotron free + freeinference/diffusiongemma
+    "Pens/auto",  # -> qwen3.6-35b on freeinference
+    "Pens/code",  # -> deepseek-v4-flash on freeinference
 ]
-FALLBACK_JUDGE = "estate/free"
+FALLBACK_JUDGE = "Pens/free"
 
 JUDGE_PROMPT = """You are judge {idx} (anonymous) on the OpenFang Oracle panel.
 Question: {question}

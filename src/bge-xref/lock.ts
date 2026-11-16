@@ -1,7 +1,7 @@
 /**
  * lock.ts — per-target exclusive lock (O_EXCL) for single-stamp guarantees.
  *
- * Estate pattern (2026-11-03, squawk b8eb9ef): a check-then-act guard has a
+ * Pens pattern (2026-11-03, squawk b8eb9ef): a check-then-act guard has a
  * TOCTOU hole — two concurrent invocations can both pass the check before
  * either writes. `withFileLock` wraps the ENTIRE read→check→write cycle under
  * an exclusive `<target>.xref.lock`:

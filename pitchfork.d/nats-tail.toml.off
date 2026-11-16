@@ -2,8 +2,8 @@
 # Owned by the ranch/squawk project; the parent only composes it.
 
 [daemons.nats-tail]
-run = "exec /home/toxic/estate/ranch/squawk/nats/run-tail.sh"
-dir = "/home/toxic/estate/ranch/squawk/nats"
+run = "exec /home/toxic/pens/estate/ranch/squawk/nats/run-tail.sh"
+dir = "/home/toxic/pens/estate/ranch/squawk/nats"
 mise = false
 retry = true
 boot_start = true

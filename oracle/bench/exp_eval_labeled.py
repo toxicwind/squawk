@@ -68,7 +68,7 @@ def ask_text(q):
 def load_panel_snapshot():
     """Alias -> concrete target from config/herd.yaml (conditions record)."""
     snap = {}
-    path = "/home/toxic/pens/estate/config/herd.yaml"
+    path = "/home/toxic/pens/Pens/config/herd.yaml"
     try:
         with open(path) as f:
             txt = f.read()
@@ -207,7 +207,7 @@ def main(argv):
 
     ts = int(time.time())
     tag = ("-" + a.tag) if a.tag else ""
-    work = "/home/toxic/pens/estate/ranch/squawk/oracle/work-eval-%d%s" % (ts, tag)
+    work = "/home/toxic/pens/Pens/ranch/squawk/oracle/work-eval-%d%s" % (ts, tag)
     os.makedirs(work, exist_ok=True)
     os.environ["ORACLE_WORK"] = work
 
@@ -225,7 +225,7 @@ def main(argv):
     os.makedirs(RESULTS, exist_ok=True)
     rows_path = os.path.join(RESULTS, "eval_%d%s.jsonl" % (ts, tag))
     sum_path = os.path.join(RESULTS, "eval_%d%s_summary.json" % (ts, tag))
-    gitsha = subprocess.run(["git", "-C", "/home/toxic/pens/estate",
+    gitsha = subprocess.run(["git", "-C", "/home/toxic/pens/Pens",
                              "rev-parse", "--short", "HEAD"],
                             capture_output=True, text=True).stdout.strip()
 
@@ -396,7 +396,7 @@ def main(argv):
         "rows_path": rows_path,
         "conditions": {
             "git_sha": gitsha,
-            "repo": "toxicwind/estate-scripts-projects",
+            "repo": "toxicwind/Pens-scripts-projects",
             "question_source": "2084Collective/kalshibench-v2 via datasets-server API",
             "eval_set": a.questions,
             "sample_seed": 20260920,

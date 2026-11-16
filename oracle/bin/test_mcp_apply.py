@@ -11,17 +11,17 @@ import shutil
 import sys
 import tempfile
 
-sys.path.insert(0, "/home/toxic/pens/estate/ranch/squawk/oracle/bin")
+sys.path.insert(0, "/home/toxic/pens/Pens/ranch/squawk/oracle/bin")
 import mcp_apply
 from mcp_apply import (_check_path, McpError, parse_edits_json,
                        apply_change_set)
 
 # ---- sandbox guard ----
-assert _check_path("/home/toxic/pens/estate/ranch/x.py") == \
-    "/home/toxic/pens/estate/ranch/x.py"
-assert _check_path("/home/toxic/pens/estate") == "/home/toxic/pens/estate"
+assert _check_path("/home/toxic/pens/Pens/ranch/x.py") == \
+    "/home/toxic/pens/Pens/ranch/x.py"
+assert _check_path("/home/toxic/pens/Pens") == "/home/toxic/pens/Pens"
 for bad in ["", "relative/path.py", "/etc/passwd",
-            "/home/toxic/pens/estate/../.ssh/id_rsa", "/tmp/evil.py",
+            "/home/toxic/pens/Pens/../.ssh/id_rsa", "/tmp/evil.py",
             "/home/toxic/other/x.py", None, 123]:
     try:
         _check_path(bad)

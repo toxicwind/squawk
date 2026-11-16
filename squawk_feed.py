@@ -226,7 +226,7 @@ def build_fat(since: int, state: FeedState,
             identity=state.identity, key_dir=state.key_dir)
         # Full bodies by design (Chris, 2026-09-21): the serve path
         # does NOT truncate. The 500-char TEXT_CAP removal was lost
-        # in the estate migration and is restored here (Pry, 2026-10-19).
+        # in the Pens migration and is restored here (Pry, 2026-10-19).
         messages.append(rec)
         seq = rec.get("seq") or 0
         if seq <= 0:

@@ -184,7 +184,7 @@ class SquawkFeedFatTests(unittest.TestCase):
         # DESIGN (Sept 21-28 records; Oct 19 lane brief): the 500-char
         # server-side cap was REMOVED -- long bodies must render in FULL.
         # build_fat still applies _truncate (TEXT_CAP=500); the removal was
-        # lost in the estate migration (untraceable in this path's history --
+        # lost in the Pens migration (untraceable in this path's history --
         # only 11 commits follow squawk_feed.py here). This test asserts the
         # DESIGN and is expected to fail until the cap is removed or the
         # design record is revised. Do NOT "fix" it by asserting truncation

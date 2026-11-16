@@ -7,5 +7,5 @@ if [[ ! -x "$VENV/bin/python" ]]; then
   python3 -m venv "$VENV"
   "$VENV/bin/pip" install -q nats-py
 fi
-export SQUAWK_NATS_CHANNELS="${SQUAWK_NATS_CHANNELS:-fleet,leads,ops,estate-chat,bid-market,uitest,fleet-misfiled-20261003}"
+export SQUAWK_NATS_CHANNELS="${SQUAWK_NATS_CHANNELS:-fleet,leads,ops,Pens-chat,bid-market,uitest,fleet-misfiled-20261003}"
 exec "$VENV/bin/python" "$(dirname "$0")/squawk_history.py"

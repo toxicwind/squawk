@@ -1,6 +1,6 @@
 # 🔮 Oracle — the ranch's decision corral
 
-> 🗺️ Part of [**the ranch**](https://github.com/toxicwind/ranch) — the whole inference estate, one map.
+> 🗺️ Part of [**the ranch**](https://github.com/toxicwind/ranch) — the whole inference Pens, one map.
 
 ![ranch](https://img.shields.io/badge/ranch-corral-brown?style=for-the-badge)
 ![python](https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=white)
@@ -13,7 +13,7 @@
 > deterministic roundup engine advised by a calibrated judge panel.
 
 > [!NOTE]
-> Live pitchfork daemons: `estate-scripts/oracle-market` (market loop + intake, `bin/run.sh`), `estate-scripts/oracle-core` (decision engine, `bin/run-oracle-core.sh`, `127.0.0.1:25151`), `estate-scripts/bidder-forge`, `estate-scripts/bidder-scout` (bidders), `estate-scripts/market-watchdog`, `estate-scripts/oracle-chat`.
+> Live pitchfork daemons: `Pens-scripts/oracle-market` (market loop + intake, `bin/run.sh`), `Pens-scripts/oracle-core` (decision engine, `bin/run-oracle-core.sh`, `127.0.0.1:25151`), `Pens-scripts/bidder-forge`, `Pens-scripts/bidder-scout` (bidders), `Pens-scripts/market-watchdog`, `Pens-scripts/oracle-chat`.
 
 ## 🌾 Ranch vocabulary
 
@@ -142,7 +142,7 @@ Replay guard: the watch re-arm path re-ingests recent files with
 |---|---|
 | `ORACLE_INTAKE=1` | enables the intake wiring in `oracle_loop.py`; exported by `bin/run.sh` (daemon entrypoint) and pinned in `pitchfork.toml` `[daemons.oracle-market]` env for the next supervisor boot |
 | `work/` | calibration state, verdict ledgers, escalation flags — all on disk |
-| `ranch/squawk/oracle/` | the corral's location in the ranch (moved from `estate-scripts/agents/oracle-market`) |
+| `ranch/squawk/oracle/` | the corral's location in the ranch (moved from `Pens-scripts/agents/oracle-market`) |
 
 ## Durability
 
@@ -156,7 +156,7 @@ two live `intake_request`s cleared full auctions
 across a `pitchfork restart`.
 
 The roundup core is equally restart-durable: `bin/run-oracle-core.sh`
-is the pitchfork entrypoint for `estate-scripts/oracle-core`; all calibration
+is the pitchfork entrypoint for `Pens-scripts/oracle-core`; all calibration
 state, verdict ledgers, and escalation flags live on disk under `work/`.
 A restart loses nothing but in-flight asks. Proven: restart the unit,
 re-run `bench/run_live_ask.py`, confirm a fresh brand

@@ -33,7 +33,7 @@
 - [ ] **Provider-wide configurability** — maxConcurrency / UA / retries /
       auth_headers as ProviderDef fields in mimetite `data.ts` (config not
       code), regen, live-probe ≥3 models, record exits.
-- [ ] **Clean-arch enforcement** — purge nested ranch snapshots from estate
+- [ ] **Clean-arch enforcement** — purge nested ranch snapshots from Pens
       (Anomaly #7 class); pens projection invariant (sync-scripts only
       writers); ranch `git status --porcelain` empty check.
 - [ ] **Doctrine merge into rigs** — append to all 9 rig system.md: the
@@ -71,7 +71,7 @@
       buildings, squawk speech bubbles, day/night from poll cadence,
       seasons = deploy cycles.
 - [ ] **Blackbird persist** — GITHUB_SESSIONS config + only-search-surface
-      doctrine line in estate AGENTS.md.
+      doctrine line in Pens AGENTS.md.
 
 ## Recursion law
 

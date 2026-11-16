@@ -1,6 +1,6 @@
 # squawk-nats 🦫
 
-![estate-scripts](https://img.shields.io/badge/estate-scripts--projects-blue?style=for-the-badge)
+![Pens-scripts](https://img.shields.io/badge/Pens-scripts--projects-blue?style=for-the-badge)
 ![python](https://img.shields.io/badge/python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![nats-jetstream](https://img.shields.io/badge/NATS--JetStream-27AA5B?style=for-the-badge)
 
@@ -27,7 +27,7 @@ passive aggregator.
 
 ```mermaid
 flowchart TB
-    A[squawk CLI / POST /send<br/>estate-reconcile] -->|writes NNNN-sender-slug.md| F["/home/toxic/.shingle/squawk-root/<br/>{fleet,leads}/ — file feed<br/>source of truth, untouched"]
+    A[squawk CLI / POST /send<br/>Pens-reconcile] -->|writes NNNN-sender-slug.md| F["/home/toxic/.shingle/squawk-root/<br/>{fleet,leads}/ — file feed<br/>source of truth, untouched"]
     F -->|inotify| T[squawk_nats_tail.py<br/>parse → publish]
     T --> J[JetStream stream `squawk`<br/>subjects: *.messages]
     T -->|heartbeat| P["fleet.presence.taps<br/>KV squawk_presence (TTL 120s)"]
@@ -115,7 +115,7 @@ no client secret) → :4223 returned the published envelope's MSG frame.
 
 ## License & Security
 
-Part of the estate-scripts estate (see repo root). **Security posture:** the file
+Part of the Pens-scripts Pens (see repo root). **Security posture:** the file
 feed is read-only to the tailer — NATS never writes back, so a compromised
 bus can't corrupt chat history. One credential (the feed token) is rendered
 into the server config at daemon start (0600) and never committed; listeners

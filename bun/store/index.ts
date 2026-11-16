@@ -1,5 +1,5 @@
 // squawk/bun/store — SQLite persistence for the merged squawk chat.
-// Cherry-picks estate-chat's identity/presence model + fleet-chat's rooms,
+// Cherry-picks Pens-chat's identity/presence model + fleet-chat's rooms,
 // and folds in fleetd's #channel / @agent targeting. This is the single
 // writer of state DB files (SQLite WAL).
 

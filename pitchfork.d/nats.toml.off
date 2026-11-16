@@ -3,8 +3,8 @@
 
 
 [daemons.nats]
-run = "exec /home/toxic/estate/ranch/squawk/nats/run-nats.sh"
-dir = "/home/toxic/estate/ranch/squawk/nats"
+run = "exec /home/toxic/pens/estate/ranch/squawk/nats/run-nats.sh"
+dir = "/home/toxic/pens/estate/ranch/squawk/nats"
 mise = false
 retry = true
 boot_start = true

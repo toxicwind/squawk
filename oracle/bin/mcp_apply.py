@@ -26,7 +26,7 @@ GATEHOUSE_MCP_URL = "http://127.0.0.1:25127/mcp"
 GATEHOUSE_RPC_CUTOFF_S = 60
 # Edits are sandboxed under these roots. Absolute paths only; anything
 # escaping via .. is rejected before any tool call.
-ALLOWED_ROOTS = ("/home/toxic/pens/estate",)
+ALLOWED_ROOTS = ("/home/toxic/pens/Pens",)
 READ_TOOL = "filesystem:read_text_file"
 EDIT_TOOL = "filesystem:edit_file"  # via call_tool_destructive
 MAX_EDITS_PER_TASK = 25

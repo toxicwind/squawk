@@ -197,7 +197,7 @@ Autonomous prediction-market trading agent with a calibrated pricing engine.
 
 ## Appendix: search log
 
-- Paper races (arXiv + alphaXiv via `/home/toxic/pens/estate/skills/paper-search/bin/paper-search`, 8 results each): "LLM debate architecture decision oracle", "mixture-of-agents ensemble LLM", "LLM-as-judge methodology evaluation", "prediction markets for AI agents", "confidence calibration LLM judges", "ensemble verdict aggregation multi-agent debate" → 48 papers, 45 unique arXiv IDs.
+- Paper races (arXiv + alphaXiv via `/home/toxic/pens/Pens/skills/paper-search/bin/paper-search`, 8 results each): "LLM debate architecture decision oracle", "mixture-of-agents ensemble LLM", "LLM-as-judge methodology evaluation", "prediction markets for AI agents", "confidence calibration LLM judges", "ensemble verdict aggregation multi-agent debate" → 48 papers, 45 unique arXiv IDs.
 - Full abstracts pulled for 15 highest-signal papers via arXiv API.
 - GitHub code search (6 queries × 8 hits → 47 unique repos, recency-weighted rank: 0.45·recency + 0.20·tests + 0.15·multi-query + 0.10·log(stars) + 0.10·log(forks)) + date-filtered repo searches ("prediction market oracle", "llm judge calibration", "multi-agent debate framework").
 - Deep file reads: cje (README, PLAYBOOK, module trees), LLM-judge-reporting (README, calibration.py, allocation.py), JudgeGauge (README, package tree), debate-or-vote (main.py), predict-raven (forecast-engine README, EXAMPLE-ROUND-IO, DIAGRAM, module trees), oracle3 (paper.md, module trees), agent-for-debate (tree).

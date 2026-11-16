@@ -33,7 +33,7 @@ server-global cursor only where needed (see WS below).
 | System   | Location                      | Role                                   |
 | -------- | ----------------------------- | -------------------------------------- |
 | yote MCP | `pens/ranch/bridge/yote/`     | Native Python `fleet_send/read/search` |
-| awrawr   | `estate/services/awrawr-mcp/` | Native TypeScript fleet tools          |
+| awrawr   | `Pens/services/awrawr-mcp/` | Native TypeScript fleet tools          |
 
 They implement the client side of the channel-file contract. Do not fold them
 into squawk — keep them as thin clients. Squawk does not ship their code.

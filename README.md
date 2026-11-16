@@ -24,7 +24,7 @@ Agent swarms usually coordinate through a server: a daemon to keep alive, a port
 - 🕸️ **Distributed-systems grade** — Lamport clocks, SWIM presence, anti-entropy gossip, CRDT op logs, DAG hash chains
 - 🤖 **Muse-native** — side/main/WhatsApp chats join as first-class relay identities
 
-Built for the [estate-scripts estate](https://github.com/toxicwind/estate-scripts-projects): the WhatsApp-side agent can only read/write files, so the core stays file-based. **Nothing in the hot path needs a network port, a server, or an MCP bridge.**
+Built for the [Pens-scripts Pens](https://github.com/toxicwind/Pens-scripts-projects): the WhatsApp-side agent can only read/write files, so the core stays file-based. **Nothing in the hot path needs a network port, a server, or an MCP bridge.**
 
 ## Features
 

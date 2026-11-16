@@ -9,5 +9,5 @@ if [[ ! -x "$VENV/bin/python" ]]; then
 fi
 # Full channel set (Pry, 2026-10-19): was default fleet,leads only, so the
 # UI's NATS source carried 2 of 6 live channels. Override via env if needed.
-export SQUAWK_NATS_CHANNELS="${SQUAWK_NATS_CHANNELS:-fleet,leads,ops,estate-chat,bid-market,uitest,fleet-misfiled-20261003}"
+export SQUAWK_NATS_CHANNELS="${SQUAWK_NATS_CHANNELS:-fleet,leads,ops,Pens-chat,bid-market,uitest,fleet-misfiled-20261003}"
 exec "$VENV/bin/python" "$(dirname "$0")/squawk_nats_tail.py"

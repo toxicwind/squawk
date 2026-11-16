@@ -6,7 +6,7 @@
 
 ### Bug Fixes
 
-- **squawk**: Resolve TOKEN_FILE to ~/.config/estate-chat-token default
+- **squawk**: Resolve TOKEN_FILE to ~/.config/Pens-chat-token default
   ([`5ea99f7`](https://github.com/toxicwind/squawk/commit/5ea99f7e37e96d291fd7e22a4f9e4d3db963f945))
 
 

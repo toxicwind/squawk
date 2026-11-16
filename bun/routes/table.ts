@@ -99,7 +99,7 @@ const health = ({ ctx }: RouteHandlerArgs) => {
   });
 };
 
-// --- identity / presence (estate-chat) ---
+// --- identity / presence (Pens-chat) ---
 const join = ({ ctx, body }: RouteHandlerArgs) => json({ ok: true, ...ctx.store.join(body) });
 const presencePost = ({ ctx, body }: RouteHandlerArgs) => json(ctx.store.heartbeat(body));
 const presenceGet = ({ ctx }: RouteHandlerArgs) => json({ ok: true, ...ctx.store.liveAgents() });
@@ -173,7 +173,7 @@ const todoBlock = ({ ctx, body }: RouteHandlerArgs) =>
     ),
   );
 
-// --- fleet dispatch (estate-chat) ---
+// --- fleet dispatch (Pens-chat) ---
 const dispatchTasksPost = ({ ctx, body }: RouteHandlerArgs) => json({ ok: true, task: ctx.dispatch.postTask(body) });
 const dispatchTasksGet = ({ ctx, url }: RouteHandlerArgs) =>
   json({ ok: true, tasks: ctx.dispatch.listTasks(url.searchParams.get("status") || undefined) });
@@ -195,7 +195,7 @@ const dispatchMetrics = ({ ctx }: RouteHandlerArgs) => json({ ok: true, metrics:
 
 export const ROUTE_TABLE: Route[] = [
   { method: "GET", pattern: "/health", auth: false, handler: health },
-  // identity / presence (estate-chat)
+  // identity / presence (Pens-chat)
   { method: "POST", pattern: "/v1/join", auth: true, handler: join },
   { method: "POST", pattern: "/v1/presence", auth: true, handler: presencePost },
   { method: "GET", pattern: "/v1/presence", auth: true, handler: presenceGet },
@@ -216,7 +216,7 @@ export const ROUTE_TABLE: Route[] = [
   { method: "POST", pattern: "/v1/todo", auth: true, handler: todoPost },
   { method: "POST", pattern: "/v1/todo/:file/done", auth: true, handler: todoDone },
   { method: "POST", pattern: "/v1/todo/block", auth: true, handler: todoBlock },
-  // fleet dispatch (estate-chat)
+  // fleet dispatch (Pens-chat)
   { method: "POST", pattern: "/v1/dispatch/tasks", auth: true, handler: dispatchTasksPost },
   { method: "GET", pattern: "/v1/dispatch/tasks", auth: true, handler: dispatchTasksGet },
   { method: "POST", pattern: "/v1/dispatch/tasks/:task_id/claim", auth: true, handler: dispatchClaim },

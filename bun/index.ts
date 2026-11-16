@@ -7,7 +7,7 @@
 //       bun bun/index.ts mcp          (stdio MCP adapter)
 //
 // Cherry-picks (2026-10-24 consolidation):
-//   - estate-chat: 4-namespace identity, presence, consolidated state, dispatch
+//   - Pens-chat: 4-namespace identity, presence, consolidated state, dispatch
 //   - fleet-chat:  rooms/join/leave/messages/presence/heartbeat REST + SQLite
 //   - fleetd:       #channel / @agent targeted messaging + roster
 
@@ -23,7 +23,7 @@ const VERSION = "2.0.0";
 const PORT = parseInt(process.env.SQUAWK_CHAT_PORT || "25120", 10);
 const TOKEN_FILE =
   process.env.SQUAWK_CHAT_TOKEN_FILE ||
-  `${process.env.HOME || "/home/toxic"}/.config/estate-chat-token`;
+  `${process.env.HOME || "/home/toxic"}/.config/Pens-chat-token`;
 const STATE_DIR = process.env.SQUAWK_CHAT_STATE_DIR || "/home/toxic/.squawk";
 const MIRROR_DIR = process.env.DISPATCH_MIRROR_DIR || "/home/toxic/.squawk";
 const BUS_ROOT =

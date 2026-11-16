@@ -42,7 +42,7 @@ import json
 import os
 import sys
 
-ORACLE = "/home/toxic/pens/estate/ranch/squawk/oracle"
+ORACLE = "/home/toxic/pens/Pens/ranch/squawk/oracle"
 BIN = os.path.join(ORACLE, "bin")
 sys.path.insert(0, BIN)
 

@@ -13,7 +13,7 @@ serve.sh) pointing at the old playwright-mcp script location; repoint to the
 real pens path per the bin contract (no hardcoded product paths in shims).
 
 **Evidence needed:**
-- grep playwright in /home/toxic/pens/estate/pitchfork.toml
+- grep playwright in /home/toxic/pens/Pens/pitchfork.toml
 - Verify the target script exists on disk before repointing
 - Restart the daemon via pitchfork and health-check
 
