@@ -2,6 +2,41 @@
 
 <!-- version list -->
 
+## v0.17.3 (2026-11-18)
+
+### Bug Fixes
+
+- **squawk**: Normalize message field aliases (from_agent|agent_id|from, body|text) +
+  all-missing-fields 400 error; routes refactor fold-forward
+  ([`0a1b226`](https://github.com/toxicwind/squawk/commit/0a1b226b9d82201be5cfb48422673dea212d2f64))
+
+### Chores
+
+- Add bazel fleet scaffold (BuildBuddy opt-in)
+  ([`e770c62`](https://github.com/toxicwind/squawk/commit/e770c62fc275b0524e851bf56ca2b3f3b8017fce))
+
+- Auto-commit dirty tree before main rename
+  ([`557e77b`](https://github.com/toxicwind/squawk/commit/557e77b78b6569dd9cdaa2e7f31fcb887042975c))
+
+- Estate → Pens rename (estate→Pens terminology)
+  ([`65473df`](https://github.com/toxicwind/squawk/commit/65473dfd372218adde8ba327be24c9ce7043a737))
+
+- Fold forward WIP (dirty-tree sweep 2026-11-02)
+  ([`3319f4d`](https://github.com/toxicwind/squawk/commit/3319f4d88063aa0fc5bba31860bdcf5aa469ce48))
+
+- **eidos**: Apply bun-scaffold bunfig + infra drop-in env (qdrant/hindsight/kafka/redis) — eidos is
+  the parent
+  ([`177cdc6`](https://github.com/toxicwind/squawk/commit/177cdc67c48992e7a7b03b592ab1367902d4b1bf))
+
+- **squawk**: Push validated forward progress
+  ([`6f45c23`](https://github.com/toxicwind/squawk/commit/6f45c2348e2d2050d2a45599bf22771834a0eedb))
+
+### Documentation
+
+- **todo**: Add pens audit/recon todo notes
+  ([`c3ec950`](https://github.com/toxicwind/squawk/commit/c3ec95079c026b621c44df7295a106543e78d661))
+
+
 ## v0.17.2 (2026-10-30)
 
 ### Bug Fixes
