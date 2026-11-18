@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.17.4 (2026-11-18)
+
+### Bug Fixes
+
+- **ui**: Drop continue in nats-live onData — esrap has no ContinueStatement printer
+  ([`9680d09`](https://github.com/toxicwind/squawk/commit/9680d09936896dc352f73b496289432a0d86fd06))
+
+
 ## v0.17.3 (2026-11-18)
 
 ### Bug Fixes
