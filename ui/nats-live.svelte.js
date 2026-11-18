@@ -309,15 +309,17 @@ class NatsLiveConnection {
         const payload = this.inbuf.slice(eol + 2, eol + 2 + nbytes);
         this.inbuf = this.inbuf.slice(need);
         this.onMsg(parts[1] || "", payload);
-        continue;
-      }
-      this.inbuf = this.inbuf.slice(eol + 2);
-      if (line === "PING") {
-        this.sendRaw("PONG\r\n");
-      } else if (line.startsWith("-ERR")) {
-        this.sysLine("server error: " + line.slice(5, 120));
-        this.reconnect();
-        return;
+      } else {
+        // NOTE: no `continue` here — esrap (via svelte compileModule) has no
+        // ContinueStatement printer, so the non-MSG tail lives in this else.
+        this.inbuf = this.inbuf.slice(eol + 2);
+        if (line === "PING") {
+          this.sendRaw("PONG\r\n");
+        } else if (line.startsWith("-ERR")) {
+          this.sysLine("server error: " + line.slice(5, 120));
+          this.reconnect();
+          return;
+        }
       }
       // INFO / +OK: nothing to do (verbose=false, auth injected by shuttle)
     }
