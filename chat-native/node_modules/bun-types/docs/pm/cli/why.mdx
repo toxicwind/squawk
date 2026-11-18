@@ -1,0 +1,109 @@
+---
+title: "bun why"
+description: "Explain why a package is installed"
+---
+
+`bun why` explains why a package is installed in your project by showing the dependency chain that led to it.
+
+## Usage
+
+```bash terminal icon="terminal"
+bun why <package>
+```
+
+## Arguments
+
+- `<package>`: The name of the package to explain, or the alias a `package.json` gives it. Supports glob patterns like `@org/*` or `*-lodash`, and a version or range after the name, like `react@^18`.
+
+## Options
+
+- `--top`: Show only the top-level dependencies instead of the complete dependency tree.
+- `--depth <number>`: Maximum depth of the dependency tree to display.
+
+## Examples
+
+Check why a specific package is installed:
+
+```bash terminal icon="terminal"
+bun why react
+```
+
+```txt
+react@18.2.0
+  └─ my-app@1.0.0 (requires ^18.0.0)
+```
+
+Check why all packages matching a pattern are installed:
+
+```bash terminal icon="terminal"
+bun why "@types/*"
+```
+
+```txt
+@types/react@18.2.15
+  └─ dev my-app@1.0.0 (requires ^18.0.0)
+
+@types/react-dom@18.2.7
+  └─ dev my-app@1.0.0 (requires ^18.0.0)
+```
+
+Find the package behind an alias. With `"lodash3": "npm:lodash@^3.0.0"` in `package.json`, both `bun why lodash3` and `bun why lodash` print:
+
+```txt
+lodash@3.10.1
+  └─ my-app@1.0.0 (requires lodash3@npm:lodash@^3.0.0)
+```
+
+Show only top-level dependencies:
+
+```bash terminal icon="terminal"
+bun why express --top
+```
+
+```txt
+express@4.18.2
+  └─ my-app@1.0.0 (requires ^4.18.2)
+```
+
+Limit the dependency tree depth:
+
+```bash terminal icon="terminal"
+bun why express --depth 2
+```
+
+```txt
+express@4.18.2
+  └─ express-pollyfill@1.20.1 (requires ^4.18.2)
+     └─ body-parser@1.20.1 (requires ^1.20.1)
+     └─ accepts@1.3.8 (requires ^1.3.8)
+        └─ (deeper dependencies hidden)
+```
+
+## Understanding the Output
+
+The output shows:
+
+- The package name and version being queried
+- The dependency chain that led to its installation
+- The type of dependency (dev, peer, optional, or production)
+- The version requirement specified in each package's dependencies
+
+For nested dependencies, the command shows the complete dependency tree by default, with indentation indicating the relationship hierarchy.
+
+A package can appear in the tree more than once when several chains go through it. Once its dependents have been listed (and take up more than one line), later occurrences are marked `*deduped` instead of listing them again. The exception is `--depth`: if the listing was cut off by the depth limit and the package appears again closer to the queried package, where more levels fit, it is listed again. A dependency cycle is marked `*circular`.
+
+```bash terminal icon="terminal"
+bun why pkg-x
+```
+
+```txt
+pkg-x@workspace:packages/pkg-x
+  ├─ monorepo
+  ├─ pkg-a@workspace (requires workspace:*)
+  │  └─ pkg-c@workspace (requires workspace:*)
+  │     └─ pkg-d@workspace (requires workspace:*)
+  │        └─ pkg-f@workspace (requires workspace:*)
+  │
+  └─ pkg-c@workspace (requires workspace:*)
+     └─ *deduped
+```

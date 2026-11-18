@@ -1,0 +1,9 @@
+{
+  "bin/test_debate_deadline.py::test_deadline_precheck_skips_doomed_rounds": true,
+  "bin/test_debate_deadline.py::test_deadline_abandons_wedged_round": true,
+  "bin/test_debate_deadline.py::test_never_live_advocates_do_not_vote": true,
+  "bin/test_debate_deadline.py::test_all_dead_debate_returns_empty_finals": true,
+  "bin/test_debate_deadline.py::test_extract_number_no_drift": true,
+  "bin/test_debate_deadline.py::test_unparseable_round_fails_and_excludes": true,
+  "bin/test_debate_deadline.py::test_all_live_debate_unchanged": true
+}

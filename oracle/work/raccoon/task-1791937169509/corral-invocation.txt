@@ -1,0 +1,5 @@
+cli: /home/toxic/pens/Pens/ranch/corral/src/cli/index.ts
+base_url: http://127.0.0.1:25193/v1
+ceiling_s: 1710
+exit: 0
+duration_ms: 1058513.3

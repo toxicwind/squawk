@@ -1,0 +1,66 @@
+name: Bot governance
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+# This workflow only writes its result to the GitHub-provided job summary.
+# It never calls the GitHub API or changes pull requests, branches, or files.
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  report:
+    name: Report corroborated bot signals
+    # Fork pull requests must not run governance logic. The title signals below
+    # are only meaningful for branches maintained by this repository.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Record bot-governance signal
+        env:
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          HEAD_REPOSITORY: ${{ github.event.pull_request.head.repo.full_name }}
+          REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          signal=""
+          case "$PR_TITLE" in
+            "🎨 Palette:"*)
+              signal="internal repository + Palette title prefix"
+              ;;
+            "⚡ Bolt:"*)
+              signal="internal repository + Bolt title prefix"
+              ;;
+            "🛡️ Sentinel:"*)
+              signal="internal repository + Sentinel title prefix"
+              ;;
+            "fix(deps): "*)
+              if [[ "$PR_AUTHOR" == "app/renovate" ]]; then
+                signal="internal repository + Renovate identity + dependency title prefix"
+              fi
+              ;;
+          esac
+
+          {
+            echo "## Bot governance (report only)"
+            echo
+            echo "- Pull request: #${PR_NUMBER}"
+            echo "- Head repository: ${HEAD_REPOSITORY}"
+            echo "- Pull request author: ${PR_AUTHOR}"
+            echo "- Title: ${PR_TITLE}"
+
+            if [[ -n "$signal" ]]; then
+              echo "- Result: matched corroborated bot signal"
+              echo "- Signal: ${signal}"
+            else
+              echo "- Result: no corroborated bot signal matched"
+            fi
+
+            echo "- Action: report only; no pull request, branch, or source-file mutation performed"
+          } >> "$GITHUB_STEP_SUMMARY"

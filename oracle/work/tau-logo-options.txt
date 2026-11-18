@@ -1,0 +1,47 @@
+TAU logo options — raw skeletons painted per-character by the gradient pipeline
+(pink→purple→cyan, 3s intro sweep) in packages/tui/src/prompt/welcome.ts (TAU_LOGO).
+Constraints: left column min 12 / preferred 26 chars wide. Solid glyphs take the
+gradient best. Options 1/2/3/6 are drop-in; 4 needs layout redesign; 5 changes box
+height and clashes with the pipeline's own gradient. the Architect's taste: authentic
+demoscene/warez NFO aesthetic (Deviance/Reloaded), maximal not timid.
+
+=== OPTION 1 — Classic Block (currently live, 22 wide, drop-in) ===
+███████ ██████ ██    ██
+   █    ██  ██ ██    ██
+   █    ██████ ██    ██
+   █    ██  ██ ██    ██
+   █    ██  ██  ██████
+
+=== OPTION 2 — Deviance shaded (~25 wide, tight fit, gradient-compatible) ===
+▓▓▓▓▓▓▓ ▓▓▓▓▓▓ ▓▓    ▓▓
+   ▓    ▓▓  ▓▓ ▓▓    ▓▓
+   ▓    ▓▓▓▓▓▓ ▓▓    ▓▓
+   ▓    ▓▓  ▓▓ ▓▓    ▓▓
+   ▓    ▓▓  ▓▓  ▓▓▓▓▓▓
+
+=== OPTION 3 — Reloaded angular (narrow, minimal) ===
+▀█▀ █▀▀█ █   █
+ █  █▄▄█ █   █
+ █  █  █ █   █
+▄█▄ █  █  ▀▀▀
+
+=== OPTION 4 — NFO release header (43 wide — BREAKS the 26-char left column, needs box redesign; 5 lines) ===
+.-----------------------------------------------------------------.
+|  ▄▄▄█████▓ ▄▄▄       █    ██                                     |
+|  ▓  ██▒ ▓▒▒████▄     ██  ▓██▒                                    |
+|  ▒ ▓██░ ▒░▒██  ▀█▄   ▓██  ▒██░                                    |
+|  ░ ▓██▓ ░ ░██▄▄▄▄██  ▓▓█  ░██░                                    |
+'-----------------------------------------------------------------'
+
+=== OPTION 5 — ANSI gradient rows (8 tall vs 5 — changes box height, fights the pipeline's own gradient) ===
+██████████████████████
+▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
+▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
+░░░░░░░░░░░░░░░░░░░░░░
+
+=== OPTION 6 — Wireframe (22 wide, drop-in) ===
+╔═════╗╔═════╗╗   ╔═╗
+  ║   ║ ║   ║ ║   ║ ║
+  ║   ╠═════╣ ║   ║ ║
+  ║   ║ ║   ║ ║   ║ ║
+  ║   ║ ║   ║  ╚═══╝

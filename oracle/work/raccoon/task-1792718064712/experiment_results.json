@@ -1,0 +1,372 @@
+[
+  {
+    "flap_index": 0,
+    "flap_type": "short_drop",
+    "flap_duration": 0.4217970197911498,
+    "agent_responses": [
+      {
+        "agent_id": "agent-0",
+        "response": "HEALING_FAILED",
+        "flap_type": "short_drop",
+        "flap_duration": 0.4217970197911498
+      },
+      {
+        "agent_id": "agent-1",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "short_drop",
+        "flap_duration": 0.4217970197911498
+      },
+      {
+        "agent_id": "agent-2",
+        "response": "HEALING_FAILED",
+        "flap_type": "short_drop",
+        "flap_duration": 0.4217970197911498
+      },
+      {
+        "agent_id": "agent-3",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "short_drop",
+        "flap_duration": 0.4217970197911498
+      },
+      {
+        "agent_id": "agent-4",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "short_drop",
+        "flap_duration": 0.4217970197911498
+      }
+    ]
+  },
+  {
+    "flap_index": 1,
+    "flap_type": "short_drop",
+    "flap_duration": 0.9155291831599642,
+    "agent_responses": [
+      {
+        "agent_id": "agent-0",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "short_drop",
+        "flap_duration": 0.9155291831599642
+      },
+      {
+        "agent_id": "agent-1",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "short_drop",
+        "flap_duration": 0.9155291831599642
+      },
+      {
+        "agent_id": "agent-2",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "short_drop",
+        "flap_duration": 0.9155291831599642
+      },
+      {
+        "agent_id": "agent-3",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "short_drop",
+        "flap_duration": 0.9155291831599642
+      },
+      {
+        "agent_id": "agent-4",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "short_drop",
+        "flap_duration": 0.9155291831599642
+      }
+    ]
+  },
+  {
+    "flap_index": 2,
+    "flap_type": "long_drop",
+    "flap_duration": 1.1301939803011454,
+    "agent_responses": [
+      {
+        "agent_id": "agent-0",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "long_drop",
+        "flap_duration": 1.1301939803011454
+      },
+      {
+        "agent_id": "agent-1",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "long_drop",
+        "flap_duration": 1.1301939803011454
+      },
+      {
+        "agent_id": "agent-2",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "long_drop",
+        "flap_duration": 1.1301939803011454
+      },
+      {
+        "agent_id": "agent-3",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "long_drop",
+        "flap_duration": 1.1301939803011454
+      },
+      {
+        "agent_id": "agent-4",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "long_drop",
+        "flap_duration": 1.1301939803011454
+      }
+    ]
+  },
+  {
+    "flap_index": 3,
+    "flap_type": "short_drop",
+    "flap_duration": 0.9504139695884483,
+    "agent_responses": [
+      {
+        "agent_id": "agent-0",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "short_drop",
+        "flap_duration": 0.9504139695884483
+      },
+      {
+        "agent_id": "agent-1",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "short_drop",
+        "flap_duration": 0.9504139695884483
+      },
+      {
+        "agent_id": "agent-2",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "short_drop",
+        "flap_duration": 0.9504139695884483
+      },
+      {
+        "agent_id": "agent-3",
+        "response": "HEALING_FAILED",
+        "flap_type": "short_drop",
+        "flap_duration": 0.9504139695884483
+      },
+      {
+        "agent_id": "agent-4",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "short_drop",
+        "flap_duration": 0.9504139695884483
+      }
+    ]
+  },
+  {
+    "flap_index": 4,
+    "flap_type": "long_drop",
+    "flap_duration": 4.539473689908731,
+    "agent_responses": [
+      {
+        "agent_id": "agent-0",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "long_drop",
+        "flap_duration": 4.539473689908731
+      },
+      {
+        "agent_id": "agent-1",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "long_drop",
+        "flap_duration": 4.539473689908731
+      },
+      {
+        "agent_id": "agent-2",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "long_drop",
+        "flap_duration": 4.539473689908731
+      },
+      {
+        "agent_id": "agent-3",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "long_drop",
+        "flap_duration": 4.539473689908731
+      },
+      {
+        "agent_id": "agent-4",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "long_drop",
+        "flap_duration": 4.539473689908731
+      }
+    ]
+  },
+  {
+    "flap_index": 5,
+    "flap_type": "short_drop",
+    "flap_duration": 0.45582466489322393,
+    "agent_responses": [
+      {
+        "agent_id": "agent-0",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "short_drop",
+        "flap_duration": 0.45582466489322393
+      },
+      {
+        "agent_id": "agent-1",
+        "response": "HEALING_FAILED",
+        "flap_type": "short_drop",
+        "flap_duration": 0.45582466489322393
+      },
+      {
+        "agent_id": "agent-2",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "short_drop",
+        "flap_duration": 0.45582466489322393
+      },
+      {
+        "agent_id": "agent-3",
+        "response": "HEALING_FAILED",
+        "flap_type": "short_drop",
+        "flap_duration": 0.45582466489322393
+      },
+      {
+        "agent_id": "agent-4",
+        "response": "HEALING_FAILED",
+        "flap_type": "short_drop",
+        "flap_duration": 0.45582466489322393
+      }
+    ]
+  },
+  {
+    "flap_index": 6,
+    "flap_type": "asymmetric_latency",
+    "flap_duration": 1.3537336843515435,
+    "agent_responses": [
+      {
+        "agent_id": "agent-0",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "asymmetric_latency",
+        "flap_duration": 1.3537336843515435
+      },
+      {
+        "agent_id": "agent-1",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "asymmetric_latency",
+        "flap_duration": 1.3537336843515435
+      },
+      {
+        "agent_id": "agent-2",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "asymmetric_latency",
+        "flap_duration": 1.3537336843515435
+      },
+      {
+        "agent_id": "agent-3",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "asymmetric_latency",
+        "flap_duration": 1.3537336843515435
+      },
+      {
+        "agent_id": "agent-4",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "asymmetric_latency",
+        "flap_duration": 1.3537336843515435
+      }
+    ]
+  },
+  {
+    "flap_index": 7,
+    "flap_type": "asymmetric_latency",
+    "flap_duration": 0.6091751160032348,
+    "agent_responses": [
+      {
+        "agent_id": "agent-0",
+        "response": "HEALING_FAILED",
+        "flap_type": "asymmetric_latency",
+        "flap_duration": 0.6091751160032348
+      },
+      {
+        "agent_id": "agent-1",
+        "response": "HEALING_FAILED",
+        "flap_type": "asymmetric_latency",
+        "flap_duration": 0.6091751160032348
+      },
+      {
+        "agent_id": "agent-2",
+        "response": "HEALING_FAILED",
+        "flap_type": "asymmetric_latency",
+        "flap_duration": 0.6091751160032348
+      },
+      {
+        "agent_id": "agent-3",
+        "response": "HEALING_FAILED",
+        "flap_type": "asymmetric_latency",
+        "flap_duration": 0.6091751160032348
+      },
+      {
+        "agent_id": "agent-4",
+        "response": "HEALING_FAILED",
+        "flap_type": "asymmetric_latency",
+        "flap_duration": 0.6091751160032348
+      }
+    ]
+  },
+  {
+    "flap_index": 8,
+    "flap_type": "asymmetric_latency",
+    "flap_duration": 0.5120683266437193,
+    "agent_responses": [
+      {
+        "agent_id": "agent-0",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "asymmetric_latency",
+        "flap_duration": 0.5120683266437193
+      },
+      {
+        "agent_id": "agent-1",
+        "response": "HEALING_FAILED",
+        "flap_type": "asymmetric_latency",
+        "flap_duration": 0.5120683266437193
+      },
+      {
+        "agent_id": "agent-2",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "asymmetric_latency",
+        "flap_duration": 0.5120683266437193
+      },
+      {
+        "agent_id": "agent-3",
+        "response": "HEALING_FAILED",
+        "flap_type": "asymmetric_latency",
+        "flap_duration": 0.5120683266437193
+      },
+      {
+        "agent_id": "agent-4",
+        "response": "HEALING_FAILED",
+        "flap_type": "asymmetric_latency",
+        "flap_duration": 0.5120683266437193
+      }
+    ]
+  },
+  {
+    "flap_index": 9,
+    "flap_type": "long_drop",
+    "flap_duration": 4.97087023123109,
+    "agent_responses": [
+      {
+        "agent_id": "agent-0",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "long_drop",
+        "flap_duration": 4.97087023123109
+      },
+      {
+        "agent_id": "agent-1",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "long_drop",
+        "flap_duration": 4.97087023123109
+      },
+      {
+        "agent_id": "agent-2",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "long_drop",
+        "flap_duration": 4.97087023123109
+      },
+      {
+        "agent_id": "agent-3",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "long_drop",
+        "flap_duration": 4.97087023123109
+      },
+      {
+        "agent_id": "agent-4",
+        "response": "HEAL_SUCCESS",
+        "flap_type": "long_drop",
+        "flap_duration": 4.97087023123109
+      }
+    ]
+  }
+]

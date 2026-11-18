@@ -7,3 +7,21 @@ build/
 ui.html.bak-*
 node_modules/
 ui/dist/
+# pensctl audit-gitignore --fix (standard pollution)
+.venv/
+# pensctl audit-gitignore --fix (standard pollution)
+venv/
+# pensctl audit-gitignore --fix (standard pollution)
+dist/
+# pensctl audit-gitignore --fix (standard pollution)
+.cache/
+# pensctl audit-gitignore --fix (standard pollution)
+target/
+# pensctl audit-gitignore --fix (standard pollution)
+blobs/
+# pensctl audit-gitignore --fix (standard pollution)
+sessions/
+# pensctl audit-gitignore --fix (standard pollution)
+.next/
+# pensctl audit-gitignore --fix (standard pollution)
+.turbo/

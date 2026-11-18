@@ -1,0 +1,8 @@
+bin: /home/toxic/.local/bin/super-ralph
+model: openai/gpt-oss-20b
+base_url: http://127.0.0.1:25200/v1
+ceiling_s: 1710
+exit: None
+duration_ms: 1710407.3
+timed_out: True
+partial_evidence: partial-output.txt

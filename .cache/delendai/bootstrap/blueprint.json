@@ -1,0 +1,127 @@
+{
+	"generatedAt": "2026-10-21T04:10:35.299Z",
+	"blueprint": {
+		"serverName": "mcp-project-squawk",
+		"namespacePrefix": "squawk",
+		"targetDir": ".",
+		"projectType": "generic",
+		"plugins": [],
+		"tools": [
+			{
+				"name": "check_project_state",
+				"description": "Single source of truth the agent calls first each turn: returns conventions, gates and what to do next."
+			},
+			{
+				"name": "get_validation_matrix",
+				"description": "Returns the quality-gate commands per scope."
+			},
+			{
+				"name": "run_build",
+				"description": "Run the project's build command and return a structured pass/fail report."
+			}
+		],
+		"prompts": [
+			{
+				"name": "start",
+				"description": "Orient and start working in this project.",
+				"body": "You are working in **squawk-ui** (`generic`, `typescript`).\n\nFirst call `squawk_overview` — it is the canonical map of this server's tools, plugins and a `recommendedNextAction`. Follow the recommendation.\n\n## Project shape\n\n- Type: `generic`\n- Framework: `svelte`\n- Monorepo tool: _(none)_\n- Test runner: `unknown`\n- Package manager: `bun`\n\n## Quality gates\n\n- `build` → `bun ui/build.ts`\n\n## When you change the project\n\n1. Re-run `squawk_analyze_project` to refresh the analysis.\n2. If the project grew (new scripts, new framework deps, new monorepo packages), call `squawk_plan_mcp_project` to refresh the blueprint and `squawk_create_project` to materialise the new tools.\n3. Never invent tool names; only call what `overview` lists."
+			},
+			{
+				"name": "fix quality",
+				"description": "Run the gates and fix what fails.",
+				"body": "Run the project quality gates in this order and fix what fails:\n1. `build` → `bun ui/build.ts`\n\nIf a gate is broken because of an external dep (downstream service, network, missing env), record it as `external-gate-blocker` with the evidence and continue."
+			}
+		],
+		"skills": [
+			{
+				"name": "project standards",
+				"description": "Closed stack and conventions of the project.",
+				"body": "## Project facts\n\n- Name: `squawk-ui`\n- Type: `generic`\n- Language: `typescript`\n- Framework: `svelte`\n- Monorepo: `(none)`\n- Package manager: `bun`\n- Test runner: `unknown`\n- MCP server: _not detected_\n- CI: - `github-actions`\n- Agent configs already in repo: - `CLAUDE.md`\n- `AGENTS.md`\n\n## Language conventions\n\n- `strict: true` in tsconfig — no implicit any.\n- Prefer `readonly` and discriminated unions over enums.\n\n## svelte conventions\n\n- Svelte 5 runes for new components; avoid legacy stores.",
+				"whenToUse": [
+					"Before writing or reviewing code in this project.",
+					"When a code review questions a project-wide convention."
+				]
+			},
+			{
+				"name": "svelte conventions",
+				"description": "svelte idioms and lint/type rules for this project.",
+				"body": "## When to use this skill\n\n- Before adding or reviewing svelte code in this project.\n- When a code review flags a non-idiomatic svelte pattern.\n\n## svelte idioms this repo follows\n\n- Svelte 5 runes for new components; avoid legacy stores.\n\n## Reference\n- Quality scripts: - `build` → `bun ui/build.ts`",
+				"whenToUse": [
+					"Before writing or reviewing svelte code.",
+					"When validating a pull request touches svelte files."
+				]
+			}
+		],
+		"agents": [
+			{
+				"slot": "orchestrator",
+				"description": "Root orchestrator for this project."
+			}
+		],
+		"tests": true,
+		"hasExistingServer": false,
+		"adoptionStrategy": {
+			"mode": "replace",
+			"selectedCapabilities": [
+				"tools",
+				"prompts",
+				"resources",
+				"knowledge",
+				"skills",
+				"agents",
+				"mcp-config",
+				"proposal-workflow"
+			],
+			"operations": [
+				{
+					"capability": "tools",
+					"action": "replace"
+				},
+				{
+					"capability": "prompts",
+					"action": "replace"
+				},
+				{
+					"capability": "resources",
+					"action": "replace"
+				},
+				{
+					"capability": "knowledge",
+					"action": "replace"
+				},
+				{
+					"capability": "skills",
+					"action": "replace"
+				},
+				{
+					"capability": "agents",
+					"action": "replace"
+				},
+				{
+					"capability": "mcp-config",
+					"action": "replace"
+				},
+				{
+					"capability": "proposal-workflow",
+					"action": "replace"
+				}
+			],
+			"protectedCapabilities": [],
+			"requiresExplicitReplacementConsent": false
+		},
+		"defaults": {
+			"keepLegacy": false,
+			"reasons": [
+				"greenfield-safe default"
+			],
+			"warnings": []
+		},
+		"notes": [
+			"Add project-specific tools as patterns emerge.",
+			"No MCP server found: create one from this blueprint (scaffold the host project, then each tool/prompt/skill/agent).",
+			"Generate a test alongside each tool.",
+			"Align with the existing agent config (CLAUDE.md, AGENTS.md).",
+			"Recommended keepLegacy=false: greenfield-safe default."
+		]
+	}
+}

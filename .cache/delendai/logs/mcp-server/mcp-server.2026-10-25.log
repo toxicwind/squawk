@@ -1,0 +1,187 @@
+2026-10-25T17:59:12.271Z cli-serve#3783916 --- server started (cli-serve) ---
+2026-10-25T17:59:12.274Z cli-serve#3783916 [delendai] guard hooks /home/toxic/pens/ranch/squawk/.git/hooks
+2026-10-25T17:59:12.274Z cli-serve#3783916 [delendai]   pre-commit: installed
+2026-10-25T17:59:12.274Z cli-serve#3783916 [delendai]   commit-msg: installed
+2026-10-25T17:59:12.274Z cli-serve#3783916 [delendai]   reference-transaction: installed
+2026-10-25T17:59:12.274Z cli-serve#3783916 [delendai]   pre-push: installed
+2026-10-25T17:59:12.274Z cli-serve#3783916 [delendai]   post-checkout: installed
+2026-10-25T17:59:12.274Z cli-serve#3783916 [delendai]   post-merge: installed
+2026-10-25T17:59:12.621Z cli-serve#3783916 [delendai] work doctor: 5 of 12 workflow invariant(s) do not hold — run `delendai work doctor`
+2026-10-25T17:59:12.621Z cli-serve#3783916 [delendai]   ✗ checkout-clean: 164 path(s): M AGENTS.md, M CLAUDE.md, M HISTORY_SEARCH.md, M README.md, M SKILL.md
+2026-10-25T17:59:12.621Z cli-serve#3783916 [delendai]       fix: git restore --staged --worktree -- <path>
+2026-10-25T17:59:12.621Z cli-serve#3783916 [delendai]   ✗ no-abandoned-work-refs: 1: wip/toxic/implement/squawk-core-g1/work
+2026-10-25T17:59:12.621Z cli-serve#3783916 [delendai]       fix: publish it (`delendai work publish`), or retire it with its work kept (`delendai work retire --ref=<ref> --reason=<why>`)
+2026-10-25T17:59:12.621Z cli-serve#3783916 [delendai]   ✗ branches-in-the-profile: 1: lane/bidder-worktree-fix
+2026-10-25T17:59:12.621Z cli-serve#3783916 [delendai]       fix: a branch an earlier profile or a person made: if it carries work, enter a unit (`delendai work enter`), merge the branch into it and publish; then delete the branch (`git branch -D <name>`). Work lives under `heads/wip/`
+2026-10-25T17:59:12.621Z cli-serve#3783916 [delendai]   ✗ units-are-committed: wip/kappa/implement/rebrand-sovereign-estate-squawk-g1/rebrand (25 path(s))
+2026-10-25T17:59:12.621Z cli-serve#3783916 [delendai]       fix: commit them in the unit if they are work, restore them if they are not (`git restore`, `git clean`); a unit nobody will finish is retired, which keeps what was not committed (`delendai work retire --ref=<ref> --reason=<why>`)
+2026-10-25T17:59:12.621Z cli-serve#3783916 [delendai]   ✗ no-husk-directories: 1: kappa-rebrand-sovereign-estate-squawk
+2026-10-25T17:59:12.621Z cli-serve#3783916 [delendai]       fix: `delendai work reap --apply` keeps on the forge whatever they hold that no commit has, then removes them
+2026-10-25T17:59:12.875Z cli-serve#3783916 [delendai] error-reporting is ON: delendai bugs are reported automatically as de-duplicated issues on CartagoGit/delendai.
+2026-10-25T17:59:12.875Z cli-serve#3783916 [delendai] Only delendai-internal errors are sent (error type, delendai stack frames, versions) — never your code, file contents, paths, branch names, environment or project data.
+2026-10-25T17:59:12.875Z cli-serve#3783916 [delendai] To turn it off, set `plugins.error-reporting.options.enabled = false` in delendai.config.json.
+2026-10-25T17:59:12.879Z cli-serve#3783916 [delendai] No component commits finished slices: `commit-policy` is not persisting them (absent, or `commit.enabled` false / no slice trigger) and `proposals.persist.mode` is unset or "none".
+2026-10-25T17:59:12.879Z cli-serve#3783916 [delendai] Slices will complete and their work will stay uncommitted, so no proposal can produce the `shipped-in` SHA its closing gate requires. Either enable `plugins.commit-policy.options.commit` with a slice trigger, or set `plugins.proposals.options.persist.mode` to "commit" (or "commit-and-push"). If you commit by hand, this is expected.
+2026-10-25T17:59:12.945Z cli-serve#3783916 === Server summary ===
+2026-10-25T17:59:12.945Z cli-serve#3783916   What is running, which surface is exposed, and how tools are loaded.
+2026-10-25T17:59:12.945Z cli-serve#3783916 [info] DelendAI ready
+2026-10-25T17:59:12.945Z cli-serve#3783916 version        0.1.0
+2026-10-25T17:59:12.945Z cli-serve#3783916 workspace      /home/toxic/pens/ranch/squawk
+2026-10-25T17:59:12.945Z cli-serve#3783916 preset         custom
+2026-10-25T17:59:12.945Z cli-serve#3783916 surface        managed · lazy loading enabled
+2026-10-25T17:59:12.945Z cli-serve#3783916 tools          7 visible / 232 available
+2026-10-25T17:59:12.945Z cli-serve#3783916 plugins        38 configured · 0 loaded · 0 warm
+2026-10-25T17:59:12.945Z cli-serve#3783916   reason: managed by default at boot; the per-client mode is decided at MCP handshake from client capabilities (see stderr for the resolved reason)
+2026-10-25T17:59:12.945Z cli-serve#3783916 report         medium (default)
+2026-10-25T17:59:12.945Z cli-serve#3783916 
+2026-10-25T17:59:12.945Z cli-serve#3783916 === Available capabilities ===
+2026-10-25T17:59:12.945Z cli-serve#3783916   The skills and resources that can be requested when needed.
+2026-10-25T17:59:12.945Z cli-serve#3783916 skills        8 available · 0 preloaded
+2026-10-25T17:59:12.945Z cli-serve#3783916 resources     12 available
+2026-10-25T17:59:12.945Z cli-serve#3783916 
+2026-10-25T17:59:12.945Z cli-serve#3783916 === Context cost per request ===
+2026-10-25T17:59:12.945Z cli-serve#3783916   The schema tokens sent to the model for the visible tool surface.
+2026-10-25T17:59:12.945Z cli-serve#3783916 visible tools  ~1,858 tokens · 7.3 KiB of schemas
+2026-10-25T17:59:12.945Z cli-serve#3783916 full surface   ~20,177 tokens
+2026-10-25T17:59:12.945Z cli-serve#3783916 saved          ~18,319 tokens · 90.8%
+2026-10-25T17:59:12.945Z cli-serve#3783916 
+2026-10-25T17:59:12.945Z cli-serve#3783916 === Plugin loading ===
+2026-10-25T17:59:12.945Z cli-serve#3783916   Plugins loaded now and plugins waiting for their first use.
+2026-10-25T17:59:12.945Z cli-serve#3783916   loaded at startup (1): core
+2026-10-25T17:59:12.945Z cli-serve#3783916   lazy loaded on demand (38): adaptive-optimizer, audit, auto-agent-selector, auto-plugin-selector, commit-policy, completion, container, conventions, context-for-change, deps, diagram, docs, env, forge, git, i18n, impact-analysis, project-health, quality-policy, link-check, logs, memory, notification, orchestrator-runner, agent-orchestrator, perf, proposals, project-kpis, quality, rules, search, security, status-marker, tech-debt, test-convention, test-policy, usage-tracking, error-reporting
+2026-10-25T17:59:12.945Z cli-serve#3783916 
+2026-10-25T17:59:12.945Z cli-serve#3783916 === Managed runtime ===
+2026-10-25T17:59:12.945Z cli-serve#3783916   Runtime policies for lazy activation, eviction, and MCP surface refreshes.
+2026-10-25T17:59:12.945Z cli-serve#3783916 lazy activation      enabled
+2026-10-25T17:59:12.945Z cli-serve#3783916 module loading       lazy
+2026-10-25T17:59:12.945Z cli-serve#3783916 internal routing     enabled
+2026-10-25T17:59:12.945Z cli-serve#3783916 idle eviction        5m
+2026-10-25T17:59:12.945Z cli-serve#3783916 max warm plugins     8
+2026-10-25T17:59:12.945Z cli-serve#3783916 list_changed needed  yes
+2026-10-25T17:59:12.945Z cli-serve#3783916 
+2026-10-25T17:59:15.299Z cli-serve#3784310 --- server started (cli-serve) ---
+2026-10-25T17:59:15.301Z cli-serve#3784310 [delendai] guard hooks /home/toxic/pens/ranch/squawk/.git/hooks
+2026-10-25T17:59:15.301Z cli-serve#3784310 [delendai]   pre-commit: installed
+2026-10-25T17:59:15.301Z cli-serve#3784310 [delendai]   commit-msg: installed
+2026-10-25T17:59:15.301Z cli-serve#3784310 [delendai]   reference-transaction: installed
+2026-10-25T17:59:15.301Z cli-serve#3784310 [delendai]   pre-push: installed
+2026-10-25T17:59:15.301Z cli-serve#3784310 [delendai]   post-checkout: installed
+2026-10-25T17:59:15.301Z cli-serve#3784310 [delendai]   post-merge: installed
+2026-10-25T17:59:15.301Z cli-serve#3784310 [delendai] work refs will be named `unknown-agent` — no model or agent is declared here.
+2026-10-25T17:59:15.301Z cli-serve#3784310 [delendai]       fix: set DELENDAI_AGENT_ID to the exact model doing the work (e.g. claude-opus-5).
+2026-10-25T17:59:15.604Z cli-serve#3784310 [delendai] work doctor: 5 of 12 workflow invariant(s) do not hold — run `delendai work doctor`
+2026-10-25T17:59:15.604Z cli-serve#3784310 [delendai]   ✗ checkout-clean: 164 path(s): M AGENTS.md, M CLAUDE.md, M HISTORY_SEARCH.md, M README.md, M SKILL.md
+2026-10-25T17:59:15.604Z cli-serve#3784310 [delendai]       fix: git restore --staged --worktree -- <path>
+2026-10-25T17:59:15.604Z cli-serve#3784310 [delendai]   ✗ no-abandoned-work-refs: 1: wip/toxic/implement/squawk-core-g1/work
+2026-10-25T17:59:15.604Z cli-serve#3784310 [delendai]       fix: publish it (`delendai work publish`), or retire it with its work kept (`delendai work retire --ref=<ref> --reason=<why>`)
+2026-10-25T17:59:15.604Z cli-serve#3784310 [delendai]   ✗ branches-in-the-profile: 1: lane/bidder-worktree-fix
+2026-10-25T17:59:15.604Z cli-serve#3784310 [delendai]       fix: a branch an earlier profile or a person made: if it carries work, enter a unit (`delendai work enter`), merge the branch into it and publish; then delete the branch (`git branch -D <name>`). Work lives under `heads/wip/`
+2026-10-25T17:59:15.604Z cli-serve#3784310 [delendai]   ✗ units-are-committed: wip/kappa/implement/rebrand-sovereign-estate-squawk-g1/rebrand (25 path(s))
+2026-10-25T17:59:15.604Z cli-serve#3784310 [delendai]       fix: commit them in the unit if they are work, restore them if they are not (`git restore`, `git clean`); a unit nobody will finish is retired, which keeps what was not committed (`delendai work retire --ref=<ref> --reason=<why>`)
+2026-10-25T17:59:15.604Z cli-serve#3784310 [delendai]   ✗ no-husk-directories: 1: kappa-rebrand-sovereign-estate-squawk
+2026-10-25T17:59:15.604Z cli-serve#3784310 [delendai]       fix: `delendai work reap --apply` keeps on the forge whatever they hold that no commit has, then removes them
+2026-10-25T17:59:15.812Z cli-serve#3784310 [delendai] error-reporting is ON: delendai bugs are reported automatically as de-duplicated issues on CartagoGit/delendai.
+2026-10-25T17:59:15.812Z cli-serve#3784310 [delendai] Only delendai-internal errors are sent (error type, delendai stack frames, versions) — never your code, file contents, paths, branch names, environment or project data.
+2026-10-25T17:59:15.812Z cli-serve#3784310 [delendai] To turn it off, set `plugins.error-reporting.options.enabled = false` in delendai.config.json.
+2026-10-25T17:59:15.819Z cli-serve#3784310 [delendai] No component commits finished slices: `commit-policy` is not persisting them (absent, or `commit.enabled` false / no slice trigger) and `proposals.persist.mode` is unset or "none".
+2026-10-25T17:59:15.819Z cli-serve#3784310 [delendai] Slices will complete and their work will stay uncommitted, so no proposal can produce the `shipped-in` SHA its closing gate requires. Either enable `plugins.commit-policy.options.commit` with a slice trigger, or set `plugins.proposals.options.persist.mode` to "commit" (or "commit-and-push"). If you commit by hand, this is expected.
+2026-10-25T17:59:15.868Z cli-serve#3784310 === Server summary ===
+2026-10-25T17:59:15.868Z cli-serve#3784310   What is running, which surface is exposed, and how tools are loaded.
+2026-10-25T17:59:15.868Z cli-serve#3784310 [info] DelendAI ready
+2026-10-25T17:59:15.868Z cli-serve#3784310 version        0.1.0
+2026-10-25T17:59:15.868Z cli-serve#3784310 workspace      /home/toxic/pens/ranch/squawk
+2026-10-25T17:59:15.868Z cli-serve#3784310 preset         custom
+2026-10-25T17:59:15.868Z cli-serve#3784310 surface        managed · lazy loading enabled
+2026-10-25T17:59:15.868Z cli-serve#3784310 tools          7 visible / 232 available
+2026-10-25T17:59:15.868Z cli-serve#3784310 plugins        38 configured · 0 loaded · 0 warm
+2026-10-25T17:59:15.868Z cli-serve#3784310   reason: managed by default at boot; the per-client mode is decided at MCP handshake from client capabilities (see stderr for the resolved reason)
+2026-10-25T17:59:15.868Z cli-serve#3784310 report         medium (default)
+2026-10-25T17:59:15.868Z cli-serve#3784310 
+2026-10-25T17:59:15.868Z cli-serve#3784310 === Available capabilities ===
+2026-10-25T17:59:15.868Z cli-serve#3784310   The skills and resources that can be requested when needed.
+2026-10-25T17:59:15.868Z cli-serve#3784310 skills        8 available · 0 preloaded
+2026-10-25T17:59:15.868Z cli-serve#3784310 resources     12 available
+2026-10-25T17:59:15.868Z cli-serve#3784310 
+2026-10-25T17:59:15.868Z cli-serve#3784310 === Context cost per request ===
+2026-10-25T17:59:15.868Z cli-serve#3784310   The schema tokens sent to the model for the visible tool surface.
+2026-10-25T17:59:15.868Z cli-serve#3784310 visible tools  ~1,858 tokens · 7.3 KiB of schemas
+2026-10-25T17:59:15.868Z cli-serve#3784310 full surface   ~20,177 tokens
+2026-10-25T17:59:15.868Z cli-serve#3784310 saved          ~18,319 tokens · 90.8%
+2026-10-25T17:59:15.868Z cli-serve#3784310 
+2026-10-25T17:59:15.868Z cli-serve#3784310 === Plugin loading ===
+2026-10-25T17:59:15.868Z cli-serve#3784310   Plugins loaded now and plugins waiting for their first use.
+2026-10-25T17:59:15.868Z cli-serve#3784310   loaded at startup (1): core
+2026-10-25T17:59:15.868Z cli-serve#3784310   lazy loaded on demand (38): adaptive-optimizer, audit, auto-agent-selector, auto-plugin-selector, commit-policy, completion, container, conventions, context-for-change, deps, diagram, docs, env, forge, git, i18n, impact-analysis, project-health, quality-policy, link-check, logs, memory, notification, orchestrator-runner, agent-orchestrator, perf, proposals, project-kpis, quality, rules, search, security, status-marker, tech-debt, test-convention, test-policy, usage-tracking, error-reporting
+2026-10-25T17:59:15.868Z cli-serve#3784310 
+2026-10-25T17:59:15.868Z cli-serve#3784310 === Managed runtime ===
+2026-10-25T17:59:15.868Z cli-serve#3784310   Runtime policies for lazy activation, eviction, and MCP surface refreshes.
+2026-10-25T17:59:15.868Z cli-serve#3784310 lazy activation      enabled
+2026-10-25T17:59:15.868Z cli-serve#3784310 module loading       lazy
+2026-10-25T17:59:15.868Z cli-serve#3784310 internal routing     enabled
+2026-10-25T17:59:15.868Z cli-serve#3784310 idle eviction        5m
+2026-10-25T17:59:15.868Z cli-serve#3784310 max warm plugins     8
+2026-10-25T17:59:15.868Z cli-serve#3784310 list_changed needed  yes
+2026-10-25T17:59:15.868Z cli-serve#3784310 
+2026-10-25T18:10:04.221Z cli-serve#3843897 --- server started (cli-serve) ---
+2026-10-25T18:10:04.223Z cli-serve#3843897 [delendai] guard hooks /home/toxic/pens/ranch/squawk/.git/hooks
+2026-10-25T18:10:04.223Z cli-serve#3843897 [delendai]   pre-commit: installed
+2026-10-25T18:10:04.223Z cli-serve#3843897 [delendai]   commit-msg: installed
+2026-10-25T18:10:04.223Z cli-serve#3843897 [delendai]   reference-transaction: installed
+2026-10-25T18:10:04.223Z cli-serve#3843897 [delendai]   pre-push: installed
+2026-10-25T18:10:04.223Z cli-serve#3843897 [delendai]   post-checkout: installed
+2026-10-25T18:10:04.223Z cli-serve#3843897 [delendai]   post-merge: installed
+2026-10-25T18:10:04.223Z cli-serve#3843897 [delendai] work refs will be named `unknown-agent` — no model or agent is declared here.
+2026-10-25T18:10:04.223Z cli-serve#3843897 [delendai]       fix: set DELENDAI_AGENT_ID to the exact model doing the work (e.g. claude-opus-5).
+2026-10-25T18:10:04.567Z cli-serve#3843897 [delendai] work doctor: 5 of 12 workflow invariant(s) do not hold — run `delendai work doctor`
+2026-10-25T18:10:04.567Z cli-serve#3843897 [delendai]   ✗ checkout-clean: 164 path(s): M AGENTS.md, M CLAUDE.md, M HISTORY_SEARCH.md, M README.md, M SKILL.md
+2026-10-25T18:10:04.568Z cli-serve#3843897 [delendai]       fix: git restore --staged --worktree -- <path>
+2026-10-25T18:10:04.568Z cli-serve#3843897 [delendai]   ✗ no-abandoned-work-refs: 2: wip/freeinference-deepseek-v4-flash/implement/hindsight_fix-s1-g1/retain_items_key, wip/toxic/implement/squawk-core-g1/work
+2026-10-25T18:10:04.568Z cli-serve#3843897 [delendai]       fix: publish it (`delendai work publish`), or retire it with its work kept (`delendai work retire --ref=<ref> --reason=<why>`)
+2026-10-25T18:10:04.568Z cli-serve#3843897 [delendai]   ✗ branches-in-the-profile: 1: lane/bidder-worktree-fix
+2026-10-25T18:10:04.568Z cli-serve#3843897 [delendai]       fix: a branch an earlier profile or a person made: if it carries work, enter a unit (`delendai work enter`), merge the branch into it and publish; then delete the branch (`git branch -D <name>`). Work lives under `heads/wip/`
+2026-10-25T18:10:04.568Z cli-serve#3843897 [delendai]   ✗ units-are-committed: wip/kappa/implement/rebrand-sovereign-estate-squawk-g1/rebrand (25 path(s))
+2026-10-25T18:10:04.568Z cli-serve#3843897 [delendai]       fix: commit them in the unit if they are work, restore them if they are not (`git restore`, `git clean`); a unit nobody will finish is retired, which keeps what was not committed (`delendai work retire --ref=<ref> --reason=<why>`)
+2026-10-25T18:10:04.568Z cli-serve#3843897 [delendai]   ✗ no-husk-directories: 1: kappa-rebrand-sovereign-estate-squawk
+2026-10-25T18:10:04.568Z cli-serve#3843897 [delendai]       fix: `delendai work reap --apply` keeps on the forge whatever they hold that no commit has, then removes them
+2026-10-25T18:10:04.758Z cli-serve#3843897 [delendai] error-reporting is ON: delendai bugs are reported automatically as de-duplicated issues on CartagoGit/delendai.
+2026-10-25T18:10:04.758Z cli-serve#3843897 [delendai] Only delendai-internal errors are sent (error type, delendai stack frames, versions) — never your code, file contents, paths, branch names, environment or project data.
+2026-10-25T18:10:04.758Z cli-serve#3843897 [delendai] To turn it off, set `plugins.error-reporting.options.enabled = false` in delendai.config.json.
+2026-10-25T18:10:04.764Z cli-serve#3843897 [delendai] No component commits finished slices: `commit-policy` is not persisting them (absent, or `commit.enabled` false / no slice trigger) and `proposals.persist.mode` is unset or "none".
+2026-10-25T18:10:04.764Z cli-serve#3843897 [delendai] Slices will complete and their work will stay uncommitted, so no proposal can produce the `shipped-in` SHA its closing gate requires. Either enable `plugins.commit-policy.options.commit` with a slice trigger, or set `plugins.proposals.options.persist.mode` to "commit" (or "commit-and-push"). If you commit by hand, this is expected.
+2026-10-25T18:10:04.812Z cli-serve#3843897 === Server summary ===
+2026-10-25T18:10:04.812Z cli-serve#3843897   What is running, which surface is exposed, and how tools are loaded.
+2026-10-25T18:10:04.812Z cli-serve#3843897 [info] DelendAI ready
+2026-10-25T18:10:04.812Z cli-serve#3843897 version        0.1.0
+2026-10-25T18:10:04.812Z cli-serve#3843897 workspace      /home/toxic/pens/ranch/squawk
+2026-10-25T18:10:04.812Z cli-serve#3843897 preset         custom
+2026-10-25T18:10:04.812Z cli-serve#3843897 surface        managed · lazy loading enabled
+2026-10-25T18:10:04.812Z cli-serve#3843897 tools          7 visible / 232 available
+2026-10-25T18:10:04.812Z cli-serve#3843897 plugins        38 configured · 0 loaded · 0 warm
+2026-10-25T18:10:04.812Z cli-serve#3843897   reason: managed by default at boot; the per-client mode is decided at MCP handshake from client capabilities (see stderr for the resolved reason)
+2026-10-25T18:10:04.812Z cli-serve#3843897 report         medium (default)
+2026-10-25T18:10:04.812Z cli-serve#3843897 
+2026-10-25T18:10:04.812Z cli-serve#3843897 === Available capabilities ===
+2026-10-25T18:10:04.812Z cli-serve#3843897   The skills and resources that can be requested when needed.
+2026-10-25T18:10:04.812Z cli-serve#3843897 skills        8 available · 0 preloaded
+2026-10-25T18:10:04.812Z cli-serve#3843897 resources     12 available
+2026-10-25T18:10:04.812Z cli-serve#3843897 
+2026-10-25T18:10:04.812Z cli-serve#3843897 === Context cost per request ===
+2026-10-25T18:10:04.812Z cli-serve#3843897   The schema tokens sent to the model for the visible tool surface.
+2026-10-25T18:10:04.812Z cli-serve#3843897 visible tools  ~1,858 tokens · 7.3 KiB of schemas
+2026-10-25T18:10:04.812Z cli-serve#3843897 full surface   ~20,177 tokens
+2026-10-25T18:10:04.812Z cli-serve#3843897 saved          ~18,319 tokens · 90.8%
+2026-10-25T18:10:04.812Z cli-serve#3843897 
+2026-10-25T18:10:04.812Z cli-serve#3843897 === Plugin loading ===
+2026-10-25T18:10:04.812Z cli-serve#3843897   Plugins loaded now and plugins waiting for their first use.
+2026-10-25T18:10:04.812Z cli-serve#3843897   loaded at startup (1): core
+2026-10-25T18:10:04.812Z cli-serve#3843897   lazy loaded on demand (38): adaptive-optimizer, audit, auto-agent-selector, auto-plugin-selector, commit-policy, completion, container, conventions, context-for-change, deps, diagram, docs, env, forge, git, i18n, impact-analysis, project-health, quality-policy, link-check, logs, memory, notification, orchestrator-runner, agent-orchestrator, perf, proposals, project-kpis, quality, rules, search, security, status-marker, tech-debt, test-convention, test-policy, usage-tracking, error-reporting
+2026-10-25T18:10:04.812Z cli-serve#3843897 
+2026-10-25T18:10:04.812Z cli-serve#3843897 === Managed runtime ===
+2026-10-25T18:10:04.812Z cli-serve#3843897   Runtime policies for lazy activation, eviction, and MCP surface refreshes.
+2026-10-25T18:10:04.812Z cli-serve#3843897 lazy activation      enabled
+2026-10-25T18:10:04.812Z cli-serve#3843897 module loading       lazy
+2026-10-25T18:10:04.812Z cli-serve#3843897 internal routing     enabled
+2026-10-25T18:10:04.812Z cli-serve#3843897 idle eviction        5m
+2026-10-25T18:10:04.812Z cli-serve#3843897 max warm plugins     8
+2026-10-25T18:10:04.812Z cli-serve#3843897 list_changed needed  yes
+2026-10-25T18:10:04.812Z cli-serve#3843897 

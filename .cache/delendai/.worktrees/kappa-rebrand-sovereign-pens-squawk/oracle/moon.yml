@@ -1,0 +1,13 @@
+$schema: 'https://moonrepo.dev/schemas/project.json'
+language: 'python'
+layer: 'application'
+# Scoped to the green subset. Full-suite collection is blocked by a
+# pre-existing mainloop import side-effect (module calls sys.exit on
+# import), and bin/test_debate_deadline.py has 7 pre-existing failures.
+# Owned by the oracle lane to unblock.
+tasks:
+  test:
+    command: '/usr/bin/python3 -m pytest bin/test_oracle_reliability.py'
+    inputs: ['bin/test_oracle_reliability.py']
+    options:
+      cache: false

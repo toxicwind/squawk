@@ -1,0 +1,751 @@
+--- partial stdout (last 65536 bytes) ---
+
+      for SQUAWK-READ-001 (furthest in pipeline, authoritative next step)\"\n }\n ],\n
+      \"reasoning\": \"All 4 free slots filled with the 4 tickets at the report stage
+      (SEQ-ALLOC-001, SEQ-ALLOC-002, DEDUP-001, SQUAWK-READ-001). These are furthest in the pipeline
+      per 'Schedule Next' authoritative column, satisfying Rule 2 (resume in-progress tickets
+      first). All assigned to reporting agent as only agent for ticket:report. Active tickets (25) >
+      8 so no discovery job needed. No rate limits known.\",\n \"rateLimitedAgents\":
+      []\n}","redaction":{"applied":false,"ruleIds":[]},"annotations":{}} agent-trace=0ms
+      runId=corral-1791945442009 nodeId=ticket-scheduler workflowName=super-ralph-full iteration=19
+      attempt=1 smithers.event.category=agent-trace smithers.trace.version=1
+      run.id=corral-1791945442009
+      workflow.path=/home/toxic/.corral/runs/20261014-023721-prompt-886795a7/.corral/workflow.tsx
+      workflow.hash=11f6d218a40da78a4c760660e6c712894ae9cb780db890c7a632513cb543cf83
+      node.id=ticket-scheduler node.iteration=19 node.attempt=1 agent.family=claude-code
+      agent.id=7b856159-28e0-4e7f-9bd3-dde293887f4b agent.model=nvidia/nemotron-3-ultra-550b-a55b
+      agent.capture_mode=cli-text trace.completeness=final-only event.kind=stdout
+      event.phase=capture event.sequence=0 source.raw_type=stdout source.raw_event_id=stdout:0
+      source.observed=true
+info  {"category":"agent-trace","payload":{"text":"{\n \"jobs\": [\n {\n \"jobId\":
+      \"SEQ-ALLOC-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SEQ-ALLOC-001\",\n \"focusId\": null,\n \"reason\": \"Complete report stage
+      for SEQ-ALLOC-001 (furthest in pipeline, authoritative next step)\"\n },\n {\n \"jobId\":
+      \"SEQ-ALLOC-002:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SEQ-ALLOC-002\",\n \"focusId\": null,\n \"reason\": \"Complete report stage
+      for SEQ-ALLOC-002 (furthest in pipeline, authoritative next step)\"\n },\n {\n \"jobId\":
+      \"DEDUP-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"DEDUP-001\",\n \"focusId\": null,\n \"reason\": \"Complete report stage for
+      DEDUP-001 (furthest in pipeline, authoritative next step)\"\n },\n {\n \"jobId\":
+      \"SQUAWK-READ-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SQUAWK-READ-001\",\n \"focusId\": null,\n \"reason\": \"Complete report stage
+      for SQUAWK-READ-001 (furthest in pipeline, authoritative next step)\"\n }\n ],\n
+      \"reasoning\": \"All 4 free slots filled with the 4 tickets at the report stage
+      (SEQ-ALLOC-001, SEQ-ALLOC-002, DEDUP-001, SQUAWK-READ-001). These are furthest in the pipeline
+      per 'Schedule Next' authoritative column, satisfying Rule 2 (resume in-progress tickets
+      first). All assigned to reporting agent as only agent for ticket:report. Active tickets (25) >
+      8 so no discovery job needed. No rate limits known.\",\n \"rateLimitedAgents\":
+      []\n}"},"raw":"{\n \"jobs\": [\n {\n \"jobId\": \"SEQ-ALLOC-001:report\",\n \"jobType\":
+      \"ticket:report\",\n \"agentId\": \"reporting\",\n \"ticketId\": \"SEQ-ALLOC-001\",\n
+      \"focusId\": null,\n \"reason\": \"Complete report stage for SEQ-ALLOC-001 (furthest in
+      pipeline, authoritative next step)\"\n },\n {\n \"jobId\": \"SEQ-ALLOC-002:report\",\n
+      \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n \"ticketId\":
+      \"SEQ-ALLOC-002\",\n \"focusId\": null,\n \"reason\": \"Complete report stage for
+      SEQ-ALLOC-002 (furthest in pipeline, authoritative next step)\"\n },\n {\n \"jobId\":
+      \"DEDUP-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"DEDUP-001\",\n \"focusId\": null,\n \"reason\": \"Complete report stage for
+      DEDUP-001 (furthest in pipeline, authoritative next step)\"\n },\n {\n \"jobId\":
+      \"SQUAWK-READ-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SQUAWK-READ-001\",\n \"focusId\": null,\n \"reason\": \"Complete report stage
+      for SQUAWK-READ-001 (furthest in pipeline, authoritative next step)\"\n }\n ],\n
+      \"reasoning\": \"All 4 free slots filled with the 4 tickets at the report stage
+      (SEQ-ALLOC-001, SEQ-ALLOC-002, DEDUP-001, SQUAWK-READ-001). These are furthest in the pipeline
+      per 'Schedule Next' authoritative column, satisfying Rule 2 (resume in-progress tickets
+      first). All assigned to reporting agent as only agent for ticket:report. Active tickets (25) >
+      8 so no discovery job needed. No rate limits known.\",\n \"rateLimitedAgents\":
+      []\n}","redaction":{"applied":false,"ruleIds":[]},"annotations":{}} agent-trace=0ms
+      runId=corral-1791945442009 nodeId=ticket-scheduler workflowName=super-ralph-full iteration=19
+      attempt=1 smithers.event.category=agent-trace smithers.trace.version=1
+      run.id=corral-1791945442009
+      workflow.path=/home/toxic/.corral/runs/20261014-023721-prompt-886795a7/.corral/workflow.tsx
+      workflow.hash=11f6d218a40da78a4c760660e6c712894ae9cb780db890c7a632513cb543cf83
+      node.id=ticket-scheduler node.iteration=19 node.attempt=1 agent.family=claude-code
+      agent.id=7b856159-28e0-4e7f-9bd3-dde293887f4b agent.model=nvidia/nemotron-3-ultra-550b-a55b
+      agent.capture_mode=cli-text trace.completeness=final-only event.kind=assistant.message.final
+      event.phase=message event.sequence=1 source.observed=false
+info  task execution finished engine:task=0ms runId=corral-1791945442009 nodeId=ticket-scheduler
+      workflowName=super-ralph-full iteration=19 attempt=1 cached=false
+      jjPointer=09f706725902c0c72191dacf9307f3f098d881d3 durationMs=65586
+info  Task "ticket-scheduler" has an output schema but engine "claude-code" does not support native
+      structured output. Falling back to prompt-injection + text JSON extraction. Schema validity
+      does not guarantee meaningful output — consider switching to an engine that declares
+      supportsNativeStructuredOutput=true (Anthropic, OpenAI). engine:task=1ms
+      runId=corral-1791945442009 nodeId=ticket-scheduler workflowName=super-ralph-full iteration=20
+      attempt=1 agentEngine=claude-code
+info  agent session completed agent.generate=0ms runId=corral-1791945442009 nodeId=ticket-scheduler
+      workflowName=super-ralph-full iteration=20 attempt=1 agentEngine=claude-code
+      agentOperation=generate agentModel=nvidia/nemotron-3-ultra-550b-a55b
+      cwd=/home/toxic/.corral/runs/20261014-023721-prompt-886795a7 timeoutMs=3600000
+      idleTimeoutMs=null hasMessages=false hasResumeSession=false promptBytes=10376
+      systemPromptBytes=31 agentCommand=claude agentArgs='--print
+      --allow-dangerously-skip-permissions --dangerously-skip-permissions --permission-mode
+      bypassPermissions --dangerously-skip-permissions --model nvidia/nemotron-3-ultra-550b-a55b
+      --output-format stream-json --system-prompt Plan and research next tickets. --verbose
+      IMPORTANT: After completing the task below, you MUST output ONLY a raw JSON object. Do NOT
+      wrap it in markdown or add any prose — the workflow fails without it.\n\nYou are the
+      **scheduler** for an AI-driven development workflow. You have 4 free concurrency slots to fill
+      with jobs.\n\n## Current Time\n2026-10-14T03:02:01.008Z\n\n## Pipeline Summary\n- Completed
+      (landed): 0\n- Active tickets: 25\n- Concurrency cap: 4\n- Currently running jobs: 0\n- Free
+      slots to fill: 4\n\n## Currently Running Jobs\n(no active jobs)\n\n## Ticket State\n| ID |
+      Title | Priority | Completed Stage | Schedule Next (authoritative) | Landed | Report Done
+      |\n|----|-------|----------|-----------------|-------------------------------|--------|-------
+      ------|\n| SEQ-ALLOC-001 | Create SPEC.md for Sequence Allocation Fix | critical | report |
+      ticket:report | ✗ | ✗ |\n| SEQ-ALLOC-002 | Create SPEC-DECISIONS.md for Sequence Allocation |
+      critical | report | ticket:report | ✗ | ✗ |\n| SEQ-ALLOC-003 | Implement Sequence Allocation
+      Fix | critical | not_started | ticket:research | ✗ | ✗ |\n| SEQ-ALLOC-004 | Add Unit Tests for
+      Sequence Allocation | critical | not_started | ticket:research | ✗ | ✗ |\n| DEDUP-001 | Create
+      specification for deduplication logic | critical | report | ticket:report | ✗ | ✗ |\n|
+      DEDUP-002 | Implement deduplication logic module | critical | not_started | ticket:research |
+      ✗ | ✗ |\n| SQUAWK-READ-001 | Locate and document squawk-read specification | critical | report
+      | ticket:report | ✗ | ✗ |\n| SQUAWK-READ-002 | Identify squawk-read implementation files |
+      critical | not_started | ticket:research | ✗ | ✗ |\n| SQUAWK-READ-003 | Create comprehensive
+      test suite for squawk-read | critical | not_started | ticket:research | ✗ | ✗ |\n|
+      SEQ-ALLOC-005 | Add Integration Tests for Sequence Allocation Workflows | high | not_started |
+      ticket:research | ✗ | ✗ |\n| SEQ-ALLOC-006 | Verify jj-native Compliance | high | not_started
+      | ticket:research | ✗ | ✗ |\n| DEDUP-003 | Add API routes for deduplication operations | high
+      | not_started | ticket:research | ✗ | ✗ |\n| DEDUP-004 | Add database schema for deduplication
+      tracking | high | not_started | ticket:research | ✗ | ✗ |\n| DEDUP-005 | Write comprehensive
+      test suite for deduplication logic | high | not_started | ticket:research | ✗ | ✗ |\n|
+      SQUAWK-READ-004 | Verify API route compliance with OpenAPI spec | high | not_started |
+      ticket:research | ✗ | ✗ |\n| SQUAWK-READ-005 | Review database schema for read operations |
+      high | not_started | ticket:research | ✗ | ✗ |\n| SQUAWK-READ-006 | Audit error handling in
+      read path handlers | high | not_started | ticket:research | ✗ | ✗ |\n| DEDUP-006 | Verify
+      jj-native integration for deduplication | medium | not_started | ticket:research | ✗ | ✗ |\n|
+      SQUAWK-READ-007 | Verify JJ-native git operations in read path | medium | not_started |
+      ticket:research | ✗ | ✗ |\n| seq-alloc-core | Implement Sequence Allocator Core Logic |
+      critical | not_started | ticket:research | ✗ | ✗ |\n| dedup-core-engine | Build Deduplication
+      Core Engine | critical | not_started | ticket:research | ✗ | ✗ |\n| squawk-read-parser |
+      Implement Squawk Code Reader/Parser | critical | not_started | ticket:research | ✗ | ✗ |\n|
+      seq-alloc-persistence | Add Persistent Storage for Sequence Allocations | high | not_started |
+      ticket:research | ✗ | ✗ |\n| dedup-squawk-integration | Integrate Deduplication with Squawk
+      Code Assignment | high | not_started | ticket:research | ✗ | ✗ |\n| squawk-read-ingest | Build
+      High-Performance Message Ingestion Pipeline | high | not_started | ticket:research | ✗ | ✗
+      |\n\n## Agent Pool\n| Agent ID | Description |\n|----------|-------------|\n| planning | Plan
+      and research next tickets. |\n| implementation | Implement with test-driven development and jj
+      workflows. |\n| testing | Run tests and validate behavior changes. |\n| reviewing | Review for
+      regressions, spec drift, and correctness. |\n| reporting | Write concise, accurate ticket
+      status reports. |\n\n## Focus Areas\n- seq-alloc: Sequence Allocation Fix\n- dedup-logic:
+      Deduplication Logic\n- squawk-read: Squawk Read Path\n\n## Job Types You Can Schedule\n\n###
+      Ticket pipeline jobs (require ticketId, focusId=null)\nEach ticket progresses through:
+      research → plan → implement → test → build-verify → spec-review → code-review → review-fix →
+      report\n- `ticket:research` — Research the ticket\'s domain and relevant code\n- `ticket:plan`
+      — Create implementation plan (requires research done)\n- `ticket:implement` — Write code
+      (requires plan done)\n- `ticket:test` — Run tests (requires implementation done)\n-
+      `ticket:build-verify` — Verify build passes (requires implementation done)\n-
+      `ticket:spec-review` — Review against specs (requires implementation done)\n-
+      `ticket:code-review` — Code quality review (requires implementation done)\n-
+      `ticket:review-fix` — Fix review issues (requires reviews done with issues)\n- `ticket:report`
+      — Final status report (requires all above done)\n\n**The "Schedule Next" column in the Ticket
+      State table is authoritative and computed deterministically: "Completed Stage" is the highest
+      stage with finished output, and "Schedule Next" is the ONLY pipeline job you may schedule for
+      that ticket. NEVER schedule any other pipeline job for a ticket — re-scheduling a completed
+      stage is a bug, not progress. A "— (done)" ticket gets no pipeline jobs.**\n\n### Global jobs
+      (ticketId=null)\n- `discovery` — Find new tickets to work on (focusId=null,
+      jobId="discovery")\n- `progress-update` — Update progress file (focusId=null,
+      jobId="progress-update")\n- `codebase-review` — Review a focus area (requires focusId,
+      jobId="codebase-review:<focusId>")\n- `integration-test` — Run integration tests for a
+      category (requires focusId, jobId="integration-test:<focusId>")\n\n## Scheduling Rules\n\n1.
+      **Fill all 4 free slots.** Output exactly 4 jobs (or fewer only if there\'s genuinely nothing
+      useful to schedule).\n\n2. **Resume in-progress tickets first.** Tickets further in the
+      pipeline get priority — drive existing work to completion before starting new tickets.\n\n3.
+      **Schedule the authoritative NEXT stage.** Read the "Schedule Next (authoritative)" column for
+      each ticket and schedule exactly that jobType. Do not infer, substitute, or repeat a completed
+      stage. Example: Completed Stage "test" → schedule "ticket:build-verify", never
+      "ticket:test".\n\n4. **Load balance across agents.** Distribute work across ALL available
+      agents. Don\'t funnel everything through 1-2 favorites. Every agent should get work when there
+      are enough jobs.\n\n5. **Keep the ticket pipeline full.** If active tickets ≤ 8, schedule a
+      "discovery" job. The scheduler should never be starved for choices.\n\n6. **Rate limit
+      awareness.** If an agent is rate-limited, don\'t assign it. Include it in rateLimitedAgents
+      and spread its work to other agents.\n\n7. **Don\'t double-schedule.** Check the "Currently
+      Running Jobs" table — never schedule a job that\'s already running or a second pipeline job
+      for a ticket that already has one running.\n\n8. **Maximize cheap agents.** Use the cheapest
+      suitable agent for each task. Only escalate to expensive agents when the task genuinely
+      requires it.\n\n## Instructions\nOutput exactly the jobs to enqueue in the `jobs` array. Each
+      job fills one concurrency slot.\n\n\n**REQUIRED OUTPUT** — You MUST return ONLY a raw JSON
+      object matching this schema:\n{\n "$schema": "https://json-schema.org/draft/2020-12/schema",\n
+      "type": "object",\n "properties": {\n "jobs": {\n "type": "array",\n "items": {\n "type":
+      "object",\n "properties": {\n "jobId": {\n "type": "string",\n "description": "Stable unique
+      ID (e.g. \'T-1:research\', \'discovery\', \'codebase-review:cat-5\')"\n },\n "jobType": {\n
+      "type": "string",\n "enum": [\n "discovery",\n "progress-update",\n "codebase-review",\n
+      "integration-test",\n "ticket:research",\n "ticket:plan",\n "ticket:implement",\n
+      "ticket:test",\n "ticket:build-verify",\n "ticket:spec-review",\n "ticket:code-review",\n
+      "ticket:review-fix",\n "ticket:report"\n ],\n "description": "Type of job to schedule"\n },\n
+      "agentId": {\n "type": "string",\n "description": "Agent ID from the pool to assign"\n },\n
+      "ticketId": {\n "description": "Ticket ID for ticket pipeline jobs, null for global jobs",\n
+      "type": [\n "string",\n "null"\n ]\n },\n "focusId": {\n "description": "Focus/category ID for
+      codebase-review and integration-test jobs, null otherwise",\n "type": [\n "string",\n "null"\n
+      ]\n },\n "reason": {\n "type": "string",\n "description": "Brief reason for scheduling this
+      job with this agent"\n }\n },\n "required": [\n "jobId",\n "jobType",\n "agentId",\n
+      "ticketId",\n "focusId",\n "reason"\n ],\n "additionalProperties": false\n },\n "description":
+      "Flat list of jobs to enqueue — each occupies one concurrency slot"\n },\n "reasoning": {\n
+      "type": "string",\n "description": "Overall scheduling rationale"\n },\n "rateLimitedAgents":
+      {\n "type": "array",\n "items": {\n "type": "object",\n "properties": {\n "agentId": {\n
+      "type": "string"\n },\n "resumeAtMs": {\n "type": "number",\n "description": "Epoch ms when to
+      resume using this agent"\n }\n },\n "required": [\n "agentId",\n '... 487 more characters
+      outputFormat=stream-json eventType=completed eventEngine=claude-code ok=true resume=null
+      error=null hasUsage=false
+info  {"category":"agent-trace","payload":{"text":"{\n \"jobs\": [\n {\n \"jobId\":
+      \"SEQ-ALLOC-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SEQ-ALLOC-001\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at final
+      report stage; drive to completion per pipeline priority\"\n },\n {\n \"jobId\":
+      \"SEQ-ALLOC-002:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SEQ-ALLOC-002\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at final
+      report stage; drive to completion per pipeline priority\"\n },\n {\n \"jobId\":
+      \"DEDUP-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"DEDUP-001\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at final
+      report stage; drive to completion per pipeline priority\"\n },\n {\n \"jobId\":
+      \"SQUAWK-READ-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SQUAWK-READ-001\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at
+      final report stage; drive to completion per pipeline priority\"\n }\n ],\n \"reasoning\":
+      \"All 4 concurrency slots filled with the 4 critical tickets that are furthest in the pipeline
+      (completed stage 'report', next stage 'ticket:report'). Per scheduling rules, in-progress
+      tickets further in the pipeline take priority over not_started tickets. All report jobs
+      correctly assigned to the reporting agent. No discovery needed (25 active tickets > 8
+      threshold). No rate-limited agents detected.\",\n \"rateLimitedAgents\": []\n}"},"raw":"{\n
+      \"jobs\": [\n {\n \"jobId\": \"SEQ-ALLOC-001:report\",\n \"jobType\": \"ticket:report\",\n
+      \"agentId\": \"reporting\",\n \"ticketId\": \"SEQ-ALLOC-001\",\n \"focusId\": null,\n
+      \"reason\": \"Critical ticket at final report stage; drive to completion per pipeline
+      priority\"\n },\n {\n \"jobId\": \"SEQ-ALLOC-002:report\",\n \"jobType\": \"ticket:report\",\n
+      \"agentId\": \"reporting\",\n \"ticketId\": \"SEQ-ALLOC-002\",\n \"focusId\": null,\n
+      \"reason\": \"Critical ticket at final report stage; drive to completion per pipeline
+      priority\"\n },\n {\n \"jobId\": \"DEDUP-001:report\",\n \"jobType\": \"ticket:report\",\n
+      \"agentId\": \"reporting\",\n \"ticketId\": \"DEDUP-001\",\n \"focusId\": null,\n \"reason\":
+      \"Critical ticket at final report stage; drive to completion per pipeline priority\"\n },\n
+      {\n \"jobId\": \"SQUAWK-READ-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\":
+      \"reporting\",\n \"ticketId\": \"SQUAWK-READ-001\",\n \"focusId\": null,\n \"reason\":
+      \"Critical ticket at final report stage; drive to completion per pipeline priority\"\n }\n
+      ],\n \"reasoning\": \"All 4 concurrency slots filled with the 4 critical tickets that are
+      furthest in the pipeline (completed stage 'report', next stage 'ticket:report'). Per
+      scheduling rules, in-progress tickets further in the pipeline take priority over not_started
+      tickets. All report jobs correctly assigned to the reporting agent. No discovery needed (25
+      active tickets > 8 threshold). No rate-limited agents detected.\",\n \"rateLimitedAgents\":
+      []\n}","redaction":{"applied":false,"ruleIds":[]},"annotations":{}} agent-trace=0ms
+      runId=corral-1791945442009 nodeId=ticket-scheduler workflowName=super-ralph-full iteration=20
+      attempt=1 smithers.event.category=agent-trace smithers.trace.version=1
+      run.id=corral-1791945442009
+      workflow.path=/home/toxic/.corral/runs/20261014-023721-prompt-886795a7/.corral/workflow.tsx
+      workflow.hash=11f6d218a40da78a4c760660e6c712894ae9cb780db890c7a632513cb543cf83
+      node.id=ticket-scheduler node.iteration=20 node.attempt=1 agent.family=claude-code
+      agent.id=7b856159-28e0-4e7f-9bd3-dde293887f4b agent.model=nvidia/nemotron-3-ultra-550b-a55b
+      agent.capture_mode=cli-text trace.completeness=final-only event.kind=stdout
+      event.phase=capture event.sequence=0 source.raw_type=stdout source.raw_event_id=stdout:0
+      source.observed=true
+info  {"category":"agent-trace","payload":{"text":"{\n \"jobs\": [\n {\n \"jobId\":
+      \"SEQ-ALLOC-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SEQ-ALLOC-001\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at final
+      report stage; drive to completion per pipeline priority\"\n },\n {\n \"jobId\":
+      \"SEQ-ALLOC-002:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SEQ-ALLOC-002\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at final
+      report stage; drive to completion per pipeline priority\"\n },\n {\n \"jobId\":
+      \"DEDUP-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"DEDUP-001\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at final
+      report stage; drive to completion per pipeline priority\"\n },\n {\n \"jobId\":
+      \"SQUAWK-READ-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SQUAWK-READ-001\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at
+      final report stage; drive to completion per pipeline priority\"\n }\n ],\n \"reasoning\":
+      \"All 4 concurrency slots filled with the 4 critical tickets that are furthest in the pipeline
+      (completed stage 'report', next stage 'ticket:report'). Per scheduling rules, in-progress
+      tickets further in the pipeline take priority over not_started tickets. All report jobs
+      correctly assigned to the reporting agent. No discovery needed (25 active tickets > 8
+      threshold). No rate-limited agents detected.\",\n \"rateLimitedAgents\": []\n}"},"raw":"{\n
+      \"jobs\": [\n {\n \"jobId\": \"SEQ-ALLOC-001:report\",\n \"jobType\": \"ticket:report\",\n
+      \"agentId\": \"reporting\",\n \"ticketId\": \"SEQ-ALLOC-001\",\n \"focusId\": null,\n
+      \"reason\": \"Critical ticket at final report stage; drive to completion per pipeline
+      priority\"\n },\n {\n \"jobId\": \"SEQ-ALLOC-002:report\",\n \"jobType\": \"ticket:report\",\n
+      \"agentId\": \"reporting\",\n \"ticketId\": \"SEQ-ALLOC-002\",\n \"focusId\": null,\n
+      \"reason\": \"Critical ticket at final report stage; drive to completion per pipeline
+      priority\"\n },\n {\n \"jobId\": \"DEDUP-001:report\",\n \"jobType\": \"ticket:report\",\n
+      \"agentId\": \"reporting\",\n \"ticketId\": \"DEDUP-001\",\n \"focusId\": null,\n \"reason\":
+      \"Critical ticket at final report stage; drive to completion per pipeline priority\"\n },\n
+      {\n \"jobId\": \"SQUAWK-READ-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\":
+      \"reporting\",\n \"ticketId\": \"SQUAWK-READ-001\",\n \"focusId\": null,\n \"reason\":
+      \"Critical ticket at final report stage; drive to completion per pipeline priority\"\n }\n
+      ],\n \"reasoning\": \"All 4 concurrency slots filled with the 4 critical tickets that are
+      furthest in the pipeline (completed stage 'report', next stage 'ticket:report'). Per
+      scheduling rules, in-progress tickets further in the pipeline take priority over not_started
+      tickets. All report jobs correctly assigned to the reporting agent. No discovery needed (25
+      active tickets > 8 threshold). No rate-limited agents detected.\",\n \"rateLimitedAgents\":
+      []\n}","redaction":{"applied":false,"ruleIds":[]},"annotations":{}} agent-trace=0ms
+      runId=corral-1791945442009 nodeId=ticket-scheduler workflowName=super-ralph-full iteration=20
+      attempt=1 smithers.event.category=agent-trace smithers.trace.version=1
+      run.id=corral-1791945442009
+      workflow.path=/home/toxic/.corral/runs/20261014-023721-prompt-886795a7/.corral/workflow.tsx
+      workflow.hash=11f6d218a40da78a4c760660e6c712894ae9cb780db890c7a632513cb543cf83
+      node.id=ticket-scheduler node.iteration=20 node.attempt=1 agent.family=claude-code
+      agent.id=7b856159-28e0-4e7f-9bd3-dde293887f4b agent.model=nvidia/nemotron-3-ultra-550b-a55b
+      agent.capture_mode=cli-text trace.completeness=final-only event.kind=assistant.message.final
+      event.phase=message event.sequence=1 source.observed=false
+info  task execution finished engine:task=0ms runId=corral-1791945442009 nodeId=ticket-scheduler
+      workflowName=super-ralph-full iteration=20 attempt=1 cached=false
+      jjPointer=494baae26fff1e75709aca1d183bcd89a53c76e0 durationMs=87298
+info  Task "ticket-scheduler" has an output schema but engine "claude-code" does not support native
+      structured output. Falling back to prompt-injection + text JSON extraction. Schema validity
+      does not guarantee meaningful output — consider switching to an engine that declares
+      supportsNativeStructuredOutput=true (Anthropic, OpenAI). engine:task=0ms
+      runId=corral-1791945442009 nodeId=ticket-scheduler workflowName=super-ralph-full iteration=21
+      attempt=1 agentEngine=claude-code
+info  agent session completed agent.generate=0ms runId=corral-1791945442009 nodeId=ticket-scheduler
+      workflowName=super-ralph-full iteration=21 attempt=1 agentEngine=claude-code
+      agentOperation=generate agentModel=nvidia/nemotron-3-ultra-550b-a55b
+      cwd=/home/toxic/.corral/runs/20261014-023721-prompt-886795a7 timeoutMs=3600000
+      idleTimeoutMs=null hasMessages=false hasResumeSession=false promptBytes=10376
+      systemPromptBytes=31 agentCommand=claude agentArgs='--print
+      --allow-dangerously-skip-permissions --dangerously-skip-permissions --permission-mode
+      bypassPermissions --dangerously-skip-permissions --model nvidia/nemotron-3-ultra-550b-a55b
+      --output-format stream-json --system-prompt Plan and research next tickets. --verbose
+      IMPORTANT: After completing the task below, you MUST output ONLY a raw JSON object. Do NOT
+      wrap it in markdown or add any prose — the workflow fails without it.\n\nYou are the
+      **scheduler** for an AI-driven development workflow. You have 4 free concurrency slots to fill
+      with jobs.\n\n## Current Time\n2026-10-14T03:03:28.341Z\n\n## Pipeline Summary\n- Completed
+      (landed): 0\n- Active tickets: 25\n- Concurrency cap: 4\n- Currently running jobs: 0\n- Free
+      slots to fill: 4\n\n## Currently Running Jobs\n(no active jobs)\n\n## Ticket State\n| ID |
+      Title | Priority | Completed Stage | Schedule Next (authoritative) | Landed | Report Done
+      |\n|----|-------|----------|-----------------|-------------------------------|--------|-------
+      ------|\n| SEQ-ALLOC-001 | Create SPEC.md for Sequence Allocation Fix | critical | report |
+      ticket:report | ✗ | ✗ |\n| SEQ-ALLOC-002 | Create SPEC-DECISIONS.md for Sequence Allocation |
+      critical | report | ticket:report | ✗ | ✗ |\n| SEQ-ALLOC-003 | Implement Sequence Allocation
+      Fix | critical | not_started | ticket:research | ✗ | ✗ |\n| SEQ-ALLOC-004 | Add Unit Tests for
+      Sequence Allocation | critical | not_started | ticket:research | ✗ | ✗ |\n| DEDUP-001 | Create
+      specification for deduplication logic | critical | report | ticket:report | ✗ | ✗ |\n|
+      DEDUP-002 | Implement deduplication logic module | critical | not_started | ticket:research |
+      ✗ | ✗ |\n| SQUAWK-READ-001 | Locate and document squawk-read specification | critical | report
+      | ticket:report | ✗ | ✗ |\n| SQUAWK-READ-002 | Identify squawk-read implementation files |
+      critical | not_started | ticket:research | ✗ | ✗ |\n| SQUAWK-READ-003 | Create comprehensive
+      test suite for squawk-read | critical | not_started | ticket:research | ✗ | ✗ |\n|
+      SEQ-ALLOC-005 | Add Integration Tests for Sequence Allocation Workflows | high | not_started |
+      ticket:research | ✗ | ✗ |\n| SEQ-ALLOC-006 | Verify jj-native Compliance | high | not_started
+      | ticket:research | ✗ | ✗ |\n| DEDUP-003 | Add API routes for deduplication operations | high
+      | not_started | ticket:research | ✗ | ✗ |\n| DEDUP-004 | Add database schema for deduplication
+      tracking | high | not_started | ticket:research | ✗ | ✗ |\n| DEDUP-005 | Write comprehensive
+      test suite for deduplication logic | high | not_started | ticket:research | ✗ | ✗ |\n|
+      SQUAWK-READ-004 | Verify API route compliance with OpenAPI spec | high | not_started |
+      ticket:research | ✗ | ✗ |\n| SQUAWK-READ-005 | Review database schema for read operations |
+      high | not_started | ticket:research | ✗ | ✗ |\n| SQUAWK-READ-006 | Audit error handling in
+      read path handlers | high | not_started | ticket:research | ✗ | ✗ |\n| DEDUP-006 | Verify
+      jj-native integration for deduplication | medium | not_started | ticket:research | ✗ | ✗ |\n|
+      SQUAWK-READ-007 | Verify JJ-native git operations in read path | medium | not_started |
+      ticket:research | ✗ | ✗ |\n| seq-alloc-core | Implement Sequence Allocator Core Logic |
+      critical | not_started | ticket:research | ✗ | ✗ |\n| dedup-core-engine | Build Deduplication
+      Core Engine | critical | not_started | ticket:research | ✗ | ✗ |\n| squawk-read-parser |
+      Implement Squawk Code Reader/Parser | critical | not_started | ticket:research | ✗ | ✗ |\n|
+      seq-alloc-persistence | Add Persistent Storage for Sequence Allocations | high | not_started |
+      ticket:research | ✗ | ✗ |\n| dedup-squawk-integration | Integrate Deduplication with Squawk
+      Code Assignment | high | not_started | ticket:research | ✗ | ✗ |\n| squawk-read-ingest | Build
+      High-Performance Message Ingestion Pipeline | high | not_started | ticket:research | ✗ | ✗
+      |\n\n## Agent Pool\n| Agent ID | Description |\n|----------|-------------|\n| planning | Plan
+      and research next tickets. |\n| implementation | Implement with test-driven development and jj
+      workflows. |\n| testing | Run tests and validate behavior changes. |\n| reviewing | Review for
+      regressions, spec drift, and correctness. |\n| reporting | Write concise, accurate ticket
+      status reports. |\n\n## Focus Areas\n- seq-alloc: Sequence Allocation Fix\n- dedup-logic:
+      Deduplication Logic\n- squawk-read: Squawk Read Path\n\n## Job Types You Can Schedule\n\n###
+      Ticket pipeline jobs (require ticketId, focusId=null)\nEach ticket progresses through:
+      research → plan → implement → test → build-verify → spec-review → code-review → review-fix →
+      report\n- `ticket:research` — Research the ticket\'s domain and relevant code\n- `ticket:plan`
+      — Create implementation plan (requires research done)\n- `ticket:implement` — Write code
+      (requires plan done)\n- `ticket:test` — Run tests (requires implementation done)\n-
+      `ticket:build-verify` — Verify build passes (requires implementation done)\n-
+      `ticket:spec-review` — Review against specs (requires implementation done)\n-
+      `ticket:code-review` — Code quality review (requires implementation done)\n-
+      `ticket:review-fix` — Fix review issues (requires reviews done with issues)\n- `ticket:report`
+      — Final status report (requires all above done)\n\n**The "Schedule Next" column in the Ticket
+      State table is authoritative and computed deterministically: "Completed Stage" is the highest
+      stage with finished output, and "Schedule Next" is the ONLY pipeline job you may schedule for
+      that ticket. NEVER schedule any other pipeline job for a ticket — re-scheduling a completed
+      stage is a bug, not progress. A "— (done)" ticket gets no pipeline jobs.**\n\n### Global jobs
+      (ticketId=null)\n- `discovery` — Find new tickets to work on (focusId=null,
+      jobId="discovery")\n- `progress-update` — Update progress file (focusId=null,
+      jobId="progress-update")\n- `codebase-review` — Review a focus area (requires focusId,
+      jobId="codebase-review:<focusId>")\n- `integration-test` — Run integration tests for a
+      category (requires focusId, jobId="integration-test:<focusId>")\n\n## Scheduling Rules\n\n1.
+      **Fill all 4 free slots.** Output exactly 4 jobs (or fewer only if there\'s genuinely nothing
+      useful to schedule).\n\n2. **Resume in-progress tickets first.** Tickets further in the
+      pipeline get priority — drive existing work to completion before starting new tickets.\n\n3.
+      **Schedule the authoritative NEXT stage.** Read the "Schedule Next (authoritative)" column for
+      each ticket and schedule exactly that jobType. Do not infer, substitute, or repeat a completed
+      stage. Example: Completed Stage "test" → schedule "ticket:build-verify", never
+      "ticket:test".\n\n4. **Load balance across agents.** Distribute work across ALL available
+      agents. Don\'t funnel everything through 1-2 favorites. Every agent should get work when there
+      are enough jobs.\n\n5. **Keep the ticket pipeline full.** If active tickets ≤ 8, schedule a
+      "discovery" job. The scheduler should never be starved for choices.\n\n6. **Rate limit
+      awareness.** If an agent is rate-limited, don\'t assign it. Include it in rateLimitedAgents
+      and spread its work to other agents.\n\n7. **Don\'t double-schedule.** Check the "Currently
+      Running Jobs" table — never schedule a job that\'s already running or a second pipeline job
+      for a ticket that already has one running.\n\n8. **Maximize cheap agents.** Use the cheapest
+      suitable agent for each task. Only escalate to expensive agents when the task genuinely
+      requires it.\n\n## Instructions\nOutput exactly the jobs to enqueue in the `jobs` array. Each
+      job fills one concurrency slot.\n\n\n**REQUIRED OUTPUT** — You MUST return ONLY a raw JSON
+      object matching this schema:\n{\n "$schema": "https://json-schema.org/draft/2020-12/schema",\n
+      "type": "object",\n "properties": {\n "jobs": {\n "type": "array",\n "items": {\n "type":
+      "object",\n "properties": {\n "jobId": {\n "type": "string",\n "description": "Stable unique
+      ID (e.g. \'T-1:research\', \'discovery\', \'codebase-review:cat-5\')"\n },\n "jobType": {\n
+      "type": "string",\n "enum": [\n "discovery",\n "progress-update",\n "codebase-review",\n
+      "integration-test",\n "ticket:research",\n "ticket:plan",\n "ticket:implement",\n
+      "ticket:test",\n "ticket:build-verify",\n "ticket:spec-review",\n "ticket:code-review",\n
+      "ticket:review-fix",\n "ticket:report"\n ],\n "description": "Type of job to schedule"\n },\n
+      "agentId": {\n "type": "string",\n "description": "Agent ID from the pool to assign"\n },\n
+      "ticketId": {\n "description": "Ticket ID for ticket pipeline jobs, null for global jobs",\n
+      "type": [\n "string",\n "null"\n ]\n },\n "focusId": {\n "description": "Focus/category ID for
+      codebase-review and integration-test jobs, null otherwise",\n "type": [\n "string",\n "null"\n
+      ]\n },\n "reason": {\n "type": "string",\n "description": "Brief reason for scheduling this
+      job with this agent"\n }\n },\n "required": [\n "jobId",\n "jobType",\n "agentId",\n
+      "ticketId",\n "focusId",\n "reason"\n ],\n "additionalProperties": false\n },\n "description":
+      "Flat list of jobs to enqueue — each occupies one concurrency slot"\n },\n "reasoning": {\n
+      "type": "string",\n "description": "Overall scheduling rationale"\n },\n "rateLimitedAgents":
+      {\n "type": "array",\n "items": {\n "type": "object",\n "properties": {\n "agentId": {\n
+      "type": "string"\n },\n "resumeAtMs": {\n "type": "number",\n "description": "Epoch ms when to
+      resume using this agent"\n }\n },\n "required": [\n "agentId",\n '... 487 more characters
+      outputFormat=stream-json eventType=completed eventEngine=claude-code ok=true resume=null
+      error=null hasUsage=false
+info  {"category":"agent-trace","payload":{"text":"{\n \"jobs\": [\n {\n \"jobId\":
+      \"SEQ-ALLOC-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SEQ-ALLOC-001\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at
+      report stage - furthest in pipeline, drive to completion\"\n },\n {\n \"jobId\":
+      \"SEQ-ALLOC-002:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SEQ-ALLOC-002\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at
+      report stage - furthest in pipeline, drive to completion\"\n },\n {\n \"jobId\":
+      \"DEDUP-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"DEDUP-001\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at report
+      stage - furthest in pipeline, drive to completion\"\n },\n {\n \"jobId\":
+      \"SQUAWK-READ-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SQUAWK-READ-001\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at
+      report stage - furthest in pipeline, drive to completion\"\n }\n ],\n \"reasoning\": \"All 4
+      free slots filled with the 4 tickets that are furthest in the pipeline (completed stage
+      'report', next stage 'ticket:report'). Per scheduling rules, in-progress tickets further in
+      the pipeline get priority. All four are critical priority and require the reporting agent for
+      final status reports. No discovery needed (25 active tickets > 8). No rate-limited agents
+      identified.\",\n \"rateLimitedAgents\": []\n}"},"raw":"{\n \"jobs\": [\n {\n \"jobId\":
+      \"SEQ-ALLOC-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SEQ-ALLOC-001\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at
+      report stage - furthest in pipeline, drive to completion\"\n },\n {\n \"jobId\":
+      \"SEQ-ALLOC-002:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SEQ-ALLOC-002\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at
+      report stage - furthest in pipeline, drive to completion\"\n },\n {\n \"jobId\":
+      \"DEDUP-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"DEDUP-001\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at report
+      stage - furthest in pipeline, drive to completion\"\n },\n {\n \"jobId\":
+      \"SQUAWK-READ-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SQUAWK-READ-001\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at
+      report stage - furthest in pipeline, drive to completion\"\n }\n ],\n \"reasoning\": \"All 4
+      free slots filled with the 4 tickets that are furthest in the pipeline (completed stage
+      'report', next stage 'ticket:report'). Per scheduling rules, in-progress tickets further in
+      the pipeline get priority. All four are critical priority and require the reporting agent for
+      final status reports. No discovery needed (25 active tickets > 8). No rate-limited agents
+      identified.\",\n \"rateLimitedAgents\":
+      []\n}","redaction":{"applied":false,"ruleIds":[]},"annotations":{}} agent-trace=0ms
+      runId=corral-1791945442009 nodeId=ticket-scheduler workflowName=super-ralph-full iteration=21
+      attempt=1 smithers.event.category=agent-trace smithers.trace.version=1
+      run.id=corral-1791945442009
+      workflow.path=/home/toxic/.corral/runs/20261014-023721-prompt-886795a7/.corral/workflow.tsx
+      workflow.hash=11f6d218a40da78a4c760660e6c712894ae9cb780db890c7a632513cb543cf83
+      node.id=ticket-scheduler node.iteration=21 node.attempt=1 agent.family=claude-code
+      agent.id=7b856159-28e0-4e7f-9bd3-dde293887f4b agent.model=nvidia/nemotron-3-ultra-550b-a55b
+      agent.capture_mode=cli-text trace.completeness=final-only event.kind=stdout
+      event.phase=capture event.sequence=0 source.raw_type=stdout source.raw_event_id=stdout:0
+      source.observed=true
+info  {"category":"agent-trace","payload":{"text":"{\n \"jobs\": [\n {\n \"jobId\":
+      \"SEQ-ALLOC-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SEQ-ALLOC-001\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at
+      report stage - furthest in pipeline, drive to completion\"\n },\n {\n \"jobId\":
+      \"SEQ-ALLOC-002:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SEQ-ALLOC-002\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at
+      report stage - furthest in pipeline, drive to completion\"\n },\n {\n \"jobId\":
+      \"DEDUP-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"DEDUP-001\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at report
+      stage - furthest in pipeline, drive to completion\"\n },\n {\n \"jobId\":
+      \"SQUAWK-READ-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SQUAWK-READ-001\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at
+      report stage - furthest in pipeline, drive to completion\"\n }\n ],\n \"reasoning\": \"All 4
+      free slots filled with the 4 tickets that are furthest in the pipeline (completed stage
+      'report', next stage 'ticket:report'). Per scheduling rules, in-progress tickets further in
+      the pipeline get priority. All four are critical priority and require the reporting agent for
+      final status reports. No discovery needed (25 active tickets > 8). No rate-limited agents
+      identified.\",\n \"rateLimitedAgents\": []\n}"},"raw":"{\n \"jobs\": [\n {\n \"jobId\":
+      \"SEQ-ALLOC-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SEQ-ALLOC-001\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at
+      report stage - furthest in pipeline, drive to completion\"\n },\n {\n \"jobId\":
+      \"SEQ-ALLOC-002:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SEQ-ALLOC-002\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at
+      report stage - furthest in pipeline, drive to completion\"\n },\n {\n \"jobId\":
+      \"DEDUP-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"DEDUP-001\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at report
+      stage - furthest in pipeline, drive to completion\"\n },\n {\n \"jobId\":
+      \"SQUAWK-READ-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SQUAWK-READ-001\",\n \"focusId\": null,\n \"reason\": \"Critical ticket at
+      report stage - furthest in pipeline, drive to completion\"\n }\n ],\n \"reasoning\": \"All 4
+      free slots filled with the 4 tickets that are furthest in the pipeline (completed stage
+      'report', next stage 'ticket:report'). Per scheduling rules, in-progress tickets further in
+      the pipeline get priority. All four are critical priority and require the reporting agent for
+      final status reports. No discovery needed (25 active tickets > 8). No rate-limited agents
+      identified.\",\n \"rateLimitedAgents\":
+      []\n}","redaction":{"applied":false,"ruleIds":[]},"annotations":{}} agent-trace=0ms
+      runId=corral-1791945442009 nodeId=ticket-scheduler workflowName=super-ralph-full iteration=21
+      attempt=1 smithers.event.category=agent-trace smithers.trace.version=1
+      run.id=corral-1791945442009
+      workflow.path=/home/toxic/.corral/runs/20261014-023721-prompt-886795a7/.corral/workflow.tsx
+      workflow.hash=11f6d218a40da78a4c760660e6c712894ae9cb780db890c7a632513cb543cf83
+      node.id=ticket-scheduler node.iteration=21 node.attempt=1 agent.family=claude-code
+      agent.id=7b856159-28e0-4e7f-9bd3-dde293887f4b agent.model=nvidia/nemotron-3-ultra-550b-a55b
+      agent.capture_mode=cli-text trace.completeness=final-only event.kind=assistant.message.final
+      event.phase=message event.sequence=1 source.observed=false
+info  task execution finished engine:task=0ms runId=corral-1791945442009 nodeId=ticket-scheduler
+      workflowName=super-ralph-full iteration=21 attempt=1 cached=false
+      jjPointer=47ebc9082170417132ba3bbe70aaaa92d437a9a9 durationMs=45822
+info  Task "ticket-scheduler" has an output schema but engine "claude-code" does not support native
+      structured output. Falling back to prompt-injection + text JSON extraction. Schema validity
+      does not guarantee meaningful output — consider switching to an engine that declares
+      supportsNativeStructuredOutput=true (Anthropic, OpenAI). engine:task=0ms
+      runId=corral-1791945442009 nodeId=ticket-scheduler workflowName=super-ralph-full iteration=22
+      attempt=1 agentEngine=claude-code
+info  agent session completed agent.generate=0ms runId=corral-1791945442009 nodeId=ticket-scheduler
+      workflowName=super-ralph-full iteration=22 attempt=1 agentEngine=claude-code
+      agentOperation=generate agentModel=nvidia/nemotron-3-ultra-550b-a55b
+      cwd=/home/toxic/.corral/runs/20261014-023721-prompt-886795a7 timeoutMs=3600000
+      idleTimeoutMs=null hasMessages=false hasResumeSession=false promptBytes=10376
+      systemPromptBytes=31 agentCommand=claude agentArgs='--print
+      --allow-dangerously-skip-permissions --dangerously-skip-permissions --permission-mode
+      bypassPermissions --dangerously-skip-permissions --model nvidia/nemotron-3-ultra-550b-a55b
+      --output-format stream-json --system-prompt Plan and research next tickets. --verbose
+      IMPORTANT: After completing the task below, you MUST output ONLY a raw JSON object. Do NOT
+      wrap it in markdown or add any prose — the workflow fails without it.\n\nYou are the
+      **scheduler** for an AI-driven development workflow. You have 4 free concurrency slots to fill
+      with jobs.\n\n## Current Time\n2026-10-14T03:04:14.205Z\n\n## Pipeline Summary\n- Completed
+      (landed): 0\n- Active tickets: 25\n- Concurrency cap: 4\n- Currently running jobs: 0\n- Free
+      slots to fill: 4\n\n## Currently Running Jobs\n(no active jobs)\n\n## Ticket State\n| ID |
+      Title | Priority | Completed Stage | Schedule Next (authoritative) | Landed | Report Done
+      |\n|----|-------|----------|-----------------|-------------------------------|--------|-------
+      ------|\n| SEQ-ALLOC-001 | Create SPEC.md for Sequence Allocation Fix | critical | report |
+      ticket:report | ✗ | ✗ |\n| SEQ-ALLOC-002 | Create SPEC-DECISIONS.md for Sequence Allocation |
+      critical | report | ticket:report | ✗ | ✗ |\n| SEQ-ALLOC-003 | Implement Sequence Allocation
+      Fix | critical | not_started | ticket:research | ✗ | ✗ |\n| SEQ-ALLOC-004 | Add Unit Tests for
+      Sequence Allocation | critical | not_started | ticket:research | ✗ | ✗ |\n| DEDUP-001 | Create
+      specification for deduplication logic | critical | report | ticket:report | ✗ | ✗ |\n|
+      DEDUP-002 | Implement deduplication logic module | critical | not_started | ticket:research |
+      ✗ | ✗ |\n| SQUAWK-READ-001 | Locate and document squawk-read specification | critical | report
+      | ticket:report | ✗ | ✗ |\n| SQUAWK-READ-002 | Identify squawk-read implementation files |
+      critical | not_started | ticket:research | ✗ | ✗ |\n| SQUAWK-READ-003 | Create comprehensive
+      test suite for squawk-read | critical | not_started | ticket:research | ✗ | ✗ |\n|
+      SEQ-ALLOC-005 | Add Integration Tests for Sequence Allocation Workflows | high | not_started |
+      ticket:research | ✗ | ✗ |\n| SEQ-ALLOC-006 | Verify jj-native Compliance | high | not_started
+      | ticket:research | ✗ | ✗ |\n| DEDUP-003 | Add API routes for deduplication operations | high
+      | not_started | ticket:research | ✗ | ✗ |\n| DEDUP-004 | Add database schema for deduplication
+      tracking | high | not_started | ticket:research | ✗ | ✗ |\n| DEDUP-005 | Write comprehensive
+      test suite for deduplication logic | high | not_started | ticket:research | ✗ | ✗ |\n|
+      SQUAWK-READ-004 | Verify API route compliance with OpenAPI spec | high | not_started |
+      ticket:research | ✗ | ✗ |\n| SQUAWK-READ-005 | Review database schema for read operations |
+      high | not_started | ticket:research | ✗ | ✗ |\n| SQUAWK-READ-006 | Audit error handling in
+      read path handlers | high | not_started | ticket:research | ✗ | ✗ |\n| DEDUP-006 | Verify
+      jj-native integration for deduplication | medium | not_started | ticket:research | ✗ | ✗ |\n|
+      SQUAWK-READ-007 | Verify JJ-native git operations in read path | medium | not_started |
+      ticket:research | ✗ | ✗ |\n| seq-alloc-core | Implement Sequence Allocator Core Logic |
+      critical | not_started | ticket:research | ✗ | ✗ |\n| dedup-core-engine | Build Deduplication
+      Core Engine | critical | not_started | ticket:research | ✗ | ✗ |\n| squawk-read-parser |
+      Implement Squawk Code Reader/Parser | critical | not_started | ticket:research | ✗ | ✗ |\n|
+      seq-alloc-persistence | Add Persistent Storage for Sequence Allocations | high | not_started |
+      ticket:research | ✗ | ✗ |\n| dedup-squawk-integration | Integrate Deduplication with Squawk
+      Code Assignment | high | not_started | ticket:research | ✗ | ✗ |\n| squawk-read-ingest | Build
+      High-Performance Message Ingestion Pipeline | high | not_started | ticket:research | ✗ | ✗
+      |\n\n## Agent Pool\n| Agent ID | Description |\n|----------|-------------|\n| planning | Plan
+      and research next tickets. |\n| implementation | Implement with test-driven development and jj
+      workflows. |\n| testing | Run tests and validate behavior changes. |\n| reviewing | Review for
+      regressions, spec drift, and correctness. |\n| reporting | Write concise, accurate ticket
+      status reports. |\n\n## Focus Areas\n- seq-alloc: Sequence Allocation Fix\n- dedup-logic:
+      Deduplication Logic\n- squawk-read: Squawk Read Path\n\n## Job Types You Can Schedule\n\n###
+      Ticket pipeline jobs (require ticketId, focusId=null)\nEach ticket progresses through:
+      research → plan → implement → test → build-verify → spec-review → code-review → review-fix →
+      report\n- `ticket:research` — Research the ticket\'s domain and relevant code\n- `ticket:plan`
+      — Create implementation plan (requires research done)\n- `ticket:implement` — Write code
+      (requires plan done)\n- `ticket:test` — Run tests (requires implementation done)\n-
+      `ticket:build-verify` — Verify build passes (requires implementation done)\n-
+      `ticket:spec-review` — Review against specs (requires implementation done)\n-
+      `ticket:code-review` — Code quality review (requires implementation done)\n-
+      `ticket:review-fix` — Fix review issues (requires reviews done with issues)\n- `ticket:report`
+      — Final status report (requires all above done)\n\n**The "Schedule Next" column in the Ticket
+      State table is authoritative and computed deterministically: "Completed Stage" is the highest
+      stage with finished output, and "Schedule Next" is the ONLY pipeline job you may schedule for
+      that ticket. NEVER schedule any other pipeline job for a ticket — re-scheduling a completed
+      stage is a bug, not progress. A "— (done)" ticket gets no pipeline jobs.**\n\n### Global jobs
+      (ticketId=null)\n- `discovery` — Find new tickets to work on (focusId=null,
+      jobId="discovery")\n- `progress-update` — Update progress file (focusId=null,
+      jobId="progress-update")\n- `codebase-review` — Review a focus area (requires focusId,
+      jobId="codebase-review:<focusId>")\n- `integration-test` — Run integration tests for a
+      category (requires focusId, jobId="integration-test:<focusId>")\n\n## Scheduling Rules\n\n1.
+      **Fill all 4 free slots.** Output exactly 4 jobs (or fewer only if there\'s genuinely nothing
+      useful to schedule).\n\n2. **Resume in-progress tickets first.** Tickets further in the
+      pipeline get priority — drive existing work to completion before starting new tickets.\n\n3.
+      **Schedule the authoritative NEXT stage.** Read the "Schedule Next (authoritative)" column for
+      each ticket and schedule exactly that jobType. Do not infer, substitute, or repeat a completed
+      stage. Example: Completed Stage "test" → schedule "ticket:build-verify", never
+      "ticket:test".\n\n4. **Load balance across agents.** Distribute work across ALL available
+      agents. Don\'t funnel everything through 1-2 favorites. Every agent should get work when there
+      are enough jobs.\n\n5. **Keep the ticket pipeline full.** If active tickets ≤ 8, schedule a
+      "discovery" job. The scheduler should never be starved for choices.\n\n6. **Rate limit
+      awareness.** If an agent is rate-limited, don\'t assign it. Include it in rateLimitedAgents
+      and spread its work to other agents.\n\n7. **Don\'t double-schedule.** Check the "Currently
+      Running Jobs" table — never schedule a job that\'s already running or a second pipeline job
+      for a ticket that already has one running.\n\n8. **Maximize cheap agents.** Use the cheapest
+      suitable agent for each task. Only escalate to expensive agents when the task genuinely
+      requires it.\n\n## Instructions\nOutput exactly the jobs to enqueue in the `jobs` array. Each
+      job fills one concurrency slot.\n\n\n**REQUIRED OUTPUT** — You MUST return ONLY a raw JSON
+      object matching this schema:\n{\n "$schema": "https://json-schema.org/draft/2020-12/schema",\n
+      "type": "object",\n "properties": {\n "jobs": {\n "type": "array",\n "items": {\n "type":
+      "object",\n "properties": {\n "jobId": {\n "type": "string",\n "description": "Stable unique
+      ID (e.g. \'T-1:research\', \'discovery\', \'codebase-review:cat-5\')"\n },\n "jobType": {\n
+      "type": "string",\n "enum": [\n "discovery",\n "progress-update",\n "codebase-review",\n
+      "integration-test",\n "ticket:research",\n "ticket:plan",\n "ticket:implement",\n
+      "ticket:test",\n "ticket:build-verify",\n "ticket:spec-review",\n "ticket:code-review",\n
+      "ticket:review-fix",\n "ticket:report"\n ],\n "description": "Type of job to schedule"\n },\n
+      "agentId": {\n "type": "string",\n "description": "Agent ID from the pool to assign"\n },\n
+      "ticketId": {\n "description": "Ticket ID for ticket pipeline jobs, null for global jobs",\n
+      "type": [\n "string",\n "null"\n ]\n },\n "focusId": {\n "description": "Focus/category ID for
+      codebase-review and integration-test jobs, null otherwise",\n "type": [\n "string",\n "null"\n
+      ]\n },\n "reason": {\n "type": "string",\n "description": "Brief reason for scheduling this
+      job with this agent"\n }\n },\n "required": [\n "jobId",\n "jobType",\n "agentId",\n
+      "ticketId",\n "focusId",\n "reason"\n ],\n "additionalProperties": false\n },\n "description":
+      "Flat list of jobs to enqueue — each occupies one concurrency slot"\n },\n "reasoning": {\n
+      "type": "string",\n "description": "Overall scheduling rationale"\n },\n "rateLimitedAgents":
+      {\n "type": "array",\n "items": {\n "type": "object",\n "properties": {\n "agentId": {\n
+      "type": "string"\n },\n "resumeAtMs": {\n "type": "number",\n "description": "Epoch ms when to
+      resume using this agent"\n }\n },\n "required": [\n "agentId",\n '... 487 more characters
+      outputFormat=stream-json eventType=completed eventEngine=claude-code ok=true resume=null
+      error=null hasUsage=false
+info  {"category":"agent-trace","payload":{"text":"{\n \"jobs\": [\n {\n \"jobId\":
+      \"SEQ-ALLOC-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SEQ-ALLOC-001\",\n \"focusId\": null,\n \"reason\": \"Ticket at report stage
+      (completed stage: report) - furthest in pipeline, critical priority\"\n },\n {\n \"jobId\":
+      \"SEQ-ALLOC-002:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SEQ-ALLOC-002\",\n \"focusId\": null,\n \"reason\": \"Ticket at report stage
+      (completed stage: report) - furthest in pipeline, critical priority\"\n },\n {\n \"jobId\":
+      \"DEDUP-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"DEDUP-001\",\n \"focusId\": null,\n \"reason\": \"Ticket at report stage
+      (completed stage: report) - furthest in pipeline, critical priority\"\n },\n {\n \"jobId\":
+      \"SQUAWK-READ-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SQUAWK-READ-001\",\n \"focusId\": null,\n \"reason\": \"Ticket at report stage
+      (completed stage: report) - furthest in pipeline, critical priority\"\n }\n ],\n
+      \"reasoning\": \"Scheduled the 4 tickets at 'report' stage (SEQ-ALLOC-001, SEQ-ALLOC-002,
+      DEDUP-001, SQUAWK-READ-001) as they are furthest in the pipeline (completed stage: report).
+      All require ticket:report jobs assigned to the reporting agent. This fills all 4 concurrency
+      slots and follows the rule to resume in-progress tickets first.\",\n \"rateLimitedAgents\":
+      []\n}"},"raw":"{\n \"jobs\": [\n {\n \"jobId\": \"SEQ-ALLOC-001:report\",\n \"jobType\":
+      \"ticket:report\",\n \"agentId\": \"reporting\",\n \"ticketId\": \"SEQ-ALLOC-001\",\n
+      \"focusId\": null,\n \"reason\": \"Ticket at report stage (completed stage: report) - furthest
+      in pipeline, critical priority\"\n },\n {\n \"jobId\": \"SEQ-ALLOC-002:report\",\n
+      \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n \"ticketId\":
+      \"SEQ-ALLOC-002\",\n \"focusId\": null,\n \"reason\": \"Ticket at report stage (completed
+      stage: report) - furthest in pipeline, critical priority\"\n },\n {\n \"jobId\":
+      \"DEDUP-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"DEDUP-001\",\n \"focusId\": null,\n \"reason\": \"Ticket at report stage
+      (completed stage: report) - furthest in pipeline, critical priority\"\n },\n {\n \"jobId\":
+      \"SQUAWK-READ-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SQUAWK-READ-001\",\n \"focusId\": null,\n \"reason\": \"Ticket at report stage
+      (completed stage: report) - furthest in pipeline, critical priority\"\n }\n ],\n
+      \"reasoning\": \"Scheduled the 4 tickets at 'report' stage (SEQ-ALLOC-001, SEQ-ALLOC-002,
+      DEDUP-001, SQUAWK-READ-001) as they are furthest in the pipeline (completed stage: report).
+      All require ticket:report jobs assigned to the reporting agent. This fills all 4 concurrency
+      slots and follows the rule to resume in-progress tickets first.\",\n \"rateLimitedAgents\":
+      []\n}","redaction":{"applied":false,"ruleIds":[]},"annotations":{}} agent-trace=0ms
+      runId=corral-1791945442009 nodeId=ticket-scheduler workflowName=super-ralph-full iteration=22
+      attempt=1 smithers.event.category=agent-trace smithers.trace.version=1
+      run.id=corral-1791945442009
+      workflow.path=/home/toxic/.corral/runs/20261014-023721-prompt-886795a7/.corral/workflow.tsx
+      workflow.hash=11f6d218a40da78a4c760660e6c712894ae9cb780db890c7a632513cb543cf83
+      node.id=ticket-scheduler node.iteration=22 node.attempt=1 agent.family=claude-code
+      agent.id=7b856159-28e0-4e7f-9bd3-dde293887f4b agent.model=nvidia/nemotron-3-ultra-550b-a55b
+      agent.capture_mode=cli-text trace.completeness=final-only event.kind=stdout
+      event.phase=capture event.sequence=0 source.raw_type=stdout source.raw_event_id=stdout:0
+      source.observed=true
+info  {"category":"agent-trace","payload":{"text":"{\n \"jobs\": [\n {\n \"jobId\":
+      \"SEQ-ALLOC-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SEQ-ALLOC-001\",\n \"focusId\": null,\n \"reason\": \"Ticket at report stage
+      (completed stage: report) - furthest in pipeline, critical priority\"\n },\n {\n \"jobId\":
+      \"SEQ-ALLOC-002:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SEQ-ALLOC-002\",\n \"focusId\": null,\n \"reason\": \"Ticket at report stage
+      (completed stage: report) - furthest in pipeline, critical priority\"\n },\n {\n \"jobId\":
+      \"DEDUP-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"DEDUP-001\",\n \"focusId\": null,\n \"reason\": \"Ticket at report stage
+      (completed stage: report) - furthest in pipeline, critical priority\"\n },\n {\n \"jobId\":
+      \"SQUAWK-READ-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SQUAWK-READ-001\",\n \"focusId\": null,\n \"reason\": \"Ticket at report stage
+      (completed stage: report) - furthest in pipeline, critical priority\"\n }\n ],\n
+      \"reasoning\": \"Scheduled the 4 tickets at 'report' stage (SEQ-ALLOC-001, SEQ-ALLOC-002,
+      DEDUP-001, SQUAWK-READ-001) as they are furthest in the pipeline (completed stage: report).
+      All require ticket:report jobs assigned to the reporting agent. This fills all 4 concurrency
+      slots and follows the rule to resume in-progress tickets first.\",\n \"rateLimitedAgents\":
+      []\n}"},"raw":"{\n \"jobs\": [\n {\n \"jobId\": \"SEQ-ALLOC-001:report\",\n \"jobType\":
+      \"ticket:report\",\n \"agentId\": \"reporting\",\n \"ticketId\": \"SEQ-ALLOC-001\",\n
+      \"focusId\": null,\n \"reason\": \"Ticket at report stage (completed stage: report) - furthest
+      in pipeline, critical priority\"\n },\n {\n \"jobId\": \"SEQ-ALLOC-002:report\",\n
+      \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n \"ticketId\":
+      \"SEQ-ALLOC-002\",\n \"focusId\": null,\n \"reason\": \"Ticket at report stage (completed
+      stage: report) - furthest in pipeline, critical priority\"\n },\n {\n \"jobId\":
+      \"DEDUP-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"DEDUP-001\",\n \"focusId\": null,\n \"reason\": \"Ticket at report stage
+      (completed stage: report) - furthest in pipeline, critical priority\"\n },\n {\n \"jobId\":
+      \"SQUAWK-READ-001:report\",\n \"jobType\": \"ticket:report\",\n \"agentId\": \"reporting\",\n
+      \"ticketId\": \"SQUAWK-READ-001\",\n \"focusId\": null,\n \"reason\": \"Ticket at report stage
+      (completed stage: report) - furthest in pipeline, critical priority\"\n }\n ],\n
+      \"reasoning\": \"Scheduled the 4 tickets at 'report' stage (SEQ-ALLOC-001, SEQ-ALLOC-002,
+      DEDUP-001, SQUAWK-READ-001) as they are furthest in the pipeline (completed stage: report).
+      All require ticket:report jobs assigned to the reporting agent. This fills all 4 concurrency
+      slots and follows the rule to resume in-progress tickets first.\",\n \"rateLimitedAgents\":
+      []\n}","redaction":{"applied":false,"ruleIds":[]},"annotations":{}} agent-trace=0ms
+      runId=corral-1791945442009 nodeId=ticket-scheduler workflowName=super-ralph-full iteration=22
+      attempt=1 smithers.event.category=agent-trace smithers.trace.version=1
+      run.id=corral-1791945442009
+      workflow.path=/home/toxic/.corral/runs/20261014-023721-prompt-886795a7/.corral/workflow.tsx
+      workflow.hash=11f6d218a40da78a4c760660e6c712894ae9cb780db890c7a632513cb543cf83
+      node.id=ticket-scheduler node.iteration=22 node.attempt=1 agent.family=claude-code
+      agent.id=7b856159-28e0-4e7f-9bd3-dde293887f4b agent.model=nvidia/nemotron-3-ultra-550b-a55b
+      agent.capture_mode=cli-text trace.completeness=final-only event.kind=assistant.message.final
+      event.phase=message event.sequence=1 source.observed=false
+info  task execution finished engine:task=0ms runId=corral-1791945442009 nodeId=ticket-scheduler
+      workflowName=super-ralph-full iteration=22 attempt=1 cached=false
+      jjPointer=4b74694b242ea5225d93ff4ed1355dfad400534f durationMs=59174
+info  Task "ticket-scheduler" has an output schema but engine "claude-code" does not support native
+      structured output. Falling back to prompt-injection + text JSON extraction. Schema validity
+      does not guarantee meaningful output — consider switching to an engine that declares
+      supportsNativeStructuredOutput=true (Anthropic, OpenAI). engine:task=0ms
+      runId=corral-1791945442009 nodeId=ticket-scheduler workflowName=super-ralph-full iteration=23
+      attempt=1 agentEngine=claude-code
+
+
+--- partial stderr (truncated) ---
+SQUAWK-READ-001:review-fix (attempt 1, iteration 9)
+[00:13:14] ✓ DEDUP-001:review-fix (attempt 1)
+[00:13:17] ✓ SEQ-ALLOC-002:review-fix (attempt 1)
+[00:13:23] ✓ SQUAWK-READ-001:review-fix (attempt 1)
+[00:13:37] ✓ SEQ-ALLOC-001:review-fix (attempt 1)
+[00:13:37] → ticket-scheduler (attempt 1, iteration 10)
+[00:14:32] ✓ ticket-scheduler (attempt 1)
+[00:14:32] → SEQ-ALLOC-001:report (attempt 1, iteration 10)
+[00:14:32] → SEQ-ALLOC-002:report (attempt 1, iteration 10)
+[00:14:32] → DEDUP-001:report (attempt 1, iteration 10)
+[00:14:32] → SQUAWK-READ-001:report (attempt 1, iteration 10)
+[00:14:39] ✓ SEQ-ALLOC-002:report (attempt 1)
+[00:14:39] ✓ DEDUP-001:report (attempt 1)
+[00:14:40] ✓ SQUAWK-READ-001:report (attempt 1)
+[00:14:46] ✓ SEQ-ALLOC-001:report (attempt 1)
+[00:14:46] → ticket-scheduler (attempt 1, iteration 11)
+[00:15:25] ✓ ticket-scheduler (attempt 1)
+[00:15:25] → ticket-scheduler (attempt 1, iteration 12)
+[00:16:58] ✓ ticket-scheduler (attempt 1)
+[00:16:58] → ticket-scheduler (attempt 1, iteration 13)
+[00:18:01] ✓ ticket-scheduler (attempt 1)
+[00:18:01] → ticket-scheduler (attempt 1, iteration 14)
+[00:19:29] ✓ ticket-scheduler (attempt 1)
+[00:19:29] → ticket-scheduler (attempt 1, iteration 15)
+[00:20:07] ✓ ticket-scheduler (attempt 1)
+[00:20:07] → ticket-scheduler (attempt 1, iteration 16)
+[00:21:14] ✓ ticket-scheduler (attempt 1)
+[00:21:14] → ticket-scheduler (attempt 1, iteration 17)
+[00:22:45] ✓ ticket-scheduler (attempt 1)
+[00:22:45] → ticket-scheduler (attempt 1, iteration 18)
+[00:23:32] ✓ ticket-scheduler (attempt 1)
+[00:23:32] → ticket-scheduler (attempt 1, iteration 19)
+[00:24:38] ✓ ticket-scheduler (attempt 1)
+[00:24:38] → ticket-scheduler (attempt 1, iteration 20)
+[00:26:05] ✓ ticket-scheduler (attempt 1)
+[00:26:05] → ticket-scheduler (attempt 1, iteration 21)
+[00:26:51] ✓ ticket-scheduler (attempt 1)
+[00:26:51] → ticket-scheduler (attempt 1, iteration 22)
+[00:27:50] ✓ ticket-scheduler (attempt 1)
+[00:27:50] → ticket-scheduler (attempt 1, iteration 23)

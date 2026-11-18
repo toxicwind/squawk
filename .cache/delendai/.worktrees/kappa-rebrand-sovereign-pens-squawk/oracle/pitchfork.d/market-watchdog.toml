@@ -1,0 +1,15 @@
+# ranch/squawk/oracle — project-owned daemon manifest. Source of truth for 'market-watchdog'.
+# Owned by the ranch/squawk/oracle project; the parent only composes it.
+
+[daemons.market-watchdog]
+run = "exec /home/toxic/Pens/ranch/squawk/oracle/bin/market-watchdog.sh"
+dir = "/home/toxic/Pens/ranch/squawk/oracle"
+mise = false
+retry = true
+auto = ["start"]
+
+# Pens-reconcile-watch — event-driven config/binary drift watcher (WS2).
+# supervises: bin/Pens-reconcile watch (inotify event loop over manifest
+# dirs; no timers, no polls). Drifted binaries are restored atomically from
+# immutable copies or signed git HEAD; declared configs are report-only.
+# Squawks on drift/restore. Added 2026-09-21.

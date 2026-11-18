@@ -1,0 +1,15 @@
+{
+  "market_id": "oracle-market-1792731225720",
+  "status": "idle",
+  "last_updated": "2026-10-22T22:54:06.897149",
+  "open_tasks": [],
+  "next_task_schema": {
+    "type": "emergent",
+    "description": "Task to be generated when market becomes active",
+    "dependencies": []
+  },
+  "experimental_work": {
+    "generator_script": "emergent_task_generator.py",
+    "status": "initialized"
+  }
+}

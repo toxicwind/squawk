@@ -1,0 +1,39 @@
+{
+  "task": "Post-outage endpoint verification",
+  "timestamp": "2026-10-23T02:11:20.496316",
+  "results": [
+    {
+      "service": "cuttinggate",
+      "host": "cuttinggate",
+      "port": 25200,
+      "status": "RED",
+      "evidence": "Error connecting to cuttinggate:25200: [Errno -2] Name or service not known",
+      "timestamp": "2026-10-23T02:11:05.468995"
+    },
+    {
+      "service": "hodos",
+      "host": "hodos",
+      "port": 25193,
+      "status": "RED",
+      "evidence": "Error connecting to hodos:25193: [Errno -2] Name or service not known",
+      "timestamp": "2026-10-23T02:11:08.996301"
+    },
+    {
+      "service": "herd router",
+      "host": "herd router",
+      "port": 25100,
+      "status": "RED",
+      "evidence": "Error connecting to herd router:25100: [Errno -2] Name or service not known",
+      "timestamp": "2026-10-23T02:11:12.753526"
+    },
+    {
+      "service": "squawk fleet bus",
+      "host": "squawk fleet bus",
+      "port": 25147,
+      "status": "RED",
+      "evidence": "Error connecting to squawk fleet bus:25147: [Errno -2] Name or service not known",
+      "timestamp": "2026-10-23T02:11:16.496223"
+    }
+  ],
+  "overall_status": "RED"
+}

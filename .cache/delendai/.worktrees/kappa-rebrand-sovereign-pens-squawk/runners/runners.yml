@@ -1,0 +1,107 @@
+# =============================================================================
+# squawk runner profiles — coordination substrate for phase-2 parallel agents.
+# =============================================================================
+#
+# LOCATION (why here): profiles bind an identity to a signing key. Keys live
+# in $SQUAWK_ROOT/keys/<identity>.key (0600), so the profile file lives next
+# to them at $SQUAWK_ROOT/runners.yml — the deployment boundary. The squawk
+# code repo (upstream toxicwind/squawk) carries no deployment config beyond
+# .env.example, which documents the FLEET_KEYS_DIR env override that the
+# squawk wrapper exports to point chat.py at these keys.
+#
+# RESOLUTION: $SQUAWK_ROOT (default /home/toxic/.shingle/squawk-root, resolved
+# via readlink -f so the shingle <-> .shingle symlink and the planned
+# sovereign/hatch/agents/ember reorg both keep working). The squawk wrapper
+# (/home/toxic/shingle/bin/squawk) and the hatch-side CLI
+# (~/workspace/bin/squawk) both resolve profiles from this file.
+#
+# USAGE (yote, HMAC-signed posts):
+#   squawk --profile coordinator post fleet --title "plan" --body "..."
+#   squawk --profile researcher read            # reads all profile channels
+#
+# USAGE (hatch, unsigned posts picked up by the server inotify watcher):
+#   squawk --profile implementer send fleet "text"
+#   squawk --profile reviewer read
+#
+# BACKWARD COMPAT: no --profile = today's behavior (SQUAWK_ID / ember).
+#
+version: 1
+
+profiles:
+  coordinator:
+    identity: coordinator
+    key: coordinator
+    role: coordinator
+    description: >
+      Phase-2 orchestrator. Owns the plan, assigns work to other profiles,
+      merges results, and is the single voice that declares a wave done.
+      Exactly one coordinator should be active at a time.
+    channels: [fleet]
+    poll_interval: 5
+    heartbeat: 60
+    message_template: "[coordinator] {title}\n\n{body}"
+
+  researcher:
+    identity: researcher
+    key: researcher
+    role: researcher
+    description: >
+      Gathers facts: web/docs/codebase reconnaissance, surveys APIs, reads
+      papers. Posts findings to fleet (and leads when lead-relevant) for
+      the coordinator and implementers to consume. Never writes code.
+    channels: [fleet, leads]
+    poll_interval: 10
+    heartbeat: 120
+    message_template: "[research] {title}\n\n{body}\n\nsources: {sources}"
+
+  implementer:
+    identity: implementer
+    key: implementer
+    role: implementer
+    description: >
+      Builds things: writes code, runs commands, applies patches per the
+      coordinator's plan. Reports progress and blockers back to fleet.
+      One implementer per workstream; coordinator fans work out across them.
+    channels: [fleet]
+    poll_interval: 10
+    heartbeat: 120
+    message_template: "[implement] {title}\n\n{body}"
+
+  reviewer:
+    identity: reviewer
+    key: reviewer
+    role: reviewer
+    description: >
+      Independent second pair of eyes. Reviews implementer output, verifies
+      claims live (never trusts a narrated success), and posts accept/rework
+      verdicts. Never approves its own work.
+    channels: [fleet]
+    poll_interval: 15
+    heartbeat: 180
+    message_template: "[review] {title}\n\nverdict: {verdict}\n\n{body}"
+
+  oracle:
+    identity: oracle
+    key: oracle
+    role: oracle
+    description: >
+      Answers hard questions on demand: deep research, paper lookup,
+      architecture judgment. Reactive, not autonomous — responds when
+      pinged by coordinator or reviewer. Low heartbeat; speaks rarely.
+    channels: [fleet]
+    poll_interval: 30
+    heartbeat: 300
+    message_template: "[oracle] {title}\n\n{body}"
+
+  relay:
+    identity: relay
+    key: relay
+    role: relay
+    description: >
+      Pre-existing bridge identity: relays messages between squawk and
+      external systems (cross-machine fan-out). Kept as a profile so
+      runners can address it uniformly.
+    channels: [fleet, leads]
+    poll_interval: 5
+    heartbeat: 60
+    message_template: "[relay] {title}\n\n{body}"

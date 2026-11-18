@@ -1,0 +1,14 @@
+{
+  "edits": [
+    {
+      "path": "/home/toxic/pens/ranch/squawk/oracle/work/raccoon/task-1792713009097/bin/delend-experimental-tasks/kite-keepalive.md",
+      "old": "",
+      "new": "# Task: Kite Keepalive Verification\n\n## Context\nThe `kite-cli` gateway requires keepalive+reconnect functionality. \nCommit `baedc9e` is cited as landed but not locally reachable. \nThis task requires the experimental agent to:\n1. Verify if `kite-cli` has a keepalive mechanism.\n2. If not, propose a minimal implementation strategy.\n3. If yes, verify its robustness under simulated network drop.\n\n## Constraints\n- Use `bun` or `node` for testing.\n- Do not modify core `kite-cli` unless explicitly authorized by the oracle market.\n- Report findings in `reports/kite-keepalive.md`.\n\n## Emergent Directive\nIf the keepalive is missing, create a `keepalive-proxy.ts` in `ranch/pylae` as a proof-of-concept.\n"
+    },
+    {
+      "path": "/home/toxic/pens/ranch/squawk/oracle/work/raccoon/task-1792713009097/bin/rig-validate.sh",
+      "old": "",
+      "new": "#!/usr/bin/env bash\n# rig-validate.sh\n# Validates the integrity of the Pens rig structure.\n\nset -e\n\nESTATE_ROOT=\"$(cd \"$(dirname \"$0\")/..\" && pwd)\"\nWEAVER_DIR=\"$ESTATE_ROOT/agents/weaver\"\nMARKET_LOOP_SRC=\"$WEAVER_DIR/bin/market-loop.ts\"\nMARKET_LOOP_LINK=\"$ESTATE_ROOT/agents/weaver/bin/market-loop.ts\"\n\necho \"=== Rig Validation ===\"\n\n# Check 1: Weaver directory exists\nif [ ! -d \"$WEAVER_DIR\" ]; then\n    echo \"FAIL: Weaver directory missing at $WEAVER_DIR\"\n    exit 1\nfi\necho \"OK: Weaver directory exists.\"\n\n# Check 2: Market loop symlink/file exists\nif [ ! -e \"$MARKET_LOOP_LINK\" ]; then\n    echo \"FAIL: Market loop link missing at $MARKET_LOOP_LINK\"\n    exit 1\nfi\necho \"OK: Market loop link exists.\"\n\n# Check 3: Market loop is executable or readable\nif [ ! -r \"$MARKET_LOOP_LINK\" ]; then\n    echo \"FAIL: Market loop is not readable.\"\n    exit 1\nfi\necho \"OK: Market loop is readable.\"\n\n# Check 4: Delend CLI tools exist\nTOOLS=(\"delend-oracle\" \"delend-iterate\" \"delend-experimental\" \"delend-code-race\" \"rig-create\")\nfor tool in \"${TOOLS[@]}\"; do\n    if [ ! -x \"$ESTATE_ROOT/bin/$tool\" ]; then\n        echo \"WARN: Tool $tool is not executable or missing.\"\n    else\n        echo \"OK: Tool $tool is executable.\"\n    fi\ndone\n\necho \"=== Validation Complete ===\"\n"
+    }
+  ]
+}

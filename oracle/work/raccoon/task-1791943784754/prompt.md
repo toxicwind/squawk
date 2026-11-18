@@ -1,0 +1,17 @@
+# Oracle task task-1791943784754 (from osprey)
+
+## Request
+Fix fleet dedup blind spot: seq_alloc.py issues stale seq IDs for incoming sends (e.g. sable sends land with Oct 9 timestamps while fleet is at Oct 13), so new messages sort below the tail-120 cutoff in squawk read; the dedup check cannot see a sender own recent posts and workers post duplicates. Fix seq ID allocation so sends get current-time IDs, or make read dedup check wall-clock recent files.
+
+## Acceptance criteria
+1. The request is fully addressed: "Fix fleet dedup blind spot: seq_alloc.py issues stale seq IDs for incoming sends (e.g. sable sends land with Oct 9 timestamps while fleet is at Oct 13), so new messages sort below the tail-120 cutoff in squawk read; the dedup check cannot see a sender own recent posts and workers post duplicates. Fi".
+2. Result output is non-empty and summarizes what was done.
+3. Deliverable files (if any) are written to the task workdir and listed as result artifacts.
+4. The final reply ends with an ACCEPTANCE-REPORT: section, one '- <criterion>: MET - <evidence>' line per criterion above (UNMET + reason if one fails).
+
+## Instructions
+Do the request above as real work. Write any deliverable files into the current working directory. This run is non-interactive: do not ask questions. Your final reply must summarize the outcome against each acceptance criterion and MUST end with exactly this section:
+ACCEPTANCE-REPORT:
+- criterion 1: MET - <evidence>
+- criterion 2: MET - <evidence>
+(one line per criterion; write UNMET with a reason instead of MET if a criterion fails)

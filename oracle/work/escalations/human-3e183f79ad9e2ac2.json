@@ -1,0 +1,10 @@
+{
+  "ts": 1793097120.9049141,
+  "question_id": "3e183f79ad9e2ac2",
+  "question": "Will the Pens fleet have more than 80 running daemons at 2026-10-27T05:00:00Z?",
+  "reason": "no live judges \u2014 nothing to aggregate",
+  "context": {
+    "verdict": 0.5
+  },
+  "status": "awaiting_human"
+}

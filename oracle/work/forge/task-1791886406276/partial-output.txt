@@ -1,0 +1,727 @@
+--- partial stdout (last 65536 bytes) ---
+-skip-permissions --dangerously-skip-permissions --permission-mode
+      bypassPermissions --dangerously-skip-permissions --model openai/gpt-oss-20b --output-format
+      stream-json --system-prompt Plan and research next tickets. --verbose IMPORTANT: After
+      completing the task below, you MUST output ONLY a raw JSON object. Do NOT wrap it in markdown
+      or add any prose — the workflow fails without it.\n\nYou are the **scheduler** for an
+      AI-driven development workflow. You have 4 free concurrency slots to fill with jobs.\n\n##
+      Current Time\n2026-10-13T11:09:22.574Z\n\n## Pipeline Summary\n- Completed (landed): 0\n-
+      Active tickets: 19\n- Concurrency cap: 4\n- Currently running jobs: 0\n- Free slots to fill:
+      4\n\n## Currently Running Jobs\n(no active jobs)\n\n## Ticket State\n| ID | Title | Priority |
+      Completed Stage | Schedule Next (authoritative) | Landed | Report Done
+      |\n|----|-------|----------|-----------------|-------------------------------|--------|-------
+      ------|\n| FORENSICS-001 | Implement Failure Forensics and Log Recovery feature from scratch |
+      critical | report | ticket:report | ✗ | ✗ |\n| FORENSICS-002 | Create forensics specification
+      document | critical | report | ticket:report | ✗ | ✗ |\n| RCA-001 | Implement Root Cause
+      Analysis feature specification | critical | report | ticket:report | ✗ | ✗ |\n| RCA-002 |
+      Implement Root Cause Analysis API endpoints | critical | report | ticket:report | ✗ | ✗ |\n|
+      RCA-003 | Design and implement Root Cause Analysis database schema | critical | not_started |
+      ticket:research | ✗ | ✗ |\n| REMED-001 | Create Fix Proposal and Rebuild specification |
+      critical | not_started | ticket:research | ✗ | ✗ |\n| REMED-002 | Implement Fix Proposal API
+      endpoints | critical | not_started | ticket:research | ✗ | ✗ |\n| REMED-003 | Design and
+      implement remediation database schema | critical | not_started | ticket:research | ✗ | ✗ |\n|
+      FORENSICS-003 | Design forensics database schema | high | not_started | ticket:research | ✗ |
+      ✗ |\n| FORENSICS-004 | Implement forensics API routes | high | not_started | ticket:research |
+      ✗ | ✗ |\n| FORENSICS-005 | Add forensics test coverage | high | not_started | ticket:research
+      | ✗ | ✗ |\n| RCA-004 | Add test coverage for Root Cause Analysis | high | not_started |
+      ticket:research | ✗ | ✗ |\n| REMED-004 | Build jj-native integration for automated fixes |
+      high | not_started | ticket:research | ✗ | ✗ |\n| REMED-005 | Add comprehensive test suite for
+      remediation | high | not_started | ticket:research | ✗ | ✗ |\n| executor-forensic-analyzer |
+      Executor Forensic Analyzer Module | critical | not_started | ticket:research | ✗ | ✗ |\n|
+      root-cause-correlation-engine | Root Cause Correlation Engine | critical | not_started |
+      ticket:research | ✗ | ✗ |\n| remediation-playbook-generator | Automated Remediation Playbook
+      Generator | high | not_started | ticket:research | ✗ | ✗ |\n| executor-state-reconstructor |
+      Executor State Reconstructor | high | not_started | ticket:research | ✗ | ✗ |\n|
+      autopsy-reporting-dashboard | Autopsy Reporting Dashboard | medium | not_started |
+      ticket:research | ✗ | ✗ |\n\n## Agent Pool\n| Agent ID | Description
+      |\n|----------|-------------|\n| planning | Plan and research next tickets. |\n|
+      implementation | Implement with test-driven development and jj workflows. |\n| testing | Run
+      tests and validate behavior changes. |\n| reviewing | Review for regressions, spec drift, and
+      correctness. |\n| reporting | Write concise, accurate ticket status reports. |\n\n## Focus
+      Areas\n- forensics: Failure Forensics and Log Recovery\n- root-cause: Root Cause Analysis\n-
+      remediation: Fix Proposal and Rebuild\n\n## Job Types You Can Schedule\n\n### Ticket pipeline
+      jobs (require ticketId, focusId=null)\nEach ticket progresses through: research → plan →
+      implement → test → build-verify → spec-review → code-review → review-fix → report\n-
+      `ticket:research` — Research the ticket\'s domain and relevant code\n- `ticket:plan` — Create
+      implementation plan (requires research done)\n- `ticket:implement` — Write code (requires plan
+      done)\n- `ticket:test` — Run tests (requires implementation done)\n- `ticket:build-verify` —
+      Verify build passes (requires implementation done)\n- `ticket:spec-review` — Review against
+      specs (requires implementation done)\n- `ticket:code-review` — Code quality review (requires
+      implementation done)\n- `ticket:review-fix` — Fix review issues (requires reviews done with
+      issues)\n- `ticket:report` — Final status report (requires all above done)\n\n**The "Schedule
+      Next" column in the Ticket State table is authoritative and computed deterministically:
+      "Completed Stage" is the highest stage with finished output, and "Schedule Next" is the ONLY
+      pipeline job you may schedule for that ticket. NEVER schedule any other pipeline job for a
+      ticket — re-scheduling a completed stage is a bug, not progress. A "— (done)" ticket gets no
+      pipeline jobs.**\n\n### Global jobs (ticketId=null)\n- `discovery` — Find new tickets to work
+      on (focusId=null, jobId="discovery")\n- `progress-update` — Update progress file
+      (focusId=null, jobId="progress-update")\n- `codebase-review` — Review a focus area (requires
+      focusId, jobId="codebase-review:<focusId>")\n- `integration-test` — Run integration tests for
+      a category (requires focusId, jobId="integration-test:<focusId>")\n\n## Scheduling Rules\n\n1.
+      **Fill all 4 free slots.** Output exactly 4 jobs (or fewer only if there\'s genuinely nothing
+      useful to schedule).\n\n2. **Resume in-progress tickets first.** Tickets further in the
+      pipeline get priority — drive existing work to completion before starting new tickets.\n\n3.
+      **Schedule the authoritative NEXT stage.** Read the "Schedule Next (authoritative)" column for
+      each ticket and schedule exactly that jobType. Do not infer, substitute, or repeat a completed
+      stage. Example: Completed Stage "test" → schedule "ticket:build-verify", never
+      "ticket:test".\n\n4. **Load balance across agents.** Distribute work across ALL available
+      agents. Don\'t funnel everything through 1-2 favorites. Every agent should get work when there
+      are enough jobs.\n\n5. **Keep the ticket pipeline full.** If active tickets ≤ 8, schedule a
+      "discovery" job. The scheduler should never be starved for choices.\n\n6. **Rate limit
+      awareness.** If an agent is rate-limited, don\'t assign it. Include it in rateLimitedAgents
+      and spread its work to other agents.\n\n7. **Don\'t double-schedule.** Check the "Currently
+      Running Jobs" table — never schedule a job that\'s already running or a second pipeline job
+      for a ticket that already has one running.\n\n8. **Maximize cheap agents.** Use the cheapest
+      suitable agent for each task. Only escalate to expensive agents when the task genuinely
+      requires it.\n\n## Instructions\nOutput exactly the jobs to enqueue in the `jobs` array. Each
+      job fills one concurrency slot.\n\n\n**REQUIRED OUTPUT** — You MUST return ONLY a raw JSON
+      object matching this schema:\n{\n "$schema": "https://json-schema.org/draft/2020-12/schema",\n
+      "type": "object",\n "properties": {\n "jobs": {\n "type": "array",\n "items": {\n "type":
+      "object",\n "properties": {\n "jobId": {\n "type": "string",\n "description": "Stable unique
+      ID (e.g. \'T-1:research\', \'discovery\', \'codebase-review:cat-5\')"\n },\n "jobType": {\n
+      "type": "string",\n "enum": [\n "discovery",\n "progress-update",\n "codebase-review",\n
+      "integration-test",\n "ticket:research",\n "ticket:plan",\n "ticket:implement",\n
+      "ticket:test",\n "ticket:build-verify",\n "ticket:spec-review",\n "ticket:code-review",\n
+      "ticket:review-fix",\n "ticket:report"\n ],\n "description": "Type of job to schedule"\n },\n
+      "agentId": {\n "type": "string",\n "description": "Agent ID from the pool to assign"\n },\n
+      "ticketId": {\n "description": "Ticket ID for ticket pipeline jobs, null for global jobs",\n
+      "type": [\n "string",\n "null"\n ]\n },\n "focusId": {\n "description": "Focus/category ID for
+      codebase-review and integration-test jobs, null otherwise",\n "type": [\n "string",\n "null"\n
+      ]\n },\n "reason": {\n "type": "string",\n "description": "Brief reason for scheduling this
+      job with this agent"\n }\n },\n "required": [\n "jobId",\n "jobType",\n "agentId",\n
+      "ticketId",\n "focusId",\n "reason"\n ],\n "additionalProperties": false\n },\n "description":
+      "Flat list of jobs to enqueue — each occupies one concurrency slot"\n },\n "reasoning": {\n
+      "type": "string",\n "description": "Overall scheduling rationale"\n },\n "rateLimitedAgents":
+      {\n "type": "array",\n "items": {\n "type": "object",\n "properties": {\n "agentId": {\n
+      "type": "string"\n },\n "resumeAtMs": {\n "type": "number",\n "description": "Epoch ms when to
+      resume using this agent"\n }\n },\n "required": [\n "agentId",\n "resumeAtMs"\n ],\n
+      "additionalProperties": false\n },\n "description": "Agents the scheduler determines are
+      rate-limited"\n }\n },\n "required": [\n "jobs",\n "reasoning",\n "rateLimitedAgents"\n ],\n
+      "additionalProperties": false\n}\nDo not include prose, markdown, headings, commentary, or
+      code fences.\nThe first character of your response must be `{` and the last character must be
+      `}`.\nThe workflow will fail unless the entire response is the JSON object.'
+      outputFormat=stream-json eventType=completed eventEngine=claude-code ok=true resume=null
+      error=null hasUsage=false
+warn  {"category":"agent-trace","payload":{"text":"direct_model_call failed: HTTP Error 401:
+      Unauthorized\n"},"raw":"direct_model_call failed: HTTP Error 401:
+      Unauthorized\n","redaction":{"applied":false,"ruleIds":[]},"annotations":{}} agent-trace=0ms
+      runId=corral-1791888131999 nodeId=ticket-scheduler workflowName=super-ralph-full iteration=14
+      attempt=2 smithers.event.category=agent-trace smithers.trace.version=1
+      run.id=corral-1791888131999
+      workflow.path=/home/toxic/.corral/runs/20261013-104211-prompt-aec208e6/.corral/workflow.tsx
+      workflow.hash=04ad5dfeab3728adbb765211e2fd16be877d852f807dcaca62106ec318e2e45c
+      node.id=ticket-scheduler node.iteration=14 node.attempt=2 agent.family=claude-code
+      agent.id=c92c1055-0e20-458f-9a2b-0a9f092385e1 agent.model=openai/gpt-oss-20b
+      agent.capture_mode=cli-text trace.completeness=final-only event.kind=stderr
+      event.phase=capture event.sequence=0 source.raw_type=stderr source.raw_event_id=stderr:0
+      source.observed=true
+info  output format correction engine:schema-retry=0ms runId=corral-1791888131999
+      nodeId=ticket-scheduler workflowName=super-ralph-full iteration=14 attempt=2 schemaRetry=1
+      maxSchemaRetries=3 correctionKind=json-format resumedSession=false resumedCheckpoint=false
+info  agent session completed agent.generate=0ms runId=corral-1791888131999 nodeId=ticket-scheduler
+      workflowName=super-ralph-full iteration=14 attempt=2 agentEngine=claude-code
+      agentOperation=generate agentModel=openai/gpt-oss-20b
+      cwd=/home/toxic/.corral/runs/20261013-104211-prompt-aec208e6 timeoutMs=3600000
+      idleTimeoutMs=null hasMessages=false hasResumeSession=false promptBytes=9477
+      systemPromptBytes=31 agentCommand=claude agentArgs='--print
+      --allow-dangerously-skip-permissions --dangerously-skip-permissions --permission-mode
+      bypassPermissions --dangerously-skip-permissions --model openai/gpt-oss-20b --output-format
+      stream-json --system-prompt Plan and research next tickets. --verbose You were given this
+      task:\n\nYou are the **scheduler** for an AI-driven development workflow. You have 4 free
+      concurrency slots to fill with jobs.\n\n## Current Time\n2026-10-13T11:09:22.574Z\n\n##
+      Pipeline Summary\n- Completed (landed): 0\n- Active tickets: 19\n- Concurrency cap: 4\n-
+      Currently running jobs: 0\n- Free slots to fill: 4\n\n## Currently Running Jobs\n(no active
+      jobs)\n\n## Ticket State\n| ID | Title | Priority | Completed Stage | Schedule Next
+      (authoritative) | Landed | Report Done
+      |\n|----|-------|----------|-----------------|-------------------------------|--------|-------
+      ------|\n| FORENSICS-001 | Implement Failure Forensics and Log Recovery feature from scratch |
+      critical | report | ticket:report | ✗ | ✗ |\n| FORENSICS-002 | Create forensics specification
+      document | critical | report | ticket:report | ✗ | ✗ |\n| RCA-001 | Implement Root Cause
+      Analysis feature specification | critical | report | ticket:report | ✗ | ✗ |\n| RCA-002 |
+      Implement Root Cause Analysis API endpoints | critical | report | ticket:report | ✗ | ✗ |\n|
+      RCA-003 | Design and implement Root Cause Analysis database schema | critical | not_started |
+      ticket:research | ✗ | ✗ |\n| REMED-001 | Create Fix Proposal and Rebuild specification |
+      critical | not_started | ticket:research | ✗ | ✗ |\n| REMED-002 | Implement Fix Proposal API
+      endpoints | critical | not_started | ticket:research | ✗ | ✗ |\n| REMED-003 | Design and
+      implement remediation database schema | critical | not_started | ticket:research | ✗ | ✗ |\n|
+      FORENSICS-003 | Design forensics database schema | high | not_started | ticket:research | ✗ |
+      ✗ |\n| FORENSICS-004 | Implement forensics API routes | high | not_started | ticket:research |
+      ✗ | ✗ |\n| FORENSICS-005 | Add forensics test coverage | high | not_started | ticket:research
+      | ✗ | ✗ |\n| RCA-004 | Add test coverage for Root Cause Analysis | high | not_started |
+      ticket:research | ✗ | ✗ |\n| REMED-004 | Build jj-native integration for automated fixes |
+      high | not_started | ticket:research | ✗ | ✗ |\n| REMED-005 | Add comprehensive test suite for
+      remediation | high | not_started | ticket:research | ✗ | ✗ |\n| executor-forensic-analyzer |
+      Executor Forensic Analyzer Module | critical | not_started | ticket:research | ✗ | ✗ |\n|
+      root-cause-correlation-engine | Root Cause Correlation Engine | critical | not_started |
+      ticket:research | ✗ | ✗ |\n| remediation-playbook-generator | Automated Remediation Playbook
+      Generator | high | not_started | ticket:research | ✗ | ✗ |\n| executor-state-reconstructor |
+      Executor State Reconstructor | high | not_started | ticket:research | ✗ | ✗ |\n|
+      autopsy-reporting-dashboard | Autopsy Reporting Dashboard | medium | not_started |
+      ticket:research | ✗ | ✗ |\n\n## Agent Pool\n| Agent ID | Description
+      |\n|----------|-------------|\n| planning | Plan and research next tickets. |\n|
+      implementation | Implement with test-driven development and jj workflows. |\n| testing | Run
+      tests and validate behavior changes. |\n| reviewing | Review for regressions, spec drift, and
+      correctness. |\n| reporting | Write concise, accurate ticket status reports. |\n\n## Focus
+      Areas\n- forensics: Failure Forensics and Log Recovery\n- root-cause: Root Cause Analysis\n-
+      remediation: Fix Proposal and Rebuild\n\n## Job Types You Can Schedule\n\n### Ticket pipeline
+      jobs (require ticketId, focusId=null)\nEach ticket progresses through: research → plan →
+      implement → test → build-verify → spec-review → code-review → review-fix → report\n-
+      `ticket:research` — Research the ticket\'s domain and relevant code\n- `ticket:plan` — Create
+      implementation plan (requires research done)\n- `ticket:implement` — Write code (requires plan
+      done)\n- `ticket:test` — Run tests (requires implementation done)\n- `ticket:build-verify` —
+      Verify build passes (requires implementation done)\n- `ticket:spec-review` — Review against
+      specs (requires implementation done)\n- `ticket:code-review` — Code quality review (requires
+      implementation done)\n- `ticket:review-fix` — Fix review issues (requires reviews done with
+      issues)\n- `ticket:report` — Final status report (requires all above done)\n\n**The "Schedule
+      Next" column in the Ticket State table is authoritative and computed deterministically:
+      "Completed Stage" is the highest stage with finished output, and "Schedule Next" is the ONLY
+      pipeline job you may schedule for that ticket. NEVER schedule any other pipeline job for a
+      ticket — re-scheduling a completed stage is a bug, not progress. A "— (done)" ticket gets no
+      pipeline jobs.**\n\n### Global jobs (ticketId=null)\n- `discovery` — Find new tickets to work
+      on (focusId=null, jobId="discovery")\n- `progress-update` — Update progress file
+      (focusId=null, jobId="progress-update")\n- `codebase-review` — Review a focus area (requires
+      focusId, jobId="codebase-review:<focusId>")\n- `integration-test` — Run integration tests for
+      a category (requires focusId, jobId="integration-test:<focusId>")\n\n## Scheduling Rules\n\n1.
+      **Fill all 4 free slots.** Output exactly 4 jobs (or fewer only if there\'s genuinely nothing
+      useful to schedule).\n\n2. **Resume in-progress tickets first.** Tickets further in the
+      pipeline get priority — drive existing work to completion before starting new tickets.\n\n3.
+      **Schedule the authoritative NEXT stage.** Read the "Schedule Next (authoritative)" column for
+      each ticket and schedule exactly that jobType. Do not infer, substitute, or repeat a completed
+      stage. Example: Completed Stage "test" → schedule "ticket:build-verify", never
+      "ticket:test".\n\n4. **Load balance across agents.** Distribute work across ALL available
+      agents. Don\'t funnel everything through 1-2 favorites. Every agent should get work when there
+      are enough jobs.\n\n5. **Keep the ticket pipeline full.** If active tickets ≤ 8, schedule a
+      "discovery" job. The scheduler should never be starved for choices.\n\n6. **Rate limit
+      awareness.** If an agent is rate-limited, don\'t assign it. Include it in rateLimitedAgents
+      and spread its work to other agents.\n\n7. **Don\'t double-schedule.** Check the "Currently
+      Running Jobs" table — never schedule a job that\'s already running or a second pipeline job
+      for a ticket that already has one running.\n\n8. **Maximize cheap agents.** Use the cheapest
+      suitable agent for each task. Only escalate to expensive agents when the task genuinely
+      requires it.\n\n## Instructions\nOutput exactly the jobs to enqueue in the `jobs` array. Each
+      job fills one concurrency slot.\n\nYou previously completed it and produced this response
+      (possibly truncated):\n\n\n\nNow you MUST output ONLY a valid JSON object (no other text)
+      summarizing your work above, with exactly these fields and types:\n{\n "$schema":
+      "https://json-schema.org/draft/2020-12/schema",\n "type": "object",\n "properties": {\n
+      "jobs": {\n "type": "array",\n "items": {\n "type": "object",\n "properties": {\n "jobId": {\n
+      "type": "string",\n "description": "Stable unique ID (e.g. \'T-1:research\', \'discovery\',
+      \'codebase-review:cat-5\')"\n },\n "jobType": {\n "type": "string",\n "enum": [\n
+      "discovery",\n "progress-update",\n "codebase-review",\n "integration-test",\n
+      "ticket:research",\n "ticket:plan",\n "ticket:implement",\n "ticket:test",\n
+      "ticket:build-verify",\n "ticket:spec-review",\n "ticket:code-review",\n
+      "ticket:review-fix",\n "ticket:report"\n ],\n "description": "Type of job to schedule"\n },\n
+      "agentId": {\n "type": "string",\n "description": "Agent ID from the pool to assign"\n },\n
+      "ticketId": {\n "description": "Ticket ID for ticket pipeline jobs, null for global jobs",\n
+      "type": [\n "string",\n "null"\n ]\n },\n "focusId": {\n "description": "Focus/category ID for
+      codebase-review and integration-test jobs, null otherwise",\n "type": [\n "string",\n "null"\n
+      ]\n },\n "reason": {\n "type": "string",\n "description": "Brief reason for scheduling this
+      job with this agent"\n }\n },\n "required": [\n "jobId",\n "jobType",\n "agentId",\n
+      "ticketId",\n "focusId",\n "reason"\n ],\n "additionalProperties": false\n },\n "description":
+      "Flat list of jobs to enqueue — each occupies one concurrency slot"\n },\n "reasoning": {\n
+      "type": "string",\n "description": "Overall scheduling rationale"\n },\n "rateLimitedAgents":
+      {\n "type": "array",\n "items": {\n "type": "object",\n "properties": {\n "agentId": {\n
+      "type": "string"\n },\n "resumeAtMs": {\n "type": "number",\n "description": "Epoch ms when to
+      resume using this agent"\n }\n },\n "required": [\n "agentId",\n "resumeAtMs"\n ],\n
+      "additionalProperties": false\n },\n "description": "Agents the scheduler determines are
+      rate-limited"\n }\n },\n "required": [\n "jobs",\n "reasoning",\n "rateLimitedAgents"\n ],\n
+      "additionalProperties": false\n}\n\nOutput ONLY the raw JSON object, with no markdown fences
+      or prose.' outputFormat=stream-json eventType=completed eventEngine=claude-code ok=true
+      resume=null error=null hasUsage=false
+info  output format correction engine:schema-retry=0ms runId=corral-1791888131999
+      nodeId=ticket-scheduler workflowName=super-ralph-full iteration=14 attempt=2 schemaRetry=2
+      maxSchemaRetries=3 correctionKind=json-format resumedSession=false resumedCheckpoint=false
+info  agent session completed agent.generate=0ms runId=corral-1791888131999 nodeId=ticket-scheduler
+      workflowName=super-ralph-full iteration=14 attempt=2 agentEngine=claude-code
+      agentOperation=generate agentModel=openai/gpt-oss-20b
+      cwd=/home/toxic/.corral/runs/20261013-104211-prompt-aec208e6 timeoutMs=3600000
+      idleTimeoutMs=null hasMessages=false hasResumeSession=false promptBytes=9477
+      systemPromptBytes=31 agentCommand=claude agentArgs='--print
+      --allow-dangerously-skip-permissions --dangerously-skip-permissions --permission-mode
+      bypassPermissions --dangerously-skip-permissions --model openai/gpt-oss-20b --output-format
+      stream-json --system-prompt Plan and research next tickets. --verbose You were given this
+      task:\n\nYou are the **scheduler** for an AI-driven development workflow. You have 4 free
+      concurrency slots to fill with jobs.\n\n## Current Time\n2026-10-13T11:09:22.574Z\n\n##
+      Pipeline Summary\n- Completed (landed): 0\n- Active tickets: 19\n- Concurrency cap: 4\n-
+      Currently running jobs: 0\n- Free slots to fill: 4\n\n## Currently Running Jobs\n(no active
+      jobs)\n\n## Ticket State\n| ID | Title | Priority | Completed Stage | Schedule Next
+      (authoritative) | Landed | Report Done
+      |\n|----|-------|----------|-----------------|-------------------------------|--------|-------
+      ------|\n| FORENSICS-001 | Implement Failure Forensics and Log Recovery feature from scratch |
+      critical | report | ticket:report | ✗ | ✗ |\n| FORENSICS-002 | Create forensics specification
+      document | critical | report | ticket:report | ✗ | ✗ |\n| RCA-001 | Implement Root Cause
+      Analysis feature specification | critical | report | ticket:report | ✗ | ✗ |\n| RCA-002 |
+      Implement Root Cause Analysis API endpoints | critical | report | ticket:report | ✗ | ✗ |\n|
+      RCA-003 | Design and implement Root Cause Analysis database schema | critical | not_started |
+      ticket:research | ✗ | ✗ |\n| REMED-001 | Create Fix Proposal and Rebuild specification |
+      critical | not_started | ticket:research | ✗ | ✗ |\n| REMED-002 | Implement Fix Proposal API
+      endpoints | critical | not_started | ticket:research | ✗ | ✗ |\n| REMED-003 | Design and
+      implement remediation database schema | critical | not_started | ticket:research | ✗ | ✗ |\n|
+      FORENSICS-003 | Design forensics database schema | high | not_started | ticket:research | ✗ |
+      ✗ |\n| FORENSICS-004 | Implement forensics API routes | high | not_started | ticket:research |
+      ✗ | ✗ |\n| FORENSICS-005 | Add forensics test coverage | high | not_started | ticket:research
+      | ✗ | ✗ |\n| RCA-004 | Add test coverage for Root Cause Analysis | high | not_started |
+      ticket:research | ✗ | ✗ |\n| REMED-004 | Build jj-native integration for automated fixes |
+      high | not_started | ticket:research | ✗ | ✗ |\n| REMED-005 | Add comprehensive test suite for
+      remediation | high | not_started | ticket:research | ✗ | ✗ |\n| executor-forensic-analyzer |
+      Executor Forensic Analyzer Module | critical | not_started | ticket:research | ✗ | ✗ |\n|
+      root-cause-correlation-engine | Root Cause Correlation Engine | critical | not_started |
+      ticket:research | ✗ | ✗ |\n| remediation-playbook-generator | Automated Remediation Playbook
+      Generator | high | not_started | ticket:research | ✗ | ✗ |\n| executor-state-reconstructor |
+      Executor State Reconstructor | high | not_started | ticket:research | ✗ | ✗ |\n|
+      autopsy-reporting-dashboard | Autopsy Reporting Dashboard | medium | not_started |
+      ticket:research | ✗ | ✗ |\n\n## Agent Pool\n| Agent ID | Description
+      |\n|----------|-------------|\n| planning | Plan and research next tickets. |\n|
+      implementation | Implement with test-driven development and jj workflows. |\n| testing | Run
+      tests and validate behavior changes. |\n| reviewing | Review for regressions, spec drift, and
+      correctness. |\n| reporting | Write concise, accurate ticket status reports. |\n\n## Focus
+      Areas\n- forensics: Failure Forensics and Log Recovery\n- root-cause: Root Cause Analysis\n-
+      remediation: Fix Proposal and Rebuild\n\n## Job Types You Can Schedule\n\n### Ticket pipeline
+      jobs (require ticketId, focusId=null)\nEach ticket progresses through: research → plan →
+      implement → test → build-verify → spec-review → code-review → review-fix → report\n-
+      `ticket:research` — Research the ticket\'s domain and relevant code\n- `ticket:plan` — Create
+      implementation plan (requires research done)\n- `ticket:implement` — Write code (requires plan
+      done)\n- `ticket:test` — Run tests (requires implementation done)\n- `ticket:build-verify` —
+      Verify build passes (requires implementation done)\n- `ticket:spec-review` — Review against
+      specs (requires implementation done)\n- `ticket:code-review` — Code quality review (requires
+      implementation done)\n- `ticket:review-fix` — Fix review issues (requires reviews done with
+      issues)\n- `ticket:report` — Final status report (requires all above done)\n\n**The "Schedule
+      Next" column in the Ticket State table is authoritative and computed deterministically:
+      "Completed Stage" is the highest stage with finished output, and "Schedule Next" is the ONLY
+      pipeline job you may schedule for that ticket. NEVER schedule any other pipeline job for a
+      ticket — re-scheduling a completed stage is a bug, not progress. A "— (done)" ticket gets no
+      pipeline jobs.**\n\n### Global jobs (ticketId=null)\n- `discovery` — Find new tickets to work
+      on (focusId=null, jobId="discovery")\n- `progress-update` — Update progress file
+      (focusId=null, jobId="progress-update")\n- `codebase-review` — Review a focus area (requires
+      focusId, jobId="codebase-review:<focusId>")\n- `integration-test` — Run integration tests for
+      a category (requires focusId, jobId="integration-test:<focusId>")\n\n## Scheduling Rules\n\n1.
+      **Fill all 4 free slots.** Output exactly 4 jobs (or fewer only if there\'s genuinely nothing
+      useful to schedule).\n\n2. **Resume in-progress tickets first.** Tickets further in the
+      pipeline get priority — drive existing work to completion before starting new tickets.\n\n3.
+      **Schedule the authoritative NEXT stage.** Read the "Schedule Next (authoritative)" column for
+      each ticket and schedule exactly that jobType. Do not infer, substitute, or repeat a completed
+      stage. Example: Completed Stage "test" → schedule "ticket:build-verify", never
+      "ticket:test".\n\n4. **Load balance across agents.** Distribute work across ALL available
+      agents. Don\'t funnel everything through 1-2 favorites. Every agent should get work when there
+      are enough jobs.\n\n5. **Keep the ticket pipeline full.** If active tickets ≤ 8, schedule a
+      "discovery" job. The scheduler should never be starved for choices.\n\n6. **Rate limit
+      awareness.** If an agent is rate-limited, don\'t assign it. Include it in rateLimitedAgents
+      and spread its work to other agents.\n\n7. **Don\'t double-schedule.** Check the "Currently
+      Running Jobs" table — never schedule a job that\'s already running or a second pipeline job
+      for a ticket that already has one running.\n\n8. **Maximize cheap agents.** Use the cheapest
+      suitable agent for each task. Only escalate to expensive agents when the task genuinely
+      requires it.\n\n## Instructions\nOutput exactly the jobs to enqueue in the `jobs` array. Each
+      job fills one concurrency slot.\n\nYou previously completed it and produced this response
+      (possibly truncated):\n\n\n\nNow you MUST output ONLY a valid JSON object (no other text)
+      summarizing your work above, with exactly these fields and types:\n{\n "$schema":
+      "https://json-schema.org/draft/2020-12/schema",\n "type": "object",\n "properties": {\n
+      "jobs": {\n "type": "array",\n "items": {\n "type": "object",\n "properties": {\n "jobId": {\n
+      "type": "string",\n "description": "Stable unique ID (e.g. \'T-1:research\', \'discovery\',
+      \'codebase-review:cat-5\')"\n },\n "jobType": {\n "type": "string",\n "enum": [\n
+      "discovery",\n "progress-update",\n "codebase-review",\n "integration-test",\n
+      "ticket:research",\n "ticket:plan",\n "ticket:implement",\n "ticket:test",\n
+      "ticket:build-verify",\n "ticket:spec-review",\n "ticket:code-review",\n
+      "ticket:review-fix",\n "ticket:report"\n ],\n "description": "Type of job to schedule"\n },\n
+      "agentId": {\n "type": "string",\n "description": "Agent ID from the pool to assign"\n },\n
+      "ticketId": {\n "description": "Ticket ID for ticket pipeline jobs, null for global jobs",\n
+      "type": [\n "string",\n "null"\n ]\n },\n "focusId": {\n "description": "Focus/category ID for
+      codebase-review and integration-test jobs, null otherwise",\n "type": [\n "string",\n "null"\n
+      ]\n },\n "reason": {\n "type": "string",\n "description": "Brief reason for scheduling this
+      job with this agent"\n }\n },\n "required": [\n "jobId",\n "jobType",\n "agentId",\n
+      "ticketId",\n "focusId",\n "reason"\n ],\n "additionalProperties": false\n },\n "description":
+      "Flat list of jobs to enqueue — each occupies one concurrency slot"\n },\n "reasoning": {\n
+      "type": "string",\n "description": "Overall scheduling rationale"\n },\n "rateLimitedAgents":
+      {\n "type": "array",\n "items": {\n "type": "object",\n "properties": {\n "agentId": {\n
+      "type": "string"\n },\n "resumeAtMs": {\n "type": "number",\n "description": "Epoch ms when to
+      resume using this agent"\n }\n },\n "required": [\n "agentId",\n "resumeAtMs"\n ],\n
+      "additionalProperties": false\n },\n "description": "Agents the scheduler determines are
+      rate-limited"\n }\n },\n "required": [\n "jobs",\n "reasoning",\n "rateLimitedAgents"\n ],\n
+      "additionalProperties": false\n}\n\nOutput ONLY the raw JSON object, with no markdown fences
+      or prose.' outputFormat=stream-json eventType=completed eventEngine=claude-code ok=true
+      resume=null error=null hasUsage=false
+info  output format correction engine:schema-retry=0ms runId=corral-1791888131999
+      nodeId=ticket-scheduler workflowName=super-ralph-full iteration=14 attempt=2 schemaRetry=3
+      maxSchemaRetries=3 correctionKind=json-format resumedSession=false resumedCheckpoint=false
+info  agent session completed agent.generate=0ms runId=corral-1791888131999 nodeId=ticket-scheduler
+      workflowName=super-ralph-full iteration=14 attempt=2 agentEngine=claude-code
+      agentOperation=generate agentModel=openai/gpt-oss-20b
+      cwd=/home/toxic/.corral/runs/20261013-104211-prompt-aec208e6 timeoutMs=3600000
+      idleTimeoutMs=null hasMessages=false hasResumeSession=false promptBytes=9477
+      systemPromptBytes=31 agentCommand=claude agentArgs='--print
+      --allow-dangerously-skip-permissions --dangerously-skip-permissions --permission-mode
+      bypassPermissions --dangerously-skip-permissions --model openai/gpt-oss-20b --output-format
+      stream-json --system-prompt Plan and research next tickets. --verbose You were given this
+      task:\n\nYou are the **scheduler** for an AI-driven development workflow. You have 4 free
+      concurrency slots to fill with jobs.\n\n## Current Time\n2026-10-13T11:09:22.574Z\n\n##
+      Pipeline Summary\n- Completed (landed): 0\n- Active tickets: 19\n- Concurrency cap: 4\n-
+      Currently running jobs: 0\n- Free slots to fill: 4\n\n## Currently Running Jobs\n(no active
+      jobs)\n\n## Ticket State\n| ID | Title | Priority | Completed Stage | Schedule Next
+      (authoritative) | Landed | Report Done
+      |\n|----|-------|----------|-----------------|-------------------------------|--------|-------
+      ------|\n| FORENSICS-001 | Implement Failure Forensics and Log Recovery feature from scratch |
+      critical | report | ticket:report | ✗ | ✗ |\n| FORENSICS-002 | Create forensics specification
+      document | critical | report | ticket:report | ✗ | ✗ |\n| RCA-001 | Implement Root Cause
+      Analysis feature specification | critical | report | ticket:report | ✗ | ✗ |\n| RCA-002 |
+      Implement Root Cause Analysis API endpoints | critical | report | ticket:report | ✗ | ✗ |\n|
+      RCA-003 | Design and implement Root Cause Analysis database schema | critical | not_started |
+      ticket:research | ✗ | ✗ |\n| REMED-001 | Create Fix Proposal and Rebuild specification |
+      critical | not_started | ticket:research | ✗ | ✗ |\n| REMED-002 | Implement Fix Proposal API
+      endpoints | critical | not_started | ticket:research | ✗ | ✗ |\n| REMED-003 | Design and
+      implement remediation database schema | critical | not_started | ticket:research | ✗ | ✗ |\n|
+      FORENSICS-003 | Design forensics database schema | high | not_started | ticket:research | ✗ |
+      ✗ |\n| FORENSICS-004 | Implement forensics API routes | high | not_started | ticket:research |
+      ✗ | ✗ |\n| FORENSICS-005 | Add forensics test coverage | high | not_started | ticket:research
+      | ✗ | ✗ |\n| RCA-004 | Add test coverage for Root Cause Analysis | high | not_started |
+      ticket:research | ✗ | ✗ |\n| REMED-004 | Build jj-native integration for automated fixes |
+      high | not_started | ticket:research | ✗ | ✗ |\n| REMED-005 | Add comprehensive test suite for
+      remediation | high | not_started | ticket:research | ✗ | ✗ |\n| executor-forensic-analyzer |
+      Executor Forensic Analyzer Module | critical | not_started | ticket:research | ✗ | ✗ |\n|
+      root-cause-correlation-engine | Root Cause Correlation Engine | critical | not_started |
+      ticket:research | ✗ | ✗ |\n| remediation-playbook-generator | Automated Remediation Playbook
+      Generator | high | not_started | ticket:research | ✗ | ✗ |\n| executor-state-reconstructor |
+      Executor State Reconstructor | high | not_started | ticket:research | ✗ | ✗ |\n|
+      autopsy-reporting-dashboard | Autopsy Reporting Dashboard | medium | not_started |
+      ticket:research | ✗ | ✗ |\n\n## Agent Pool\n| Agent ID | Description
+      |\n|----------|-------------|\n| planning | Plan and research next tickets. |\n|
+      implementation | Implement with test-driven development and jj workflows. |\n| testing | Run
+      tests and validate behavior changes. |\n| reviewing | Review for regressions, spec drift, and
+      correctness. |\n| reporting | Write concise, accurate ticket status reports. |\n\n## Focus
+      Areas\n- forensics: Failure Forensics and Log Recovery\n- root-cause: Root Cause Analysis\n-
+      remediation: Fix Proposal and Rebuild\n\n## Job Types You Can Schedule\n\n### Ticket pipeline
+      jobs (require ticketId, focusId=null)\nEach ticket progresses through: research → plan →
+      implement → test → build-verify → spec-review → code-review → review-fix → report\n-
+      `ticket:research` — Research the ticket\'s domain and relevant code\n- `ticket:plan` — Create
+      implementation plan (requires research done)\n- `ticket:implement` — Write code (requires plan
+      done)\n- `ticket:test` — Run tests (requires implementation done)\n- `ticket:build-verify` —
+      Verify build passes (requires implementation done)\n- `ticket:spec-review` — Review against
+      specs (requires implementation done)\n- `ticket:code-review` — Code quality review (requires
+      implementation done)\n- `ticket:review-fix` — Fix review issues (requires reviews done with
+      issues)\n- `ticket:report` — Final status report (requires all above done)\n\n**The "Schedule
+      Next" column in the Ticket State table is authoritative and computed deterministically:
+      "Completed Stage" is the highest stage with finished output, and "Schedule Next" is the ONLY
+      pipeline job you may schedule for that ticket. NEVER schedule any other pipeline job for a
+      ticket — re-scheduling a completed stage is a bug, not progress. A "— (done)" ticket gets no
+      pipeline jobs.**\n\n### Global jobs (ticketId=null)\n- `discovery` — Find new tickets to work
+      on (focusId=null, jobId="discovery")\n- `progress-update` — Update progress file
+      (focusId=null, jobId="progress-update")\n- `codebase-review` — Review a focus area (requires
+      focusId, jobId="codebase-review:<focusId>")\n- `integration-test` — Run integration tests for
+      a category (requires focusId, jobId="integration-test:<focusId>")\n\n## Scheduling Rules\n\n1.
+      **Fill all 4 free slots.** Output exactly 4 jobs (or fewer only if there\'s genuinely nothing
+      useful to schedule).\n\n2. **Resume in-progress tickets first.** Tickets further in the
+      pipeline get priority — drive existing work to completion before starting new tickets.\n\n3.
+      **Schedule the authoritative NEXT stage.** Read the "Schedule Next (authoritative)" column for
+      each ticket and schedule exactly that jobType. Do not infer, substitute, or repeat a completed
+      stage. Example: Completed Stage "test" → schedule "ticket:build-verify", never
+      "ticket:test".\n\n4. **Load balance across agents.** Distribute work across ALL available
+      agents. Don\'t funnel everything through 1-2 favorites. Every agent should get work when there
+      are enough jobs.\n\n5. **Keep the ticket pipeline full.** If active tickets ≤ 8, schedule a
+      "discovery" job. The scheduler should never be starved for choices.\n\n6. **Rate limit
+      awareness.** If an agent is rate-limited, don\'t assign it. Include it in rateLimitedAgents
+      and spread its work to other agents.\n\n7. **Don\'t double-schedule.** Check the "Currently
+      Running Jobs" table — never schedule a job that\'s already running or a second pipeline job
+      for a ticket that already has one running.\n\n8. **Maximize cheap agents.** Use the cheapest
+      suitable agent for each task. Only escalate to expensive agents when the task genuinely
+      requires it.\n\n## Instructions\nOutput exactly the jobs to enqueue in the `jobs` array. Each
+      job fills one concurrency slot.\n\nYou previously completed it and produced this response
+      (possibly truncated):\n\n\n\nNow you MUST output ONLY a valid JSON object (no other text)
+      summarizing your work above, with exactly these fields and types:\n{\n "$schema":
+      "https://json-schema.org/draft/2020-12/schema",\n "type": "object",\n "properties": {\n
+      "jobs": {\n "type": "array",\n "items": {\n "type": "object",\n "properties": {\n "jobId": {\n
+      "type": "string",\n "description": "Stable unique ID (e.g. \'T-1:research\', \'discovery\',
+      \'codebase-review:cat-5\')"\n },\n "jobType": {\n "type": "string",\n "enum": [\n
+      "discovery",\n "progress-update",\n "codebase-review",\n "integration-test",\n
+      "ticket:research",\n "ticket:plan",\n "ticket:implement",\n "ticket:test",\n
+      "ticket:build-verify",\n "ticket:spec-review",\n "ticket:code-review",\n
+      "ticket:review-fix",\n "ticket:report"\n ],\n "description": "Type of job to schedule"\n },\n
+      "agentId": {\n "type": "string",\n "description": "Agent ID from the pool to assign"\n },\n
+      "ticketId": {\n "description": "Ticket ID for ticket pipeline jobs, null for global jobs",\n
+      "type": [\n "string",\n "null"\n ]\n },\n "focusId": {\n "description": "Focus/category ID for
+      codebase-review and integration-test jobs, null otherwise",\n "type": [\n "string",\n "null"\n
+      ]\n },\n "reason": {\n "type": "string",\n "description": "Brief reason for scheduling this
+      job with this agent"\n }\n },\n "required": [\n "jobId",\n "jobType",\n "agentId",\n
+      "ticketId",\n "focusId",\n "reason"\n ],\n "additionalProperties": false\n },\n "description":
+      "Flat list of jobs to enqueue — each occupies one concurrency slot"\n },\n "reasoning": {\n
+      "type": "string",\n "description": "Overall scheduling rationale"\n },\n "rateLimitedAgents":
+      {\n "type": "array",\n "items": {\n "type": "object",\n "properties": {\n "agentId": {\n
+      "type": "string"\n },\n "resumeAtMs": {\n "type": "number",\n "description": "Epoch ms when to
+      resume using this agent"\n }\n },\n "required": [\n "agentId",\n "resumeAtMs"\n ],\n
+      "additionalProperties": false\n },\n "description": "Agents the scheduler determines are
+      rate-limited"\n }\n },\n "required": [\n "jobs",\n "reasoning",\n "rateLimitedAgents"\n ],\n
+      "additionalProperties": false\n}\n\nOutput ONLY the raw JSON object, with no markdown fences
+      or prose.' outputFormat=stream-json eventType=completed eventEngine=claude-code ok=true
+      resume=null error=null hasUsage=false
+error task execution failed engine:task=0ms runId=corral-1791888131999 nodeId=ticket-scheduler
+      workflowName=super-ralph-full iteration=14 attempt=2 maxAttempts=3 error='No valid JSON output
+      found in agent response (finishReason=stop, textLength=0). Agent returned an empty response.
+      See https://smithers.sh/reference/errors'
+info  task scheduled for retry engine:task=0ms runId=corral-1791888131999 nodeId=ticket-scheduler
+      workflowName=super-ralph-full iteration=14 attempt=2 failedAttempt=2 nextAttempt=3
+info  Task "ticket-scheduler" has an output schema but engine "claude-code" does not support native
+      structured output. Falling back to prompt-injection + text JSON extraction. Schema validity
+      does not guarantee meaningful output — consider switching to an engine that declares
+      supportsNativeStructuredOutput=true (Anthropic, OpenAI). engine:task=0ms
+      runId=corral-1791888131999 nodeId=ticket-scheduler workflowName=super-ralph-full iteration=14
+      attempt=3 agentEngine=claude-code
+info  agent session completed agent.generate=0ms runId=corral-1791888131999 nodeId=ticket-scheduler
+      workflowName=super-ralph-full iteration=14 attempt=3 agentEngine=claude-code
+      agentOperation=generate agentModel=openai/gpt-oss-20b
+      cwd=/home/toxic/.corral/runs/20261013-104211-prompt-aec208e6 timeoutMs=3600000
+      idleTimeoutMs=null hasMessages=false hasResumeSession=false promptBytes=9650
+      systemPromptBytes=31 agentCommand=claude agentArgs='--print
+      --allow-dangerously-skip-permissions --dangerously-skip-permissions --permission-mode
+      bypassPermissions --dangerously-skip-permissions --model openai/gpt-oss-20b --output-format
+      stream-json --system-prompt Plan and research next tickets. --verbose IMPORTANT: After
+      completing the task below, you MUST output ONLY a raw JSON object. Do NOT wrap it in markdown
+      or add any prose — the workflow fails without it.\n\nYou are the **scheduler** for an
+      AI-driven development workflow. You have 4 free concurrency slots to fill with jobs.\n\n##
+      Current Time\n2026-10-13T11:09:22.574Z\n\n## Pipeline Summary\n- Completed (landed): 0\n-
+      Active tickets: 19\n- Concurrency cap: 4\n- Currently running jobs: 0\n- Free slots to fill:
+      4\n\n## Currently Running Jobs\n(no active jobs)\n\n## Ticket State\n| ID | Title | Priority |
+      Completed Stage | Schedule Next (authoritative) | Landed | Report Done
+      |\n|----|-------|----------|-----------------|-------------------------------|--------|-------
+      ------|\n| FORENSICS-001 | Implement Failure Forensics and Log Recovery feature from scratch |
+      critical | report | ticket:report | ✗ | ✗ |\n| FORENSICS-002 | Create forensics specification
+      document | critical | report | ticket:report | ✗ | ✗ |\n| RCA-001 | Implement Root Cause
+      Analysis feature specification | critical | report | ticket:report | ✗ | ✗ |\n| RCA-002 |
+      Implement Root Cause Analysis API endpoints | critical | report | ticket:report | ✗ | ✗ |\n|
+      RCA-003 | Design and implement Root Cause Analysis database schema | critical | not_started |
+      ticket:research | ✗ | ✗ |\n| REMED-001 | Create Fix Proposal and Rebuild specification |
+      critical | not_started | ticket:research | ✗ | ✗ |\n| REMED-002 | Implement Fix Proposal API
+      endpoints | critical | not_started | ticket:research | ✗ | ✗ |\n| REMED-003 | Design and
+      implement remediation database schema | critical | not_started | ticket:research | ✗ | ✗ |\n|
+      FORENSICS-003 | Design forensics database schema | high | not_started | ticket:research | ✗ |
+      ✗ |\n| FORENSICS-004 | Implement forensics API routes | high | not_started | ticket:research |
+      ✗ | ✗ |\n| FORENSICS-005 | Add forensics test coverage | high | not_started | ticket:research
+      | ✗ | ✗ |\n| RCA-004 | Add test coverage for Root Cause Analysis | high | not_started |
+      ticket:research | ✗ | ✗ |\n| REMED-004 | Build jj-native integration for automated fixes |
+      high | not_started | ticket:research | ✗ | ✗ |\n| REMED-005 | Add comprehensive test suite for
+      remediation | high | not_started | ticket:research | ✗ | ✗ |\n| executor-forensic-analyzer |
+      Executor Forensic Analyzer Module | critical | not_started | ticket:research | ✗ | ✗ |\n|
+      root-cause-correlation-engine | Root Cause Correlation Engine | critical | not_started |
+      ticket:research | ✗ | ✗ |\n| remediation-playbook-generator | Automated Remediation Playbook
+      Generator | high | not_started | ticket:research | ✗ | ✗ |\n| executor-state-reconstructor |
+      Executor State Reconstructor | high | not_started | ticket:research | ✗ | ✗ |\n|
+      autopsy-reporting-dashboard | Autopsy Reporting Dashboard | medium | not_started |
+      ticket:research | ✗ | ✗ |\n\n## Agent Pool\n| Agent ID | Description
+      |\n|----------|-------------|\n| planning | Plan and research next tickets. |\n|
+      implementation | Implement with test-driven development and jj workflows. |\n| testing | Run
+      tests and validate behavior changes. |\n| reviewing | Review for regressions, spec drift, and
+      correctness. |\n| reporting | Write concise, accurate ticket status reports. |\n\n## Focus
+      Areas\n- forensics: Failure Forensics and Log Recovery\n- root-cause: Root Cause Analysis\n-
+      remediation: Fix Proposal and Rebuild\n\n## Job Types You Can Schedule\n\n### Ticket pipeline
+      jobs (require ticketId, focusId=null)\nEach ticket progresses through: research → plan →
+      implement → test → build-verify → spec-review → code-review → review-fix → report\n-
+      `ticket:research` — Research the ticket\'s domain and relevant code\n- `ticket:plan` — Create
+      implementation plan (requires research done)\n- `ticket:implement` — Write code (requires plan
+      done)\n- `ticket:test` — Run tests (requires implementation done)\n- `ticket:build-verify` —
+      Verify build passes (requires implementation done)\n- `ticket:spec-review` — Review against
+      specs (requires implementation done)\n- `ticket:code-review` — Code quality review (requires
+      implementation done)\n- `ticket:review-fix` — Fix review issues (requires reviews done with
+      issues)\n- `ticket:report` — Final status report (requires all above done)\n\n**The "Schedule
+      Next" column in the Ticket State table is authoritative and computed deterministically:
+      "Completed Stage" is the highest stage with finished output, and "Schedule Next" is the ONLY
+      pipeline job you may schedule for that ticket. NEVER schedule any other pipeline job for a
+      ticket — re-scheduling a completed stage is a bug, not progress. A "— (done)" ticket gets no
+      pipeline jobs.**\n\n### Global jobs (ticketId=null)\n- `discovery` — Find new tickets to work
+      on (focusId=null, jobId="discovery")\n- `progress-update` — Update progress file
+      (focusId=null, jobId="progress-update")\n- `codebase-review` — Review a focus area (requires
+      focusId, jobId="codebase-review:<focusId>")\n- `integration-test` — Run integration tests for
+      a category (requires focusId, jobId="integration-test:<focusId>")\n\n## Scheduling Rules\n\n1.
+      **Fill all 4 free slots.** Output exactly 4 jobs (or fewer only if there\'s genuinely nothing
+      useful to schedule).\n\n2. **Resume in-progress tickets first.** Tickets further in the
+      pipeline get priority — drive existing work to completion before starting new tickets.\n\n3.
+      **Schedule the authoritative NEXT stage.** Read the "Schedule Next (authoritative)" column for
+      each ticket and schedule exactly that jobType. Do not infer, substitute, or repeat a completed
+      stage. Example: Completed Stage "test" → schedule "ticket:build-verify", never
+      "ticket:test".\n\n4. **Load balance across agents.** Distribute work across ALL available
+      agents. Don\'t funnel everything through 1-2 favorites. Every agent should get work when there
+      are enough jobs.\n\n5. **Keep the ticket pipeline full.** If active tickets ≤ 8, schedule a
+      "discovery" job. The scheduler should never be starved for choices.\n\n6. **Rate limit
+      awareness.** If an agent is rate-limited, don\'t assign it. Include it in rateLimitedAgents
+      and spread its work to other agents.\n\n7. **Don\'t double-schedule.** Check the "Currently
+      Running Jobs" table — never schedule a job that\'s already running or a second pipeline job
+      for a ticket that already has one running.\n\n8. **Maximize cheap agents.** Use the cheapest
+      suitable agent for each task. Only escalate to expensive agents when the task genuinely
+      requires it.\n\n## Instructions\nOutput exactly the jobs to enqueue in the `jobs` array. Each
+      job fills one concurrency slot.\n\n\n**REQUIRED OUTPUT** — You MUST return ONLY a raw JSON
+      object matching this schema:\n{\n "$schema": "https://json-schema.org/draft/2020-12/schema",\n
+      "type": "object",\n "properties": {\n "jobs": {\n "type": "array",\n "items": {\n "type":
+      "object",\n "properties": {\n "jobId": {\n "type": "string",\n "description": "Stable unique
+      ID (e.g. \'T-1:research\', \'discovery\', \'codebase-review:cat-5\')"\n },\n "jobType": {\n
+      "type": "string",\n "enum": [\n "discovery",\n "progress-update",\n "codebase-review",\n
+      "integration-test",\n "ticket:research",\n "ticket:plan",\n "ticket:implement",\n
+      "ticket:test",\n "ticket:build-verify",\n "ticket:spec-review",\n "ticket:code-review",\n
+      "ticket:review-fix",\n "ticket:report"\n ],\n "description": "Type of job to schedule"\n },\n
+      "agentId": {\n "type": "string",\n "description": "Agent ID from the pool to assign"\n },\n
+      "ticketId": {\n "description": "Ticket ID for ticket pipeline jobs, null for global jobs",\n
+      "type": [\n "string",\n "null"\n ]\n },\n "focusId": {\n "description": "Focus/category ID for
+      codebase-review and integration-test jobs, null otherwise",\n "type": [\n "string",\n "null"\n
+      ]\n },\n "reason": {\n "type": "string",\n "description": "Brief reason for scheduling this
+      job with this agent"\n }\n },\n "required": [\n "jobId",\n "jobType",\n "agentId",\n
+      "ticketId",\n "focusId",\n "reason"\n ],\n "additionalProperties": false\n },\n "description":
+      "Flat list of jobs to enqueue — each occupies one concurrency slot"\n },\n "reasoning": {\n
+      "type": "string",\n "description": "Overall scheduling rationale"\n },\n "rateLimitedAgents":
+      {\n "type": "array",\n "items": {\n "type": "object",\n "properties": {\n "agentId": {\n
+      "type": "string"\n },\n "resumeAtMs": {\n "type": "number",\n "description": "Epoch ms when to
+      resume using this agent"\n }\n },\n "required": [\n "agentId",\n "resumeAtMs"\n ],\n
+      "additionalProperties": false\n },\n "description": "Agents the scheduler determines are
+      rate-limited"\n }\n },\n "required": [\n "jobs",\n "reasoning",\n "rateLimitedAgents"\n ],\n
+      "additionalProperties": false\n}\nDo not include prose, markdown, headings, commentary, or
+      code fences.\nThe first character of your response must be `{` and the last character must be
+      `}`.\nThe workflow will fail unless the entire response is the JSON object.'
+      outputFormat=stream-json eventType=completed eventEngine=claude-code ok=true resume=null
+      error=null hasUsage=false
+warn  {"category":"agent-trace","payload":{"text":"direct_model_call failed: HTTP Error 401:
+      Unauthorized\n"},"raw":"direct_model_call failed: HTTP Error 401:
+      Unauthorized\n","redaction":{"applied":false,"ruleIds":[]},"annotations":{}} agent-trace=0ms
+      runId=corral-1791888131999 nodeId=ticket-scheduler workflowName=super-ralph-full iteration=14
+      attempt=3 smithers.event.category=agent-trace smithers.trace.version=1
+      run.id=corral-1791888131999
+      workflow.path=/home/toxic/.corral/runs/20261013-104211-prompt-aec208e6/.corral/workflow.tsx
+      workflow.hash=04ad5dfeab3728adbb765211e2fd16be877d852f807dcaca62106ec318e2e45c
+      node.id=ticket-scheduler node.iteration=14 node.attempt=3 agent.family=claude-code
+      agent.id=c92c1055-0e20-458f-9a2b-0a9f092385e1 agent.model=openai/gpt-oss-20b
+      agent.capture_mode=cli-text trace.completeness=final-only event.kind=stderr
+      event.phase=capture event.sequence=0 source.raw_type=stderr source.raw_event_id=stderr:0
+      source.observed=true
+info  output format correction engine:schema-retry=0ms runId=corral-1791888131999
+      nodeId=ticket-scheduler workflowName=super-ralph-full iteration=14 attempt=3 schemaRetry=1
+      maxSchemaRetries=3 correctionKind=json-format resumedSession=false resumedCheckpoint=false
+info  agent session completed agent.generate=0ms runId=corral-1791888131999 nodeId=ticket-scheduler
+      workflowName=super-ralph-full iteration=14 attempt=3 agentEngine=claude-code
+      agentOperation=generate agentModel=openai/gpt-oss-20b
+      cwd=/home/toxic/.corral/runs/20261013-104211-prompt-aec208e6 timeoutMs=3600000
+      idleTimeoutMs=null hasMessages=false hasResumeSession=false promptBytes=9477
+      systemPromptBytes=31 agentCommand=claude agentArgs='--print
+      --allow-dangerously-skip-permissions --dangerously-skip-permissions --permission-mode
+      bypassPermissions --dangerously-skip-permissions --model openai/gpt-oss-20b --output-format
+      stream-json --system-prompt Plan and research next tickets. --verbose You were given this
+      task:\n\nYou are the **scheduler** for an AI-driven development workflow. You have 4 free
+      concurrency slots to fill with jobs.\n\n## Current Time\n2026-10-13T11:09:22.574Z\n\n##
+      Pipeline Summary\n- Completed (landed): 0\n- Active tickets: 19\n- Concurrency cap: 4\n-
+      Currently running jobs: 0\n- Free slots to fill: 4\n\n## Currently Running Jobs\n(no active
+      jobs)\n\n## Ticket State\n| ID | Title | Priority | Completed Stage | Schedule Next
+      (authoritative) | Landed | Report Done
+      |\n|----|-------|----------|-----------------|-------------------------------|--------|-------
+      ------|\n| FORENSICS-001 | Implement Failure Forensics and Log Recovery feature from scratch |
+      critical | report | ticket:report | ✗ | ✗ |\n| FORENSICS-002 | Create forensics specification
+      document | critical | report | ticket:report | ✗ | ✗ |\n| RCA-001 | Implement Root Cause
+      Analysis feature specification | critical | report | ticket:report | ✗ | ✗ |\n| RCA-002 |
+      Implement Root Cause Analysis API endpoints | critical | report | ticket:report | ✗ | ✗ |\n|
+      RCA-003 | Design and implement Root Cause Analysis database schema | critical | not_started |
+      ticket:research | ✗ | ✗ |\n| REMED-001 | Create Fix Proposal and Rebuild specification |
+      critical | not_started | ticket:research | ✗ | ✗ |\n| REMED-002 | Implement Fix Proposal API
+      endpoints | critical | not_started | ticket:research | ✗ | ✗ |\n| REMED-003 | Design and
+      implement remediation database schema | critical | not_started | ticket:research | ✗ | ✗ |\n|
+      FORENSICS-003 | Design forensics database schema | high | not_started | ticket:research | ✗ |
+      ✗ |\n| FORENSICS-004 | Implement forensics API routes | high | not_started | ticket:research |
+      ✗ | ✗ |\n| FORENSICS-005 | Add forensics test coverage | high | not_started | ticket:research
+      | ✗ | ✗ |\n| RCA-004 | Add test coverage for Root Cause Analysis | high | not_started |
+      ticket:research | ✗ | ✗ |\n| REMED-004 | Build jj-native integration for automated fixes |
+      high | not_started | ticket:research | ✗ | ✗ |\n| REMED-005 | Add comprehensive test suite for
+      remediation | high | not_started | ticket:research | ✗ | ✗ |\n| executor-forensic-analyzer |
+      Executor Forensic Analyzer Module | critical | not_started | ticket:research | ✗ | ✗ |\n|
+      root-cause-correlation-engine | Root Cause Correlation Engine | critical | not_started |
+      ticket:research | ✗ | ✗ |\n| remediation-playbook-generator | Automated Remediation Playbook
+      Generator | high | not_started | ticket:research | ✗ | ✗ |\n| executor-state-reconstructor |
+      Executor State Reconstructor | high | not_started | ticket:research | ✗ | ✗ |\n|
+      autopsy-reporting-dashboard | Autopsy Reporting Dashboard | medium | not_started |
+      ticket:research | ✗ | ✗ |\n\n## Agent Pool\n| Agent ID | Description
+      |\n|----------|-------------|\n| planning | Plan and research next tickets. |\n|
+      implementation | Implement with test-driven development and jj workflows. |\n| testing | Run
+      tests and validate behavior changes. |\n| reviewing | Review for regressions, spec drift, and
+      correctness. |\n| reporting | Write concise, accurate ticket status reports. |\n\n## Focus
+      Areas\n- forensics: Failure Forensics and Log Recovery\n- root-cause: Root Cause Analysis\n-
+      remediation: Fix Proposal and Rebuild\n\n## Job Types You Can Schedule\n\n### Ticket pipeline
+      jobs (require ticketId, focusId=null)\nEach ticket progresses through: research → plan →
+      implement → test → build-verify → spec-review → code-review → review-fix → report\n-
+      `ticket:research` — Research the ticket\'s domain and relevant code\n- `ticket:plan` — Create
+      implementation plan (requires research done)\n- `ticket:implement` — Write code (requires plan
+      done)\n- `ticket:test` — Run tests (requires implementation done)\n- `ticket:build-verify` —
+      Verify build passes (requires implementation done)\n- `ticket:spec-review` — Review against
+      specs (requires implementation done)\n- `ticket:code-review` — Code quality review (requires
+      implementation done)\n- `ticket:review-fix` — Fix review issues (requires reviews done with
+      issues)\n- `ticket:report` — Final status report (requires all above done)\n\n**The "Schedule
+      Next" column in the Ticket State table is authoritative and computed deterministically:
+      "Completed Stage" is the highest stage with finished output, and "Schedule Next" is the ONLY
+      pipeline job you may schedule for that ticket. NEVER schedule any other pipeline job for a
+      ticket — re-scheduling a completed stage is a bug, not progress. A "— (done)" ticket gets no
+      pipeline jobs.**\n\n### Global jobs (ticketId=null)\n- `discovery` — Find new tickets to work
+      on (focusId=null, jobId="discovery")\n- `progress-update` — Update progress file
+      (focusId=null, jobId="progress-update")\n- `codebase-review` — Review a focus area (requires
+      focusId, jobId="codebase-review:<focusId>")\n- `integration-test` — Run integration tests for
+      a category (requires focusId, jobId="integration-test:<focusId>")\n\n## Scheduling Rules\n\n1.
+      **Fill all 4 free slots.** Output exactly 4 jobs (or fewer only if there\'s genuinely nothing
+      useful to schedule).\n\n2. **Resume in-progress tickets first.** Tickets further in the
+      pipeline get priority — drive existing work to completion before starting new tickets.\n\n3.
+      **Schedule the authoritative NEXT stage.** Read the "Schedule Next (authoritative)" column for
+      each ticket and schedule exactly that jobType. Do not infer, substitute, or repeat a completed
+      stage. Example: Completed Stage "test" → schedule "ticket:build-verify", never
+      "ticket:test".\n\n4. **Load balance across agents.** Distribute work across ALL available
+      agents. Don\'t funnel everything through 1-2 favorites. Every agent should get work when there
+      are enough jobs.\n\n5. **Keep the ticket pipeline full.** If active tickets ≤ 8, schedule a
+      "discovery" job. The scheduler should never be starved for choices.\n\n6. **Rate limit
+      awareness.** If an agent is rate-limited, don\'t assign it. Include it in rateLimitedAgents
+      and spread its work to other agents.\n\n7. **Don\'t double-schedule.** Check the "Currently
+      Running Jobs" table — never schedule a job that\'s already running or a second pipeline job
+      for a ticket that already has one running.\n\n8. **Maximize cheap agents.** Use the cheapest
+      suitable agent for each task. Only escalate to expensive agents when the task genuinely
+      requires it.\n\n## Instructions\nOutput exactly the jobs to enqueue in the `jobs` array. Each
+      job fills one concurrency slot.\n\nYou previously completed it and produced this response
+      (possibly truncated):\n\n\n\nNow you MUST output ONLY a valid JSON object (no other text)
+      summarizing your work above, with exactly these fields and types:\n{\n "$schema":
+      "https://json-schema.org/draft/2020-12/schema",\n "type": "object",\n "properties": {\n
+      "jobs": {\n "type": "array",\n "items": {\n "type": "object",\n "properties": {\n "jobId": {\n
+      "type": "string",\n "description": "Stable unique ID (e.g. \'T-1:research\', \'discovery\',
+      \'codebase-review:cat-5\')"\n },\n "jobType": {\n "type": "string",\n "enum": [\n
+      "discovery",\n "progress-update",\n "codebase-review",\n "integration-test",\n
+      "ticket:research",\n "ticket:plan",\n "ticket:implement",\n "ticket:test",\n
+      "ticket:build-verify",\n "ticket:spec-review",\n "ticket:code-review",\n
+      "ticket:review-fix",\n "ticket:report"\n ],\n "description": "Type of job to schedule"\n },\n
+      "agentId": {\n "type": "string",\n "description": "Agent ID from the pool to assign"\n },\n
+      "ticketId": {\n "description": "Ticket ID for ticket pipeline jobs, null for global jobs",\n
+      "type": [\n "string",\n "null"\n ]\n },\n "focusId": {\n "description": "Focus/category ID for
+      codebase-review and integration-test jobs, null otherwise",\n "type": [\n "string",\n "null"\n
+      ]\n },\n "reason": {\n "type": "string",\n "description": "Brief reason for scheduling this
+      job with this agent"\n }\n },\n "required": [\n "jobId",\n "jobType",\n "agentId",\n
+      "ticketId",\n "focusId",\n "reason"\n ],\n "additionalProperties": false\n },\n "description":
+      "Flat list of jobs to enqueue — each occupies one concurrency slot"\n },\n "reasoning": {\n
+      "type": "string",\n "description": "Overall scheduling rationale"\n },\n "rateLimitedAgents":
+      {\n "type": "array",\n "items": {\n "type": "object",\n "properties": {\n "agentId": {\n
+      "type": "string"\n },\n "resumeAtMs": {\n "type": "number",\n "description": "Epoch ms when to
+      resume using this agent"\n }\n },\n "required": [\n "agentId",\n "resumeAtMs"\n ],\n
+      "additionalProperties": false\n },\n "description": "Agents the scheduler determines are
+      rate-limited"\n }\n },\n "required": [\n "jobs",\n "reasoning",\n "rateLimitedAgents"\n ],\n
+      "additionalProperties": false\n}\n\nOutput ONLY the raw JSON object, with no markdown fences
+      or prose.' outputFormat=stream-json eventType=completed eventEngine=claude-code ok=true
+      resume=null error=null hasUsage=false
+info  output format correction engine:schema-retry=0ms runId=corral-1791888131999
+      nodeId=ticket-scheduler workflowName=super-ralph-full iteration=14 attempt=3 schemaRetry=2
+      maxSchemaRetries=3 correctionKind=json-format resumedSession=false resumedCheckpoint=false
+
+
+--- partial stderr (truncated) ---
+No valid JSON output found in agent response (finishReason=stop, textLength=0). Agent returned an empty response. See https://smithers.sh/reference/errors
+[00:20:27] ↻ RCA-001:report retrying (attempt 2)
+[00:20:28] → RCA-001:report (attempt 2, iteration 10)
+[00:20:29] ✓ RCA-002:report (attempt 1)
+[00:20:32] ✓ FORENSICS-001:report (attempt 1)
+[00:20:44] ✓ RCA-001:report (attempt 2)
+[00:21:15] ✓ FORENSICS-002:report (attempt 2)
+[00:21:15] → ticket-scheduler (attempt 1, iteration 11)
+[00:22:35] ✓ ticket-scheduler (attempt 1)
+[00:22:35] → ticket-scheduler (attempt 1, iteration 12)
+[00:22:37] ✗ ticket-scheduler (attempt 1): No valid JSON output found in agent response (finishReason=stop, textLength=0). Agent returned an empty response. See https://smithers.sh/reference/errors
+[00:22:37] ↻ ticket-scheduler retrying (attempt 2)
+[00:22:38] → ticket-scheduler (attempt 2, iteration 12)
+[00:22:39] ✗ ticket-scheduler (attempt 2): No valid JSON output found in agent response (finishReason=stop, textLength=0). Agent returned an empty response. See https://smithers.sh/reference/errors
+[00:22:39] ↻ ticket-scheduler retrying (attempt 3)
+[00:22:41] → ticket-scheduler (attempt 3, iteration 12)
+[00:23:59] ✓ ticket-scheduler (attempt 3)
+[00:23:59] → ticket-scheduler (attempt 1, iteration 13)
+[00:27:09] ✓ ticket-scheduler (attempt 1)
+[00:27:09] → ticket-scheduler (attempt 1, iteration 14)
+[00:27:11] ✗ ticket-scheduler (attempt 1): No valid JSON output found in agent response (finishReason=stop, textLength=0). Agent returned an empty response. See https://smithers.sh/reference/errors
+[00:27:11] ↻ ticket-scheduler retrying (attempt 2)
+[00:27:12] → ticket-scheduler (attempt 2, iteration 14)
+[00:27:14] ✗ ticket-scheduler (attempt 2): No valid JSON output found in agent response (finishReason=stop, textLength=0). Agent returned an empty response. See https://smithers.sh/reference/errors
+[00:27:14] ↻ ticket-scheduler retrying (attempt 3)
+[00:27:16] → ticket-scheduler (attempt 3, iteration 14)

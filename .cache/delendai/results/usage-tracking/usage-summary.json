@@ -1,0 +1,445 @@
+{
+	"updatedAt": "2026-10-25T18:10:04.759Z",
+	"windowDays": 7,
+	"totals": {
+		"calls": 6,
+		"inputTokens": 0,
+		"outputTokens": 0,
+		"totalTokens": 0,
+		"costUsd": 0,
+		"tokensSaved": 0,
+		"savingsPercent": 0,
+		"errors": 0,
+		"autoBypassed": 0
+	},
+	"byProvider": [
+		{
+			"key": "unknown",
+			"calls": 6,
+			"inputTokens": 0,
+			"outputTokens": 0,
+			"totalTokens": 0,
+			"costUsd": 0,
+			"tokensSaved": 0,
+			"savingsPercent": 0,
+			"errors": 0,
+			"autoBypassed": 0
+		}
+	],
+	"byPlugin": [
+		{
+			"key": "core",
+			"calls": 5,
+			"inputTokens": 0,
+			"outputTokens": 0,
+			"totalTokens": 0,
+			"costUsd": 0,
+			"tokensSaved": 0,
+			"savingsPercent": 0,
+			"errors": 0,
+			"autoBypassed": 0
+		},
+		{
+			"key": "search",
+			"calls": 1,
+			"inputTokens": 0,
+			"outputTokens": 0,
+			"totalTokens": 0,
+			"costUsd": 0,
+			"tokensSaved": 0,
+			"savingsPercent": 0,
+			"errors": 0,
+			"autoBypassed": 0
+		}
+	],
+	"byAgent": [
+		{
+			"key": "unknown",
+			"calls": 6,
+			"inputTokens": 0,
+			"outputTokens": 0,
+			"totalTokens": 0,
+			"costUsd": 0,
+			"tokensSaved": 0,
+			"savingsPercent": 0,
+			"errors": 0,
+			"autoBypassed": 0
+		}
+	],
+	"byExtension": [
+		{
+			"key": "unknown",
+			"calls": 6,
+			"inputTokens": 0,
+			"outputTokens": 0,
+			"totalTokens": 0,
+			"costUsd": 0,
+			"tokensSaved": 0,
+			"savingsPercent": 0,
+			"errors": 0,
+			"autoBypassed": 0
+		}
+	],
+	"pluginKpis": [
+		{
+			"plugin": "core",
+			"observedCalls": 5,
+			"observedSessions": 5,
+			"tokenTax": {
+				"plugin": "core",
+				"staticSchemaBytes": 2048,
+				"compactTypicalBytes": 605,
+				"p95ResponseBytes": 605,
+				"estimated": false,
+				"observedToolCount": 2,
+				"observedResponseSamples": 5,
+				"sources": {
+					"staticSchemaBytes": "derived-from-observed-distinct-tools",
+					"compactTypicalBytes": "observed-response-bytes-p50",
+					"p95ResponseBytes": "observed-response-bytes-p95"
+				},
+				"totalBytes": 3258
+			},
+			"utilityPer1kTokens": 1.0231,
+			"kpis": {
+				"schemaBytes": 2048,
+				"invocationRatePerDay": 2.7575,
+				"successContribution": 0.8333,
+				"responseBytesP50": 605,
+				"responseBytesP95": 605,
+				"latencyMsP50": 2,
+				"latencyMsP95": 13,
+				"toolErrorRate": 0,
+				"pluginActivationRate": 0.8333,
+				"dynamicActivationSavingsBytes": 2048,
+				"memoryCompactionSavingsTokens": 0,
+				"contextRehydrationEffectiveness": null,
+				"contextRehydrationEffectivenessNote": "usage-tracking does not record a resume-success signal after rehydration; only raw invocation metadata is available locally.",
+				"privacyGateBlockedReportCount": null,
+				"privacyGateBlockedReportCountNote": "usage-tracking does not currently emit a local blocked-report counter, so this KPI remains intentionally null."
+			}
+		},
+		{
+			"plugin": "search",
+			"observedCalls": 1,
+			"observedSessions": 1,
+			"tokenTax": {
+				"plugin": "search",
+				"staticSchemaBytes": 1408,
+				"compactTypicalBytes": 1511,
+				"p95ResponseBytes": 1511,
+				"estimated": false,
+				"observedToolCount": 1,
+				"observedResponseSamples": 1,
+				"sources": {
+					"staticSchemaBytes": "derived-from-observed-distinct-tools",
+					"compactTypicalBytes": "observed-response-bytes-p50",
+					"p95ResponseBytes": "observed-response-bytes-p95"
+				},
+				"totalBytes": 4430
+			},
+			"utilityPer1kTokens": 0.1505,
+			"kpis": {
+				"schemaBytes": 1408,
+				"invocationRatePerDay": 0.5515,
+				"successContribution": 0.1667,
+				"responseBytesP50": 1511,
+				"responseBytesP95": 1511,
+				"latencyMsP50": 6,
+				"latencyMsP95": 6,
+				"toolErrorRate": 0,
+				"pluginActivationRate": 0.1667,
+				"dynamicActivationSavingsBytes": 7040,
+				"memoryCompactionSavingsTokens": 0,
+				"contextRehydrationEffectiveness": null,
+				"contextRehydrationEffectivenessNote": "usage-tracking does not record a resume-success signal after rehydration; only raw invocation metadata is available locally.",
+				"privacyGateBlockedReportCount": null,
+				"privacyGateBlockedReportCountNote": "usage-tracking does not currently emit a local blocked-report counter, so this KPI remains intentionally null."
+			}
+		}
+	],
+	"kpis": {
+		"coldStartCostBytes": 3456,
+		"coldStartCostTokens": 864,
+		"coldStartCostNote": "Derived from observed plugins only. Unloaded or never-invoked plugins are intentionally invisible to this local aggregate.",
+		"invocationRatePerDay": 3.3089,
+		"successfulCallRate": 1,
+		"responseBytesP50": 605,
+		"responseBytesP95": 1511,
+		"latencyMsP50": 2,
+		"latencyMsP95": 13,
+		"toolErrorRate": 0,
+		"averagePluginActivationRate": 0.5,
+		"dynamicActivationSavingsBytes": 9088,
+		"memoryCompactionSavingsTokens": 0,
+		"memoryCompactionSavingsNote": "Summed from locally stamped tokensSaved counters only; usage-tracking never inspects prompts, args or outputs.",
+		"contextRehydrationEffectiveness": null,
+		"contextRehydrationEffectivenessNote": "No local signal links a rehydration event to subsequent task success, so this KPI remains intentionally null.",
+		"privacyGateBlockedReportCount": null,
+		"privacyGateBlockedReportCountNote": "No local blocked-report counter is emitted today, so this KPI remains intentionally null."
+	},
+	"autoBypassed": 0,
+	"limitsStatus": {
+		"sessionSpendUsd": 0,
+		"sessionLimitUsd": null,
+		"sessionLimitPct": null,
+		"monthlySpendUsd": 0,
+		"monthlyLimitUsd": null,
+		"monthlyLimitPct": null,
+		"breached": null
+	},
+	"degradations": [],
+	"invocationTelemetry": {
+		"generatedAt": "2026-10-25T18:10:04.759Z",
+		"windowDays": 7,
+		"totals": {
+			"calls": 6,
+			"successfulCalls": 6,
+			"failedCalls": 0,
+			"retries": 0,
+			"iterationsObserved": 0,
+			"inputTokens": 0,
+			"outputTokens": 0,
+			"totalTokens": 0,
+			"costUsd": 0,
+			"averageLatencyMs": 5.667,
+			"p50LatencyMs": 2,
+			"p95LatencyMs": 13,
+			"withCorrelation": 0,
+			"schemaIncongruences": 0
+		},
+		"byPlugin": [
+			{
+				"key": "core",
+				"calls": 5,
+				"successfulCalls": 5,
+				"failedCalls": 0,
+				"retries": 0,
+				"iterationsObserved": 0,
+				"inputTokens": 0,
+				"outputTokens": 0,
+				"totalTokens": 0,
+				"costUsd": 0,
+				"averageLatencyMs": 5.6,
+				"p50LatencyMs": 2,
+				"p95LatencyMs": 13,
+				"lastSeenAt": "2026-10-22T23:42:42.665Z",
+				"latestCorrelationId": null,
+				"latestError": null
+			},
+			{
+				"key": "search",
+				"calls": 1,
+				"successfulCalls": 1,
+				"failedCalls": 0,
+				"retries": 0,
+				"iterationsObserved": 0,
+				"inputTokens": 0,
+				"outputTokens": 0,
+				"totalTokens": 0,
+				"costUsd": 0,
+				"averageLatencyMs": 6,
+				"p50LatencyMs": 6,
+				"p95LatencyMs": 6,
+				"lastSeenAt": "2026-10-21T04:24:18.670Z",
+				"latestCorrelationId": null,
+				"latestError": null
+			}
+		],
+		"byTool": [
+			{
+				"key": "core/status",
+				"calls": 3,
+				"successfulCalls": 3,
+				"failedCalls": 0,
+				"retries": 0,
+				"iterationsObserved": 0,
+				"inputTokens": 0,
+				"outputTokens": 0,
+				"totalTokens": 0,
+				"costUsd": 0,
+				"averageLatencyMs": 1.333,
+				"p50LatencyMs": 1,
+				"p95LatencyMs": 2,
+				"lastSeenAt": "2026-10-22T23:42:42.665Z",
+				"latestCorrelationId": null,
+				"latestError": null
+			},
+			{
+				"key": "core/overview",
+				"calls": 2,
+				"successfulCalls": 2,
+				"failedCalls": 0,
+				"retries": 0,
+				"iterationsObserved": 0,
+				"inputTokens": 0,
+				"outputTokens": 0,
+				"totalTokens": 0,
+				"costUsd": 0,
+				"averageLatencyMs": 12,
+				"p50LatencyMs": 11,
+				"p95LatencyMs": 13,
+				"lastSeenAt": "2026-10-22T23:21:11.172Z",
+				"latestCorrelationId": null,
+				"latestError": null
+			},
+			{
+				"key": "search/search",
+				"calls": 1,
+				"successfulCalls": 1,
+				"failedCalls": 0,
+				"retries": 0,
+				"iterationsObserved": 0,
+				"inputTokens": 0,
+				"outputTokens": 0,
+				"totalTokens": 0,
+				"costUsd": 0,
+				"averageLatencyMs": 6,
+				"p50LatencyMs": 6,
+				"p95LatencyMs": 6,
+				"lastSeenAt": "2026-10-21T04:24:18.670Z",
+				"latestCorrelationId": null,
+				"latestError": null
+			}
+		],
+		"byModel": [
+			{
+				"key": "unattributed",
+				"calls": 6,
+				"successfulCalls": 6,
+				"failedCalls": 0,
+				"retries": 0,
+				"iterationsObserved": 0,
+				"inputTokens": 0,
+				"outputTokens": 0,
+				"totalTokens": 0,
+				"costUsd": 0,
+				"averageLatencyMs": 5.667,
+				"p50LatencyMs": 2,
+				"p95LatencyMs": 13,
+				"lastSeenAt": "2026-10-22T23:42:42.665Z",
+				"latestCorrelationId": null,
+				"latestError": null
+			}
+		],
+		"byAgent": [
+			{
+				"key": "unknown",
+				"calls": 6,
+				"successfulCalls": 6,
+				"failedCalls": 0,
+				"retries": 0,
+				"iterationsObserved": 0,
+				"inputTokens": 0,
+				"outputTokens": 0,
+				"totalTokens": 0,
+				"costUsd": 0,
+				"averageLatencyMs": 5.667,
+				"p50LatencyMs": 2,
+				"p95LatencyMs": 13,
+				"lastSeenAt": "2026-10-22T23:42:42.665Z",
+				"latestCorrelationId": null,
+				"latestError": null
+			}
+		],
+		"byRequestType": [
+			{
+				"key": "query",
+				"calls": 6,
+				"successfulCalls": 6,
+				"failedCalls": 0,
+				"retries": 0,
+				"iterationsObserved": 0,
+				"inputTokens": 0,
+				"outputTokens": 0,
+				"totalTokens": 0,
+				"costUsd": 0,
+				"averageLatencyMs": 5.667,
+				"p50LatencyMs": 2,
+				"p95LatencyMs": 13,
+				"lastSeenAt": "2026-10-22T23:42:42.665Z",
+				"latestCorrelationId": null,
+				"latestError": null
+			}
+		],
+		"byOutcome": [
+			{
+				"key": "success",
+				"calls": 6,
+				"successfulCalls": 6,
+				"failedCalls": 0,
+				"retries": 0,
+				"iterationsObserved": 0,
+				"inputTokens": 0,
+				"outputTokens": 0,
+				"totalTokens": 0,
+				"costUsd": 0,
+				"averageLatencyMs": 5.667,
+				"p50LatencyMs": 2,
+				"p95LatencyMs": 13,
+				"lastSeenAt": "2026-10-22T23:42:42.665Z",
+				"latestCorrelationId": null,
+				"latestError": null
+			}
+		],
+		"byError": [
+			{
+				"key": "none",
+				"calls": 6,
+				"successfulCalls": 6,
+				"failedCalls": 0,
+				"retries": 0,
+				"iterationsObserved": 0,
+				"inputTokens": 0,
+				"outputTokens": 0,
+				"totalTokens": 0,
+				"costUsd": 0,
+				"averageLatencyMs": 5.667,
+				"p50LatencyMs": 2,
+				"p95LatencyMs": 13,
+				"lastSeenAt": "2026-10-22T23:42:42.665Z",
+				"latestCorrelationId": null,
+				"latestError": null
+			}
+		],
+		"byDay": [
+			{
+				"key": "2026-10-22",
+				"calls": 4,
+				"successfulCalls": 4,
+				"failedCalls": 0,
+				"retries": 0,
+				"iterationsObserved": 0,
+				"inputTokens": 0,
+				"outputTokens": 0,
+				"totalTokens": 0,
+				"costUsd": 0,
+				"averageLatencyMs": 4.25,
+				"p50LatencyMs": 1,
+				"p95LatencyMs": 13,
+				"lastSeenAt": "2026-10-22T23:42:42.665Z",
+				"latestCorrelationId": null,
+				"latestError": null
+			},
+			{
+				"key": "2026-10-21",
+				"calls": 2,
+				"successfulCalls": 2,
+				"failedCalls": 0,
+				"retries": 0,
+				"iterationsObserved": 0,
+				"inputTokens": 0,
+				"outputTokens": 0,
+				"totalTokens": 0,
+				"costUsd": 0,
+				"averageLatencyMs": 8.5,
+				"p50LatencyMs": 6,
+				"p95LatencyMs": 11,
+				"lastSeenAt": "2026-10-21T04:24:18.670Z",
+				"latestCorrelationId": null,
+				"latestError": null
+			}
+		],
+		"issues": []
+	}
+}

@@ -1,0 +1,10 @@
+{
+  "ts": 1792443192.7709906,
+  "question_id": "a302127dcb20e0ca",
+  "question": "Should the fleet keep openai/gpt-oss-120b as the primary executor model?",
+  "reason": "no live judges \u2014 nothing to aggregate",
+  "context": {
+    "verdict": 0.5
+  },
+  "status": "awaiting_human"
+}

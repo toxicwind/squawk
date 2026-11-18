@@ -1,0 +1,19 @@
+# Mise configuration for agent-chat-plugin
+# https://mise.jdx.dev/
+#
+# Runtime: chat.py plus agent_chat/, using only the Python stdlib.
+# Ruff is a development tool; running from a complete checkout needs no build.
+
+[tools]
+python = "3.14.7"
+# Same version as CI and .pre-commit-config.yaml. "latest" silently changes the
+# rule set under you: ruff 0.16.0 widened the defaults and turned main red.
+ruff = "0.16.7"
+
+[tasks.lint]
+description = "Lint with ruff"
+run = "ruff check ."
+
+[tasks.smoke]
+description = "Smoke-test the CLI"
+run = "python chat.py --help"

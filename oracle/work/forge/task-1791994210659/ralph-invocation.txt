@@ -1,0 +1,8 @@
+bin: /home/toxic/.local/bin/super-ralph
+model: nvidia/nemotron-3-ultra-550b-a55b
+base_url: http://127.0.0.1:25193/v1
+ceiling_s: 1710
+exit: 1
+duration_ms: 16693.2
+timed_out: False
+partial_evidence: n/a

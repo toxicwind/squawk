@@ -1,0 +1,14 @@
+{
+  "edits": [
+    {
+      "path": "/home/toxic/pens/Pens/bin/rig-create",
+      "old": "#!/usr/bin/env bun\n// rig-create: opens rig scaffold\nconsole.log('Opening rig scaffold...');",
+      "new": "#!/usr/bin/env bun\n// rig-create: opens rig scaffold with auto-populate\nconsole.log('Opening rig scaffold with auto-populate...');\nimport { autoPopulate } from '../agents/weaver/lib/auto-populate.ts';\nawait autoPopulate();"
+    },
+    {
+      "path": "/home/toxic/pens/Pens/bin/delend-experimental",
+      "old": "#!/usr/bin/env bun\n// delend-experimental: emergent apply agent\nconsole.log('Running emergent apply...');",
+      "new": "#!/usr/bin/env bun\n// delend-experimental: emergent apply agent with zero-trust validation\nconsole.log('Running emergent apply with zero-trust validation...');\nimport { validateOrigin } from '../agents/weaver/lib/zero-trust.ts';\nawait validateOrigin();"
+    }
+  ]
+}

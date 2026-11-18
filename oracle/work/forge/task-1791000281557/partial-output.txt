@@ -1,0 +1,21 @@
+--- partial stderr (truncated) ---
+e (finishReason=stop, textLength=0). Agent returned an empty response. See https://smithers.sh/reference/errors
+[00:01:11] ↻ interpret-config retrying (attempt 8)
+[00:02:15] → interpret-config (attempt 8, iteration 0)
+[00:02:17] ✗ interpret-config (attempt 8): No valid JSON output found in agent response (finishReason=stop, textLength=0). Agent returned an empty response. See https://smithers.sh/reference/errors
+[00:02:17] ↻ interpret-config retrying (attempt 9)
+[00:04:25] → interpret-config (attempt 9, iteration 0)
+[00:04:26] ✗ interpret-config (attempt 9): No valid JSON output found in agent response (finishReason=stop, textLength=0). Agent returned an empty response. See https://smithers.sh/reference/errors
+[00:04:26] ↻ interpret-config retrying (attempt 10)
+[00:08:42] → interpret-config (attempt 10, iteration 0)
+[00:08:43] ✗ interpret-config (attempt 10): No valid JSON output found in agent response (finishReason=stop, textLength=0). Agent returned an empty response. See https://smithers.sh/reference/errors
+[00:08:43] ↻ interpret-config retrying (attempt 11)
+[00:13:43] → interpret-config (attempt 11, iteration 0)
+[00:13:44] ✗ interpret-config (attempt 11): No valid JSON output found in agent response (finishReason=stop, textLength=0). Agent returned an empty response. See https://smithers.sh/reference/errors
+[00:13:44] ↻ interpret-config retrying (attempt 12)
+[00:18:44] → interpret-config (attempt 12, iteration 0)
+[00:18:46] ✗ interpret-config (attempt 12): No valid JSON output found in agent response (finishReason=stop, textLength=0). Agent returned an empty response. See https://smithers.sh/reference/errors
+[00:18:46] ↻ interpret-config retrying (attempt 13)
+[00:23:46] → interpret-config (attempt 13, iteration 0)
+[00:23:47] ✗ interpret-config (attempt 13): No valid JSON output found in agent response (finishReason=stop, textLength=0). Agent returned an empty response. See https://smithers.sh/reference/errors
+[00:23:47] ↻ interpret-config retrying (attempt 14)

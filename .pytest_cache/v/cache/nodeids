@@ -1,0 +1,3 @@
+[
+  "tests/test_squawk_feed.py::SquawkFeedFatTests::test_wait_wakes_on_post"
+]

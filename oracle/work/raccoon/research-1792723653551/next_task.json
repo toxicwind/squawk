@@ -1,0 +1,11 @@
+{
+  "id": "task-1792723653552",
+  "title": "Implement MCP Health-Check Hook",
+  "description": "Add a pre-execution hook in delend-oracle to validate MCP tool availability, preventing catalog_missing errors.",
+  "type": "experimental",
+  "priority": "high",
+  "doctrine_alignment": [
+    "dig-deeper",
+    "self-healing"
+  ]
+}

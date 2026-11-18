@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-10-23T00:44:42.297220",
+  "next_task": {
+    "id": "task-1792716261428",
+    "type": "recursive_loop",
+    "description": "Reconcile Pens oracle market with standing recursive mandate",
+    "priority": "high",
+    "status": "open"
+  },
+  "experimental_work": {
+    "opportunity_id": "exp-001",
+    "description": "Auto-generate rig scaffolds for new task types",
+    "action": "apply_emergent_experiment",
+    "rationale": "Selected based on multi-divergent race with potential value 0.85"
+  },
+  "status": "mandate_reconciled"
+}

@@ -1,0 +1,610 @@
+{
+  "status": "escalate",
+  "question_id": "493f6f623f5b4ead",
+  "binary_question": "Should :25104 router traffic be cut over to Cuttinggate on :25200 on 2026-10-02, given green health gates on the new router?",
+  "probability": 0.5,
+  "bias_corrected_agreement": 0.4999999999999999,
+  "agreement_ci": [
+    0.0,
+    1.0
+  ],
+  "structural_confidence": {
+    "confidence": 0.0,
+    "spread": 0.35,
+    "evidence_overlap": 1.0,
+    "stance_divergence": 0.5,
+    "n_judges": 4,
+    "n_providers": 1,
+    "providers": [
+      "unknown"
+    ],
+    "provider_concentration": 0.75
+  },
+  "prior": 0.5,
+  "judge_contributions": [
+    {
+      "judge": "oracle-judge-a",
+      "provider": "unknown",
+      "model_family": null,
+      "weight_raw": 0.5,
+      "provider_share": 0.25,
+      "weight": 0.25,
+      "posterior": 0.85,
+      "logit_contrib": 0.4336502638470266
+    },
+    {
+      "judge": "oracle-judge-b",
+      "provider": "unknown",
+      "model_family": null,
+      "weight_raw": 0.5,
+      "provider_share": 0.25,
+      "weight": 0.25,
+      "posterior": 0.85,
+      "logit_contrib": 0.4336502638470266
+    },
+    {
+      "judge": "oracle-judge-c",
+      "provider": "unknown",
+      "model_family": null,
+      "weight_raw": 0.5,
+      "provider_share": 0.25,
+      "weight": 0.25,
+      "posterior": 0.15,
+      "logit_contrib": -0.4336502638470266
+    },
+    {
+      "judge": "oracle-judge-a",
+      "provider": "unknown",
+      "model_family": null,
+      "weight_raw": 0.5,
+      "provider_share": 0.25,
+      "weight": 0.25,
+      "posterior": 0.15,
+      "logit_contrib": -0.4336502638470266
+    }
+  ],
+  "canary_flags": [],
+  "gate": {
+    "ok": false,
+    "failures": {
+      "abstention": {
+        "status": "FAIL",
+        "detail": "CP lower bound 0.000 < 0.80 on 0 labeled accepted (k=0, shrunk=0.500, quarantined=0)"
+      }
+    },
+    "limitations": "NOT_CHECKED: drift"
+  },
+  "gate_reason": "CP lower bound 0.000 < 0.80 on 0 labeled accepted (k=0, shrunk=0.500, quarantined=0)",
+  "operating_point": {
+    "safety_target": 0.8,
+    "alpha": 0.05,
+    "history_n": 0,
+    "history_k": 0,
+    "cp_lo": 0.0,
+    "cp_hi": 1.0,
+    "shrunk_accuracy": 0.5,
+    "prior_pseudo_n": 4.0,
+    "prior_mean": 0.5,
+    "quarantined_rows": 0,
+    "served_planned": false
+  },
+  "failure_topology": {
+    "topology": "all_ok",
+    "detail": "all slots live",
+    "n_failed_slots": 0,
+    "n_live_slots": 4,
+    "providers_affected": []
+  },
+  "provider_diversity": {
+    "n_providers": 1,
+    "providers": [
+      "unknown"
+    ],
+    "provider_collapse": true
+  },
+  "judge_slots": [
+    {
+      "slot": "oracle-judge-c",
+      "served_by": "oracle-judge-local",
+      "refused": false,
+      "valid": true,
+      "failure_category": "ok",
+      "provider_requested": "unknown",
+      "provider_serving": "unknown",
+      "attempts": 3
+    },
+    {
+      "slot": "oracle-judge-a",
+      "served_by": "oracle-judge-local",
+      "refused": false,
+      "valid": true,
+      "failure_category": "ok",
+      "provider_requested": "unknown",
+      "provider_serving": "unknown",
+      "attempts": 3
+    },
+    {
+      "slot": "oracle-judge-b",
+      "served_by": "oracle-judge-local",
+      "refused": false,
+      "valid": true,
+      "failure_category": "ok",
+      "provider_requested": "unknown",
+      "provider_serving": "unknown",
+      "attempts": 3
+    }
+  ],
+  "ts": 1790977825.9091165,
+  "verdict_sha256": "6a13bcac475c6264",
+  "tier": "DEBATE",
+  "tier_reason": "structured advocate debate: 3 rounds, budget-capped",
+  "debate": {
+    "rounds": 3,
+    "converged": false,
+    "internal_posterior": 0.5,
+    "advocate_finals": [
+      {
+        "model": "oracle-judge-a",
+        "side": "YES",
+        "posterior": 0.85,
+        "rounds": [
+          0.85,
+          0.85,
+          0.85
+        ]
+      },
+      {
+        "model": "oracle-judge-b",
+        "side": "YES",
+        "posterior": 0.85,
+        "rounds": [
+          0.85,
+          0.85,
+          0.85
+        ]
+      },
+      {
+        "model": "oracle-judge-c",
+        "side": "NO",
+        "posterior": 0.15,
+        "rounds": [
+          0.15,
+          0.15,
+          0.15
+        ]
+      },
+      {
+        "model": "oracle-judge-a",
+        "side": "NO",
+        "posterior": 0.15,
+        "rounds": [
+          0.15,
+          0.15,
+          0.15
+        ]
+      }
+    ],
+    "vote_probability": 0.8974590923924288,
+    "vote_status": "escalate",
+    "vote_tier": "DEBATE"
+  },
+  "vote_verdict": {
+    "status": "escalate",
+    "question_id": "493f6f623f5b4ead",
+    "binary_question": "Should :25104 router traffic be cut over to Cuttinggate on :25200 on 2026-10-02, given green health gates on the new router?",
+    "probability": 0.8974590923924288,
+    "bias_corrected_agreement": 1.0,
+    "agreement_ci": [
+      0.33548350240355757,
+      1.0
+    ],
+    "structural_confidence": {
+      "confidence": 0.4336604139058096,
+      "spread": 0.14142135623730948,
+      "evidence_overlap": 0.2222222222222222,
+      "stance_divergence": 0.0,
+      "n_judges": 3,
+      "n_providers": 1,
+      "providers": [
+        "unknown"
+      ],
+      "provider_concentration": 0.6666666666666667
+    },
+    "prior": 0.5,
+    "judge_contributions": [
+      {
+        "judge": "oracle-judge-local",
+        "provider": "unknown",
+        "model_family": "unknown",
+        "weight_raw": 1.0,
+        "provider_share": 0.3333333333333333,
+        "weight": 0.3333333333333333,
+        "posterior": 0.95,
+        "logit_contrib": 0.9814796597221465
+      },
+      {
+        "judge": "oracle-judge-local",
+        "provider": "unknown",
+        "model_family": "unknown",
+        "weight_raw": 1.0,
+        "provider_share": 0.3333333333333333,
+        "weight": 0.3333333333333333,
+        "posterior": 0.95,
+        "logit_contrib": 0.9814796597221465
+      },
+      {
+        "judge": "oracle-judge-local",
+        "provider": "unknown",
+        "model_family": "unknown",
+        "weight_raw": 1.0,
+        "provider_share": 0.3333333333333333,
+        "weight": 0.3333333333333333,
+        "posterior": 0.65,
+        "logit_contrib": 0.20634640280207453
+      }
+    ],
+    "canary_flags": [],
+    "gate": {
+      "ok": false,
+      "failures": {
+        "abstention": {
+          "status": "FAIL",
+          "detail": "CP lower bound 0.000 < 0.80 on 0 labeled accepted (k=0, shrunk=0.500, quarantined=0)"
+        }
+      },
+      "limitations": "NOT_CHECKED: drift"
+    },
+    "gate_reason": "CP lower bound 0.000 < 0.80 on 0 labeled accepted (k=0, shrunk=0.500, quarantined=0)",
+    "operating_point": {
+      "safety_target": 0.8,
+      "alpha": 0.05,
+      "history_n": 0,
+      "history_k": 0,
+      "cp_lo": 0.0,
+      "cp_hi": 1.0,
+      "shrunk_accuracy": 0.5,
+      "prior_pseudo_n": 4.0,
+      "prior_mean": 0.5,
+      "quarantined_rows": 0,
+      "served_planned": false
+    },
+    "failure_topology": {
+      "topology": "all_ok",
+      "detail": "all slots live",
+      "n_failed_slots": 0,
+      "n_live_slots": 3,
+      "providers_affected": []
+    },
+    "provider_diversity": {
+      "n_providers": 1,
+      "providers": [
+        "unknown"
+      ],
+      "provider_collapse": true
+    },
+    "judge_slots": [
+      {
+        "slot": "oracle-judge-c",
+        "served_by": "oracle-judge-local",
+        "refused": false,
+        "valid": true,
+        "failure_category": "ok",
+        "provider_requested": "unknown",
+        "provider_serving": "unknown",
+        "attempts": 3
+      },
+      {
+        "slot": "oracle-judge-a",
+        "served_by": "oracle-judge-local",
+        "refused": false,
+        "valid": true,
+        "failure_category": "ok",
+        "provider_requested": "unknown",
+        "provider_serving": "unknown",
+        "attempts": 3
+      },
+      {
+        "slot": "oracle-judge-b",
+        "served_by": "oracle-judge-local",
+        "refused": false,
+        "valid": true,
+        "failure_category": "ok",
+        "provider_requested": "unknown",
+        "provider_serving": "unknown",
+        "attempts": 3
+      }
+    ],
+    "ts": 1790977825.8226469,
+    "verdict_sha256": "94eaaa0855c091df",
+    "timing": {
+      "frame_s": 0.0,
+      "judge_s": 22.567,
+      "engine_s": 0.0
+    },
+    "latency_s": 22.567462682724,
+    "judge_latencies": {
+      "oracle-judge-c": 10.500368595123291,
+      "oracle-judge-a": 16.281922578811646,
+      "oracle-judge-b": 22.54797053337097
+    },
+    "judge_attempts": {
+      "oracle-judge-c": [
+        {
+          "attempt_no": 1,
+          "slot_alias": "oracle-judge-c",
+          "provider_requested": "unknown",
+          "model_served": null,
+          "provider_served": null,
+          "http_status": 404,
+          "failure_category": "http_4xx",
+          "latency_s": 0.01458430290222168,
+          "error_excerpt": "HTTPError 404: Not Found | upstream body: {\"src\":\"llama-swap\",\"error\":{\"message\":\"no router for requested model\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"not_found\"}}",
+          "response_excerpt": "",
+          "correlation_id": "ba38cb6154f84c2c"
+        },
+        {
+          "attempt_no": 2,
+          "slot_alias": "oracle-judge-c",
+          "provider_requested": "unknown",
+          "model_served": null,
+          "provider_served": null,
+          "http_status": 404,
+          "failure_category": "http_4xx",
+          "latency_s": 0.005243539810180664,
+          "error_excerpt": "HTTPError 404: Not Found | upstream body: {\"src\":\"llama-swap\",\"error\":{\"message\":\"no router for requested model\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"not_found\"}}",
+          "response_excerpt": "",
+          "correlation_id": "ba38cb6154f84c2c"
+        },
+        {
+          "attempt_no": 3,
+          "slot_alias": "oracle-judge-local",
+          "provider_requested": "unknown",
+          "model_served": "/home/toxic/models/gemma-4-12b-it-Q4_K_M.gguf",
+          "provider_served": null,
+          "http_status": 200,
+          "failure_category": "ok",
+          "latency_s": 10.500368595123291,
+          "error_excerpt": "",
+          "response_excerpt": "```json\n{\n  \"posterior\": 0.95,\n  \"verbal_confidence\": \"high\",\n  \"claims\": [\n    {\n      \"text\": \"Cuttinggate unit suite is green on 2026-10-02\",\n      \"stance\": \"supports_yes\",\n      \"llr\": 1.5,\n      \"cluster_id\": \"cg_health\",\n      \"rationale\": \"The unit suite passed all 46 tests with 0 failures.\",\n      \"urls\": [],\n      \"credibility\": \"high\"\n    },\n    {\n      \"text\": \"Port 25200 is the designated target for Cuttinggate\",\n      \"stance\": \"supports_yes\",\n      \"llr\": 1.2,\n      \"cluster_id\": ",
+          "correlation_id": "ba38cb6154f84c2c"
+        }
+      ],
+      "oracle-judge-a": [
+        {
+          "attempt_no": 1,
+          "slot_alias": "oracle-judge-a",
+          "provider_requested": "unknown",
+          "model_served": null,
+          "provider_served": null,
+          "http_status": 404,
+          "failure_category": "http_4xx",
+          "latency_s": 0.013245105743408203,
+          "error_excerpt": "HTTPError 404: Not Found | upstream body: {\"src\":\"llama-swap\",\"error\":{\"message\":\"no router for requested model\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"not_found\"}}",
+          "response_excerpt": "",
+          "correlation_id": "ba38cb6154f84c2c"
+        },
+        {
+          "attempt_no": 2,
+          "slot_alias": "oracle-judge-a",
+          "provider_requested": "unknown",
+          "model_served": null,
+          "provider_served": null,
+          "http_status": 404,
+          "failure_category": "http_4xx",
+          "latency_s": 0.005851030349731445,
+          "error_excerpt": "HTTPError 404: Not Found | upstream body: {\"src\":\"llama-swap\",\"error\":{\"message\":\"no router for requested model\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"not_found\"}}",
+          "response_excerpt": "",
+          "correlation_id": "ba38cb6154f84c2c"
+        },
+        {
+          "attempt_no": 3,
+          "slot_alias": "oracle-judge-local",
+          "provider_requested": "unknown",
+          "model_served": "/home/toxic/models/gemma-4-12b-it-Q4_K_M.gguf",
+          "provider_served": null,
+          "http_status": 200,
+          "failure_category": "ok",
+          "latency_s": 16.281922578811646,
+          "error_excerpt": "",
+          "response_excerpt": "```json\n{\n  \"posterior\": 0.95,\n  \"verbal_confidence\": \"high\",\n  \"claims\": [\n    {\n      \"text\": \"Cuttinggate unit suite is green on 2026-10-02\",\n      \"stance\": \"supports_yes\",\n      \"llr\": 1.5,\n      \"cluster_id\": \"gate_health\",\n      \"rationale\": \"The unit suite passed 46/46 tests, meeting the primary condition for cutover.\",\n      \"urls\": [],\n      \"credibility\": \"high\"\n    },\n    {\n      \"text\": \"Port 25200 is free and ready for Cuttinggate\",\n      \"stance\": \"supports_yes\",\n      \"llr\": 1.2,",
+          "correlation_id": "ba38cb6154f84c2c"
+        }
+      ],
+      "oracle-judge-b": [
+        {
+          "attempt_no": 1,
+          "slot_alias": "oracle-judge-b",
+          "provider_requested": "unknown",
+          "model_served": null,
+          "provider_served": null,
+          "http_status": 404,
+          "failure_category": "http_4xx",
+          "latency_s": 0.011661291122436523,
+          "error_excerpt": "HTTPError 404: Not Found | upstream body: {\"src\":\"llama-swap\",\"error\":{\"message\":\"no router for requested model\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"not_found\"}}",
+          "response_excerpt": "",
+          "correlation_id": "ba38cb6154f84c2c"
+        },
+        {
+          "attempt_no": 2,
+          "slot_alias": "oracle-judge-b",
+          "provider_requested": "unknown",
+          "model_served": null,
+          "provider_served": null,
+          "http_status": 404,
+          "failure_category": "http_4xx",
+          "latency_s": 0.005717039108276367,
+          "error_excerpt": "HTTPError 404: Not Found | upstream body: {\"src\":\"llama-swap\",\"error\":{\"message\":\"no router for requested model\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"not_found\"}}",
+          "response_excerpt": "",
+          "correlation_id": "ba38cb6154f84c2c"
+        },
+        {
+          "attempt_no": 3,
+          "slot_alias": "oracle-judge-local",
+          "provider_requested": "unknown",
+          "model_served": "/home/toxic/models/gemma-4-12b-it-Q4_K_M.gguf",
+          "provider_served": null,
+          "http_status": 200,
+          "failure_category": "ok",
+          "latency_s": 22.54797053337097,
+          "error_excerpt": "",
+          "response_excerpt": "```json\n{\n  \"posterior\": 0.65,\n  \"verbal_confidence\": \"medium\",\n  \"claims\": [\n    {\n      \"text\": \"Cuttinggate unit suite is green with 46 pass and 0 fail on 2026-10-02.\",\n      \"stance\": \"supports_yes\",\n      \"llr\": 1.2,\n      \"cluster_id\": \"cg_health\",\n      \"rationale\": \"The new router meets the technical readiness criteria for cutover.\",\n      \"urls\": [],\n      \"credibility\": \"high\"\n    },\n    {\n      \"text\": \":25104 is currently live, healthy, and serving 742 models.\",\n      \"stance\": \"supp",
+          "correlation_id": "ba38cb6154f84c2c"
+        }
+      ]
+    },
+    "correlation_id": "ba38cb6154f84c2c",
+    "models": [
+      "oracle-judge-a",
+      "oracle-judge-b",
+      "oracle-judge-c"
+    ],
+    "tier": "DEBATE",
+    "tier_reason": "abstention gate withheld the verdict"
+  },
+  "judge_attempts": {
+    "oracle-judge-c": [
+      {
+        "attempt_no": 1,
+        "slot_alias": "oracle-judge-c",
+        "provider_requested": "unknown",
+        "model_served": null,
+        "provider_served": null,
+        "http_status": 404,
+        "failure_category": "http_4xx",
+        "latency_s": 0.01458430290222168,
+        "error_excerpt": "HTTPError 404: Not Found | upstream body: {\"src\":\"llama-swap\",\"error\":{\"message\":\"no router for requested model\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"not_found\"}}",
+        "response_excerpt": "",
+        "correlation_id": "ba38cb6154f84c2c"
+      },
+      {
+        "attempt_no": 2,
+        "slot_alias": "oracle-judge-c",
+        "provider_requested": "unknown",
+        "model_served": null,
+        "provider_served": null,
+        "http_status": 404,
+        "failure_category": "http_4xx",
+        "latency_s": 0.005243539810180664,
+        "error_excerpt": "HTTPError 404: Not Found | upstream body: {\"src\":\"llama-swap\",\"error\":{\"message\":\"no router for requested model\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"not_found\"}}",
+        "response_excerpt": "",
+        "correlation_id": "ba38cb6154f84c2c"
+      },
+      {
+        "attempt_no": 3,
+        "slot_alias": "oracle-judge-local",
+        "provider_requested": "unknown",
+        "model_served": "/home/toxic/models/gemma-4-12b-it-Q4_K_M.gguf",
+        "provider_served": null,
+        "http_status": 200,
+        "failure_category": "ok",
+        "latency_s": 10.500368595123291,
+        "error_excerpt": "",
+        "response_excerpt": "```json\n{\n  \"posterior\": 0.95,\n  \"verbal_confidence\": \"high\",\n  \"claims\": [\n    {\n      \"text\": \"Cuttinggate unit suite is green on 2026-10-02\",\n      \"stance\": \"supports_yes\",\n      \"llr\": 1.5,\n      \"cluster_id\": \"cg_health\",\n      \"rationale\": \"The unit suite passed all 46 tests with 0 failures.\",\n      \"urls\": [],\n      \"credibility\": \"high\"\n    },\n    {\n      \"text\": \"Port 25200 is the designated target for Cuttinggate\",\n      \"stance\": \"supports_yes\",\n      \"llr\": 1.2,\n      \"cluster_id\": ",
+        "correlation_id": "ba38cb6154f84c2c"
+      }
+    ],
+    "oracle-judge-a": [
+      {
+        "attempt_no": 1,
+        "slot_alias": "oracle-judge-a",
+        "provider_requested": "unknown",
+        "model_served": null,
+        "provider_served": null,
+        "http_status": 404,
+        "failure_category": "http_4xx",
+        "latency_s": 0.013245105743408203,
+        "error_excerpt": "HTTPError 404: Not Found | upstream body: {\"src\":\"llama-swap\",\"error\":{\"message\":\"no router for requested model\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"not_found\"}}",
+        "response_excerpt": "",
+        "correlation_id": "ba38cb6154f84c2c"
+      },
+      {
+        "attempt_no": 2,
+        "slot_alias": "oracle-judge-a",
+        "provider_requested": "unknown",
+        "model_served": null,
+        "provider_served": null,
+        "http_status": 404,
+        "failure_category": "http_4xx",
+        "latency_s": 0.005851030349731445,
+        "error_excerpt": "HTTPError 404: Not Found | upstream body: {\"src\":\"llama-swap\",\"error\":{\"message\":\"no router for requested model\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"not_found\"}}",
+        "response_excerpt": "",
+        "correlation_id": "ba38cb6154f84c2c"
+      },
+      {
+        "attempt_no": 3,
+        "slot_alias": "oracle-judge-local",
+        "provider_requested": "unknown",
+        "model_served": "/home/toxic/models/gemma-4-12b-it-Q4_K_M.gguf",
+        "provider_served": null,
+        "http_status": 200,
+        "failure_category": "ok",
+        "latency_s": 16.281922578811646,
+        "error_excerpt": "",
+        "response_excerpt": "```json\n{\n  \"posterior\": 0.95,\n  \"verbal_confidence\": \"high\",\n  \"claims\": [\n    {\n      \"text\": \"Cuttinggate unit suite is green on 2026-10-02\",\n      \"stance\": \"supports_yes\",\n      \"llr\": 1.5,\n      \"cluster_id\": \"gate_health\",\n      \"rationale\": \"The unit suite passed 46/46 tests, meeting the primary condition for cutover.\",\n      \"urls\": [],\n      \"credibility\": \"high\"\n    },\n    {\n      \"text\": \"Port 25200 is free and ready for Cuttinggate\",\n      \"stance\": \"supports_yes\",\n      \"llr\": 1.2,",
+        "correlation_id": "ba38cb6154f84c2c"
+      }
+    ],
+    "oracle-judge-b": [
+      {
+        "attempt_no": 1,
+        "slot_alias": "oracle-judge-b",
+        "provider_requested": "unknown",
+        "model_served": null,
+        "provider_served": null,
+        "http_status": 404,
+        "failure_category": "http_4xx",
+        "latency_s": 0.011661291122436523,
+        "error_excerpt": "HTTPError 404: Not Found | upstream body: {\"src\":\"llama-swap\",\"error\":{\"message\":\"no router for requested model\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"not_found\"}}",
+        "response_excerpt": "",
+        "correlation_id": "ba38cb6154f84c2c"
+      },
+      {
+        "attempt_no": 2,
+        "slot_alias": "oracle-judge-b",
+        "provider_requested": "unknown",
+        "model_served": null,
+        "provider_served": null,
+        "http_status": 404,
+        "failure_category": "http_4xx",
+        "latency_s": 0.005717039108276367,
+        "error_excerpt": "HTTPError 404: Not Found | upstream body: {\"src\":\"llama-swap\",\"error\":{\"message\":\"no router for requested model\",\"type\":\"invalid_request_error\",\"param\":null,\"code\":\"not_found\"}}",
+        "response_excerpt": "",
+        "correlation_id": "ba38cb6154f84c2c"
+      },
+      {
+        "attempt_no": 3,
+        "slot_alias": "oracle-judge-local",
+        "provider_requested": "unknown",
+        "model_served": "/home/toxic/models/gemma-4-12b-it-Q4_K_M.gguf",
+        "provider_served": null,
+        "http_status": 200,
+        "failure_category": "ok",
+        "latency_s": 22.54797053337097,
+        "error_excerpt": "",
+        "response_excerpt": "```json\n{\n  \"posterior\": 0.65,\n  \"verbal_confidence\": \"medium\",\n  \"claims\": [\n    {\n      \"text\": \"Cuttinggate unit suite is green with 46 pass and 0 fail on 2026-10-02.\",\n      \"stance\": \"supports_yes\",\n      \"llr\": 1.2,\n      \"cluster_id\": \"cg_health\",\n      \"rationale\": \"The new router meets the technical readiness criteria for cutover.\",\n      \"urls\": [],\n      \"credibility\": \"high\"\n    },\n    {\n      \"text\": \":25104 is currently live, healthy, and serving 742 models.\",\n      \"stance\": \"supp",
+        "correlation_id": "ba38cb6154f84c2c"
+      }
+    ]
+  },
+  "correlation_id": "ba38cb6154f84c2c",
+  "judge_latencies": {
+    "oracle-judge-c": 10.500368595123291,
+    "oracle-judge-a": 16.281922578811646,
+    "oracle-judge-b": 22.54797053337097
+  },
+  "models": [
+    "oracle-judge-a",
+    "oracle-judge-b",
+    "oracle-judge-c"
+  ],
+  "latency_s": 22.653937816619873,
+  "timing": {
+    "frame_s": 0.0,
+    "judge_s": 22.567,
+    "engine_s": 0.0,
+    "debate_s": 0.086
+  },
+  "cost_usd": 0.066,
+  "llm_calls": 33,
+  "usage_cost_usd": 0.0
+}

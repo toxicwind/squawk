@@ -1,0 +1,33 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "schedule": [
+    "before 5am every weekday"
+  ],
+  "prConcurrentLimit": 3,
+  "semanticCommits": "enabled",
+  "commitMessagePrefix": "fix(deps):",
+  "commitMessageAction": "update",
+  "commitMessageTopic": "{{depName}}",
+  "semanticCommitType": "fix",
+  "semanticCommitScope": "deps",
+  "golang": {
+    "postUpdateOptions": [
+      "gomodTidy"
+    ]
+  },
+  "packageRules": [
+    {
+      "description": "Pin GitHub Actions to SHA for security",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "pinDigests": true
+    }
+  ]
+}

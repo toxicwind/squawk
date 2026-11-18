@@ -1,0 +1,2 @@
+[console_scripts]
+agent-chat = chat:main

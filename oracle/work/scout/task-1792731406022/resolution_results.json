@@ -1,0 +1,18 @@
+{
+  "task_id": "EMERG-2026-10-23-001",
+  "shock_simulation": {
+    "asset_pair": "ETH/USD",
+    "original_confidence": 0.99,
+    "degraded_confidence": 0.891,
+    "shock_applied": true
+  },
+  "mitigation_strategy": {
+    "mitigation_strategy": "Reduce weight of ETH/USD oracle sources by 20% and increase reliance on backup oracles.",
+    "updated_weighting_algorithm": "new_weight = old_weight * 0.8 if source == 'ETH/USD' else old_weight",
+    "simulated_result": {
+      "recovered_confidence": 0.9801000000000001,
+      "latency_increase_ms": 199,
+      "status": "mitigated"
+    }
+  }
+}

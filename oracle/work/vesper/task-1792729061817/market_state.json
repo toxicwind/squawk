@@ -1,0 +1,22 @@
+{
+  "market_state": {
+    "status": "idle",
+    "open_tasks": [],
+    "last_checked": "2026-10-23T04:17:59.587035"
+  },
+  "protocol": {
+    "protocol_version": "1.0",
+    "experimental_work": {
+      "type": "recursive_emergent",
+      "description": "When a task is found, apply the following experimental framework:",
+      "steps": [
+        "1. Parse the task requirements.",
+        "2. Generate a solution hypothesis.",
+        "3. Implement the solution in the current workdir.",
+        "4. Validate against acceptance criteria.",
+        "5. Report back to the oracle market."
+      ]
+    }
+  },
+  "timestamp": "2026-10-23T04:17:59.587055"
+}
